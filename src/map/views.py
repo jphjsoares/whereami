@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.shortcuts import render
 
 # Create your views here.
 def index(request):
-    return HttpResponse("This is the map app")
+    return render(request, 'map/map-home.html')

@@ -21,7 +21,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-#SECRET_KEY = os.environ.get("SECRET_KEY")
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -53,10 +52,15 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'whereami.urls'
 
+print(os.listdir("./whereami/templates/whereami"))
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            #os.path.join(BASE_DIR, "whereami/templates"), #I NEED TO MAKE THIS WORK IN map/templates/map/home
+            './whereami/templates',
+            './map/templates',
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
