@@ -1,0 +1,11 @@
+{% extends "whereami/base.html" %}
+
+
+{% block content %}
+    <h1>Welcome to the main page!</h1>
+    <ul>
+        <li><a href="{% url 'map-home' %}">Map</a>.</li>
+        <li><a href="{% url 'game-home' %}">Game</a>.</li>
+        <li><a href="{% url 'user-home' %}">User</a>.</li>
+    </ul>
+{% endblock %}

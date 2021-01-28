@@ -57,7 +57,6 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            #os.path.join(BASE_DIR, "whereami/templates"), #I NEED TO MAKE THIS WORK IN map/templates/map/home
             './whereami/templates',
             './map/templates',
         ],

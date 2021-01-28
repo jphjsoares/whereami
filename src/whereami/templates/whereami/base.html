@@ -1,9 +1,14 @@
 <!DOCTYPE html>
-    <head>
-    </head>
-    <body>
-        <h2>This belongs to the base template of the whole project</h2>
-        {% block app-code %}
-        {% endblock %}
-    </body>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>whereami</title>
+    <!-- All the common css in the app will go on here -->
+</head>
+<body>
+    <div id="main-content">
+        {% block content %} {% endblock %}
+    </div>
+</body>
 </html>
