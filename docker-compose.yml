@@ -8,7 +8,6 @@ services:
             - ./src:/code/
         ports: 
             - 8000:8000
-        environment: 
-            - DEBUG=1
-            - SECRET_KEY="foo"
-            - ALLOWED_HOSTS=["*"]
+        env_file: 
+            - .dev.env
+        

@@ -18,7 +18,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    #path('', include('whereamibackend.urls')), this is the main page
     path('map/', include('map.urls')),
     path('game/', include('game.urls')),
     path('user/', include('user.urls')),
