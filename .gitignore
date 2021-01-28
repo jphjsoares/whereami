@@ -1,13 +1,6 @@
 env/
 .creds.env
-src/map/__pycache__/__init__.cpython-38.pyc
-src/map/__pycache__/urls.cpython-38.pyc
-src/map/__pycache__/views.cpython-38.pyc
-src/game/__pycache__/__init__.cpython-38.pyc
-src/game/__pycache__/urls.cpython-38.pyc
-src/game/__pycache__/views.cpython-38.pyc
-src/user/__pycache__/__init__.cpython-38.pyc
-src/user/__pycache__/urls.cpython-38.pyc
-src/user/__pycache__/views.cpython-38.pyc
-src/whereami/__pycache__
+src/map/__pycache__/
+src/game/__pycache__/
+src/user/__pycache__/
 src/whereami/__pycache__
