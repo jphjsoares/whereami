@@ -1,0 +1,11 @@
+{% extends 'map/base-map.html' %}
+
+{% block mapcreate %}
+        <h3>WELCOME TO THE MAP CREATOR</h3>
+        <ul>
+            <li><a href="{% url 'create-custom' %}">Create a custom map</a>.</li>
+            <li><a href="{% url 'create-by-region' %}">Create a map with a given region</a>.</li>
+            <li><a href="{% url 'create-world' %}">Create a map with any location around the world!</a>.</li>
+        </ul>
+        
+{% endblock %}
