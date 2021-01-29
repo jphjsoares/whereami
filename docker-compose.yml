@@ -1,6 +1,12 @@
 version: '3.7'
 
-services: 
+services:
+    db:
+        image: postgres
+        environment: 
+            - POSTGRES_DB=postgres
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres
     web:
         build: ./src
         command: python manage.py runserver 0:8000
@@ -11,4 +17,6 @@ services:
         env_file: 
             - .dev.env
             - .creds.env
+        depends_on: 
+            - db
         
