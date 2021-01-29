@@ -11,27 +11,28 @@ var mapillarySource;
 map.on('style.load', function() {
     var mapillarySource = {
         type: 'vector',
-        tiles: ['https://tiles3.mapillary.com/v0.1/{z}/{x}/{y}.mvt'],
+        tiles: ["https://tiles3.mapillary.com/v0.1/{z}/{x}/{y}.mvt"],
         minzoom: 0,
         maxzoom: 14
     };
+
+    map.addSource('mapillary', mapillarySource);
+
+    map.addLayer({
+        'id': 'mapillary',
+        'type': 'line',
+        'source': 'mapillary',
+        'source-layer': 'mapillary-sequences',
+        'layout': {
+            'line-cap': 'round',
+            'line-join': 'round'
+        },
+        'paint': {
+            'line-opacity': 0.6,
+            'line-color': 'rgb(53, 175, 109)',
+            'line-width': 2
+        }
+    });
 });
 
 
-map.addSource('mapillary', mapillarySource);
-
-map.addLayer({
-    'id': 'mapillary',
-    'type': 'line',
-    'source': 'mapillary',
-    'source-layer': 'mapillary-sequences',
-    'layout': {
-        'line-cap': 'round',
-        'line-join': 'round'
-    },
-    'paint': {
-        'line-opacity': 0.6,
-        'line-color': 'rgb(53, 175, 109)',
-        'line-width': 2
-    }
-});
