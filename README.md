@@ -1,4 +1,4 @@
-# wherami
+# whereami
 
 
 ### To create a virtual environment
