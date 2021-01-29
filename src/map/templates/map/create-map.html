@@ -3,12 +3,12 @@
 {% block mapcreate %}
         <h3>WELCOME TO THE MAP CREATOR</h3>
         <p>Below there is a map!</p>
-        <div id="mapid" style="height: 180px;">
-        </div>
+        <div id='map' style='height: 400px;'></div>
         
 {% endblock %}
 
 {% block otherjs %}
         {% load static %}
-        <script src="{% static 'map/javascript/Leaflet.MapboxVectorTile.min.js' %}"></script>
+        <script src="{% static 'map/javascript/mapCreation.js' %}"></script>
+        
 {% endblock %}
