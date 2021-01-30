@@ -12,9 +12,18 @@ let chosenCoords = {
     "coordinates": []
 }
 
+let markersCoords = {
+    "markers": []
+}
+
 /*
 TO FIND IMAGES CLOSE TO COORDINATES
 https://www.mapillary.com/developer/api-documentation/#search-images
+*/
+/*
+TO DELETE A MARKER, JUST USE markersCoords.markers[i].remove()
+AND FOR THE JSON
+delete markersaCoords.markers[i]
 */
 
 map.on('style.load', function() {
@@ -42,12 +51,21 @@ map.on('style.load', function() {
             'line-width': 3
         }
     });
+    
+    let i = 0;
 
     map.on('click', function(e){
-        chosenCoords["coordinates"].push(e.lngLat.wrap());
-        //Be careful with xss here
-        document.getElementById("show-coords").innerHTML =
-            JSON.stringify(chosenCoords);
+        
+        chosenCoords["coordinates"].push(e.lngLat.wrap()); // Add all the coordinates to a json object
+        
+        var marker = new mapboxgl.Marker()
+        .setLngLat([chosenCoords.coordinates[i].lng, chosenCoords.coordinates[i].lat])
+        .addTo(map);
+
+        markersCoords["markers"].push(marker); // Add every marker to a marker json object
+    
+        i++;
+        console.log(markersCoords);
     });
 
 });
