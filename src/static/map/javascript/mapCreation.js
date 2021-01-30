@@ -48,7 +48,6 @@ map.on('style.load', function() {
         //Be careful with xss here
         document.getElementById("show-coords").innerHTML =
             JSON.stringify(chosenCoords);
-        console.log(chosenCoords);
     });
 
 });
