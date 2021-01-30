@@ -63,9 +63,15 @@ map.on('style.load', function() {
         .addTo(map);
 
         markersCoords["markers"].push(marker); // Add every marker to a marker json object
-    
+        let newCoordinate = document.createElement("li");
+        let coordinateContent = document.createTextNode(chosenCoords.coordinates[i]);
+        newCoordinate.appendChild(coordinateContent);
+        newCoordinate.id = i;
+
+        let element = document.getElementById("show-coords");
+        element.appendChild(newCoordinate);
+        console.log(chosenCoords["coordinates"]);
         i++;
-        console.log(markersCoords);
     });
 
 });
