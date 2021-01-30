@@ -52,7 +52,6 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'whereami.urls'
 
-print(os.listdir("./whereami/templates/whereami"))
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

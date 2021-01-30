@@ -2,11 +2,20 @@ mapboxgl.accessToken = 'pk.eyJ1IjoiY2FzZWlubWVsbCIsImEiOiJja2tpZWU3bG8wNXN4MnBzN
 let map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/streets-v11', // stylesheet location
-    center: [-74.5, 40], // starting position [lng, lat]
-    zoom: 12 // starting zoom
+    center: [-9.136068933525848, 38.74608203665869], // starting position [lng, lat]
+    zoom: 9 // starting zoom
 });
 
-var mapillarySource;
+let mapillarySource;
+
+let chosenCoords = {
+    "coordinates": []
+}
+
+/*
+TO FIND IMAGES CLOSE TO COORDINATES
+https://www.mapillary.com/developer/api-documentation/#search-images
+*/
 
 map.on('style.load', function() {
     var mapillarySource = {
@@ -30,9 +39,18 @@ map.on('style.load', function() {
         'paint': {
             'line-opacity': 0.6,
             'line-color': 'rgb(53, 175, 109)',
-            'line-width': 2
+            'line-width': 3
         }
     });
+
+    map.on('click', function(e){
+        chosenCoords["coordinates"].push(e.lngLat.wrap());
+        //Be careful with xss here
+        document.getElementById("show-coords").innerHTML =
+            JSON.stringify(chosenCoords);
+        console.log(chosenCoords);
+    });
+
 });
 
 
