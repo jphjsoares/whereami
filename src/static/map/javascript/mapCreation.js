@@ -16,6 +16,8 @@ let markersCoords = {
     "markers": []
 }
 
+let table = document.getElementById("show-coords");
+
 /*
 TO FIND IMAGES CLOSE TO COORDINATES
 https://www.mapillary.com/developer/api-documentation/#search-images
@@ -25,6 +27,35 @@ TO DELETE A MARKER, JUST USE markersCoords.markers[i].remove()
 AND FOR THE JSON
 delete markersaCoords.markers[i]
 */
+
+function deleteSelection() {
+    //TODO
+    console.log("Deleting all the info about this coordinate!");
+}
+
+
+function populateTable(index) {
+    //Get the table and insert a row after the last element
+    let rowToInsert = table.insertRow(-1); //Add a new row to end of table
+
+    let cellToInsertInput = rowToInsert.insertCell(0); //Select cell for button
+    let cellToInsertCoords = rowToInsert.insertCell(1); //Select cell for coords
+
+    //Add the content to the cells
+    let deleteCoordinateButton = document.createElement("input");
+    deleteCoordinateButton.setAttribute("type", "button");
+    deleteCoordinateButton.setAttribute("id", index+1);
+    cellToInsertInput.appendChild(deleteCoordinateButton);
+
+    let coordinateText = document.createTextNode(chosenCoords.coordinates[index]);
+    cellToInsertCoords.appendChild(coordinateText);
+    
+
+    deleteCoordinateButton.onclick = function() {
+        table.deleteRow(rowToInsert.rowIndex);
+        deleteSelection(); //Delete chosenCoords and markersCoords info about that object
+    }
+}
 
 map.on('style.load', function() {
     var mapillarySource = {
@@ -63,14 +94,12 @@ map.on('style.load', function() {
         .addTo(map);
 
         markersCoords["markers"].push(marker); // Add every marker to a marker json object
-        let newCoordinate = document.createElement("li");
-        let coordinateContent = document.createTextNode(chosenCoords.coordinates[i]);
-        newCoordinate.appendChild(coordinateContent);
-        newCoordinate.id = i;
+        
+        //Add elements to table
+        populateTable(i);
 
-        let element = document.getElementById("show-coords");
-        element.appendChild(newCoordinate);
-        console.log(chosenCoords["coordinates"]);
+        //FOR DEBUG PORPUSES ONLY
+        //console.log(chosenCoords["coordinates"]);
         i++;
     });
 
