@@ -6,6 +6,8 @@ let map = new mapboxgl.Map({
     zoom: 9 // starting zoom
 });
 
+let i = 0;
+
 let mapillarySource;
 
 let chosenCoords = {
@@ -28,9 +30,11 @@ AND FOR THE JSON
 delete markersaCoords.markers[i]
 */
 
-function deleteSelection() {
-    //TODO
-    console.log("Deleting all the info about this coordinate!");
+function deleteSelection(indexToDelete) {
+    //Instead of using delete, set it to an empty string and filter out on the backend
+    chosenCoords.coordinates[indexToDelete] = ""; 
+    markersCoords.markers[indexToDelete].remove(); //Remove marker from map
+    markersCoords.markers[indexToDelete] = "";
 }
 
 
@@ -44,7 +48,7 @@ function populateTable(index) {
     //Add the content to the cells
     let deleteCoordinateButton = document.createElement("input");
     deleteCoordinateButton.setAttribute("type", "button");
-    deleteCoordinateButton.setAttribute("id", index+1);
+    deleteCoordinateButton.setAttribute("id", index);
     cellToInsertInput.appendChild(deleteCoordinateButton);
 
     let coordinateText = document.createTextNode(chosenCoords.coordinates[index]);
@@ -53,7 +57,7 @@ function populateTable(index) {
 
     deleteCoordinateButton.onclick = function() {
         table.deleteRow(rowToInsert.rowIndex);
-        deleteSelection(); //Delete chosenCoords and markersCoords info about that object
+        deleteSelection(deleteCoordinateButton.getAttribute("id")); //Delete chosenCoords and markersCoords info about that object
     }
 }
 
@@ -83,8 +87,6 @@ map.on('style.load', function() {
         }
     });
     
-    let i = 0;
-
     map.on('click', function(e){
         
         chosenCoords["coordinates"].push(e.lngLat.wrap()); // Add all the coordinates to a json object
