@@ -16,14 +16,16 @@ class Map(models.Model):
     # ID field is added automatically
     name = models.CharField(max_length=50)
     creator = models.CharField(max_length=40)
-    create_date = models.DateField(auto_now=True)
     num_of_locations = models.IntegerField(default=0)
+    #Deleted datefield because I dont find it really useful,
+    #and might be a pain to debug
     
     # [ [lat, lng],[lat, lng],[lat, lng],[lat, lng] ]
     locations = ArrayField(ArrayField(models.FloatField()))
+    # { "asd":213, "asd":3213, ...}
     users_who_played = HStoreField()
     times_played = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.name, self.locations
+        return '%s, %s' % (self.name, self.creator)
 

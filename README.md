@@ -20,3 +20,25 @@ deactivate
 ``` sh
 docker-compose up --build -d
 ```
+
+### To test
+
+First access docker-compose web service
+
+``` sh
+docker-compose run web bash
+```
+
+And then:
+
+``` sh
+python manage.py test --keepdb
+```
+
+#### WARNING: make sure you have hstore extension created in the test db. If you don't have it do it like how it's said below. And use --keepdb to prevent the extension from being removed (because django creates a new DB everytime)
+
+``` sh
+docker-compose run db bash
+psql --host=[your host name] --dbname=[your test db name] --username=[your username]
+create extension hstore;
+```
