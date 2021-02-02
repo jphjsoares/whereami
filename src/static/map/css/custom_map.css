@@ -1,0 +1,14 @@
+#map canvas {
+    cursor: crosshair;
+}
+
+#map {
+    position: relative;
+}
+
+#dialog-container {
+    height: 40px;
+    width: 200px;
+    position: absolute;
+    z-index: 5;
+}

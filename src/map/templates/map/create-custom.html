@@ -1,8 +1,15 @@
 {% extends 'map/base-map.html' %}
 
+
+{% block othercss %}
+    {% load static %}
+    <link href="{% static 'map/css/custom_map.css' %}" rel="stylesheet" />
+{% endblock %}
+
 {% block mapcreate %}
         <h3>CUSTOM MAP CREATOR</h3>
         <p>Click in the map to choose a location</p>
+        <div id="dialog-container"></div>
         <div id='map' style='height: 500px;'></div>
         <table id="show-coords">
                 <tr>
@@ -10,10 +17,11 @@
                         <td></td>
                 </tr>
                 
-        </table>
+        </table> <br />
         <form action="" method="post">
-                <label>When you are ready submit your custom created map</label>
-                <input type="submit" value="Generate map!"> 
+                {% csrf_token %}
+                <label>When you are ready, submit your custom created map!</label><br />
+                <input type="submit" value="Generate map!" class="btn btn-success"> 
         </form>
         
 {% endblock %}

@@ -109,13 +109,19 @@ map.on('style.load', function() {
         }
     });
     
-    map.on('click', function(e){
 
+    let error = document.createElement("DIALOG");
+    let errorText = document.createTextNode("Oops... There's no available street view close to that point. Choose one closer to a green spot! Must be at least 100 meters close!");
+    
+    map.on('click', function(e){
+        error.remove();
         //Check if there is a close image on the selected location
         verifyCloseImage = isThereACloseImage(e.lngLat.wrap().lng, e.lngLat.wrap().lat).then(res => {
             //TODO: Show the user a loading message while fetching mapillary api
             if(res.features.length === 0) {
-                alert("No close image, try another location!");                
+                error.setAttribute("open","open");
+                error.appendChild(errorText);
+                document.getElementById("dialog-container").appendChild(error);
             } else {
                 chosenCoords["coordinates"].push(e.lngLat.wrap()); // Add all the coordinates to a json object
         
