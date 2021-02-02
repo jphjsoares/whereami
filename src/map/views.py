@@ -1,5 +1,6 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
+from .forms import CustomMapForm
 
 #Main page of the map/ app
 def index(request):
@@ -7,6 +8,12 @@ def index(request):
 
 #Let the user choose what places to add to a new map, by clicking
 def create_custom(request):
+    if request.method == 'POST':
+        form = CustomMapForm(request.POST)
+        if form.is_valid():
+            return HttpResponseRedirect("/map/")
+    else:
+        form = CustomMapForm()
     return render(request, 'map/create-custom.html')
 
 #Let the user draw a polygon on the map, creating the "perimter"

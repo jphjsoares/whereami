@@ -83,6 +83,13 @@ function populateTable(index) {
 
 
 function handleSubmit() {
+    /**
+     * 
+     * WE CAN ALSO USE JSONFIELD ON THE BACKEND
+     * SEEMS EASIER
+     * https://docs.djangoproject.com/en/3.1/ref/contrib/postgres/forms/
+     * 
+     */
     for(i = 0; i < chosenCoords.coordinates.length; i++) {
         if(chosenCoords.coordinates[i] != "") {
             //Every line on the text area will be in the form lng,lat
@@ -119,18 +126,18 @@ map.on('style.load', function() {
     });
     
 
-    let error = document.createElement("DIALOG");
+    let message = document.createElement("DIALOG");
     let errorText = document.createTextNode("Oops... There's no available street view close to that point. Choose one closer to a green spot! Must be at least 100 meters close!");
-    
+    let successText = document.createTextNode("Point successfuly set!");
     map.on('click', function(e){
-        error.remove();
+        message.remove();
         //Check if there is a close image on the selected location
         verifyCloseImage = isThereACloseImage(e.lngLat.wrap().lng, e.lngLat.wrap().lat).then(res => {
             //TODO: Show the user a loading message while fetching mapillary api
             if(res.features.length === 0) {
-                error.setAttribute("open","open");
-                error.appendChild(errorText);
-                document.getElementById("dialog-container").appendChild(error);
+                message.setAttribute("open","open");
+                message.appendChild(errorText);
+                document.getElementById("dialog-container").appendChild(message);
             } else {
                 chosenCoords["coordinates"].push(e.lngLat.wrap()); // Add all the coordinates to a json object
         
