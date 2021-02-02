@@ -48,8 +48,6 @@ const isThereACloseImage = async (lng, lat) => {
     
 }
 
-
-
 function deleteSelection(indexToDelete) {
     //Instead of using delete, set it to an empty string and filter out on the backend
     chosenCoords.coordinates[indexToDelete] = ""; 
@@ -81,6 +79,17 @@ function populateTable(index) {
         table.deleteRow(rowToInsert.rowIndex);
         deleteSelection(deleteCoordinateButton.getAttribute("id")); //Delete chosenCoords and markersCoords info about that object
     }
+}
+
+
+function handleSubmit() {
+    for(i = 0; i < chosenCoords.coordinates.length; i++) {
+        if(chosenCoords.coordinates[i] != "") {
+            //Every line on the text area will be in the form lng,lat
+            //On the backend we must get every line and separate by comma and make an array for each pair
+            document.getElementById("locations-to-submit").value += chosenCoords.coordinates[i].lng + "," + chosenCoords.coordinates[i].lat + '\n';        
+        }
+    }    
 }
 
 map.on('style.load', function() {
@@ -141,7 +150,4 @@ map.on('style.load', function() {
         });
         
     });
-
 });
-
-

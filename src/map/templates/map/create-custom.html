@@ -18,9 +18,11 @@
                 </tr>
                 
         </table> <br />
-        <form action="" method="post">
+        <form action="" method="post" onsubmit="handleSubmit()"> 
                 {% csrf_token %}
                 <label>When you are ready, submit your custom created map!</label><br />
+                {{ form }}
+                <textarea id="locations-to-submit" name="hide" style="display:none;"></textarea>
                 <input type="submit" value="Generate map!" class="btn btn-success"> 
         </form>
         
