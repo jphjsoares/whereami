@@ -69,6 +69,8 @@ function populateTable(index) {
     let deleteCoordinateButton = document.createElement("input");
     deleteCoordinateButton.setAttribute("type", "button");
     deleteCoordinateButton.setAttribute("id", index);
+    deleteCoordinateButton.setAttribute("class", "btn btn-error");
+    deleteCoordinateButton.value = "Delete";
     cellToInsertInput.appendChild(deleteCoordinateButton);
 
     let coordinateText = document.createTextNode(chosenCoords.coordinates[index]);
@@ -113,8 +115,7 @@ map.on('style.load', function() {
         verifyCloseImage = isThereACloseImage(e.lngLat.wrap().lng, e.lngLat.wrap().lat).then(res => {
             //TODO: Show the user a loading message while fetching mapillary api
             if(res.features.length === 0) {
-                alert("No close image, try another location!");
-                
+                alert("No close image, try another location!");                
             } else {
                 chosenCoords["coordinates"].push(e.lngLat.wrap()); // Add all the coordinates to a json object
         

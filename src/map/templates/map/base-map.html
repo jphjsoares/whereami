@@ -6,13 +6,14 @@
     <title>whereami</title>
 
     <!-- All the common css in the app will go on here -->
+    {% include "whereami/common_css.html" %}
     <script src='https://api.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.js'></script>
     <link href='https://api.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.css' rel='stylesheet' />
+    {% block othercss %} {% endblock %}
 </head>
 <body>
     {% include "whereami/nav.html" %}
-    <div id="main-content">
-        <h1>Welcome to the map creator!</h1>
+    <div id="main-content" style="margin: 0 auto; width: 50%;">
             {% block mapcreate %} {% endblock %}
     </div>
     {% block otherjs %} 

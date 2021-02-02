@@ -1,13 +1,22 @@
 {% extends 'map/base-map.html' %}
 
+
+{% block othercss %}
+    <style>
+        .map-creator-button {
+            margin: 5px;
+        }
+    </style>
+{% endblock %}
+
 {% block mapcreate %}
-        <h3>WELCOME TO THE MAP CREATOR</h3>
-        <ul>
-            <li><a href="{% url 'create-custom' %}">Create a custom map</a>.</li>
-            <li><a href="{% url 'create-by-region' %}">Create a map with a given region</a>.</li>
-            <li><a href="{% url 'create-world' %}">Create a map with any location around the world!</a>.</li>
-        </ul>
+        <div style="margin: 0 auto; width: 50%;  background-color: slategrey; padding: 10px;">
+            <div class="col-3"><a href="{% url 'create-custom' %}"><button class="btn map-creator-button">Create a custom map</button></a></div>
         
+            <div class="col-3"><a href="{% url 'create-by-region' %}"><button class="btn map-creator-button">Create a map with a given region</button></a></div>
+
+            <div class="col-3"><a href="{% url 'create-world' %}"><button class="btn map-creator-button">Create a map with any location around the world!</button></a></div>
+        </div>        
 {% endblock %}
 
 

@@ -4,14 +4,17 @@
     <meta charset='utf-8'>
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
     <title>whereami</title>
+    {% include "whereami/common_css.html" %}
 </head>
 <body>
     {% include "whereami/nav.html" %}
     <div id="main-content">
-        <ul>
-            <li><a href="{% url 'map-home' %}">Map</a>.</li>
-            <li><a href="{% url 'game-home' %}">Game</a>.</li>
-            <li><a href="{% url 'user-home' %}">User</a>.</li>
-        </ul>
+        <div class="container">
+            <div class="columns col-oneline">
+            <div class="col-6"><a href="{% url 'map-home' %}">Map</a>.</div>
+            <div class="col-6"><a href="{% url 'game-home' %}">Game</a>.</div>
+            <div class="col-6"><a href="{% url 'user-home' %}">User</a>.</div>
+            </div>
+        </div>
 </body>
 </html>
