@@ -1,6 +1,6 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-from .forms import CustomMapForm
+from .models import Map
 
 #Main page of the map/ app
 def index(request):
@@ -9,16 +9,33 @@ def index(request):
 #Let the user choose what places to add to a new map, by clicking
 def create_custom(request):
     if request.method == 'POST':
-        form = CustomMapForm(request.POST)
-        if form.is_valid():
-            return HttpResponseRedirect("/map/")
+        #TODO: check if the user submits 5 or more locations 
+                
+        input = request.POST["locations"].splitlines()
+        locations_to_submit_final = []
+        
+        #gets lng and lat separated, ready for storing
+        for submitted_location in input:
+            locations_to_submit_final.append(submitted_location.split(','))
+
+
+        # Create and save the new map!
+        map_to_submit = Map(name="testMap",
+            creator="tester",
+            num_of_locations=len(locations_to_submit_final),
+            locations=locations_to_submit_final,
+            times_played=123
+        )
+
+        map_to_submit.save()
+        
+        return HttpResponse("Success!")
     else:
-        form = CustomMapForm()
-    return render(request, 'map/create-custom.html')
+        return render(request, 'map/create-custom.html')
 
 #Let the user draw a polygon on the map, creating the "perimter"
 #Give random coordinates, that are inside the polygon
-def create_by_region(request):
+def create_by_region(request):                                      
     return render(request, 'map/create-by-region.html')
 
 #By defining how many locations to set (or infinite),

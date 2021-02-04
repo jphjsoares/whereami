@@ -18,7 +18,7 @@
                 </tr>
                 
         </table> <br />
-        <form action="" method="post" onsubmit="handleSubmit()"> 
+        <form action="" method="post" onsubmit="handleSubmit()" id="form"> 
                 {% csrf_token %}
                 <label>When you are ready, submit your custom created map!</label><br />
                 {{ form }}

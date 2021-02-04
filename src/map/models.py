@@ -23,7 +23,8 @@ class Map(models.Model):
     # [ [lat, lng],[lat, lng],[lat, lng],[lat, lng] ]
     locations = ArrayField(ArrayField(models.FloatField()))
     # { "asd":213, "asd":3213, ...}
-    users_who_played = HStoreField()
+    #users_who_played = HStoreField() will be implemented after users app creation
+    #probably will be a fk!
     times_played = models.IntegerField(default=0)
 
     def __str__(self):
