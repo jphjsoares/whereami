@@ -8,6 +8,7 @@ def index(request):
 
 #Let the user choose what places to add to a new map, by clicking
 def create_custom(request):
+    #TODO: Only allow POST requests if the user is signed in
     if request.method == 'POST':
         #TODO: check if the user submits 5 or more locations 
                 
@@ -20,7 +21,7 @@ def create_custom(request):
 
 
         # Create and save the new map!
-        map_to_submit = Map(name="testMap",
+        map_to_submit = Map(name="testCustom",
             creator="tester",
             num_of_locations=len(locations_to_submit_final),
             locations=locations_to_submit_final,

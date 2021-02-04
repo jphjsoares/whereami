@@ -1,1 +1,26 @@
-<h1>UNDER DEV</h1>
+{% extends 'map/base-map.html' %}
+
+
+{% block othercss %}
+	
+{% endblock %}
+
+{% block mapcreate %}
+
+		{% load static %}
+    	<link href="{% static 'map/css/mapbox-gl-draw.css' %}" rel="stylesheet" />
+		
+        <h3>Create by selecting region</h3>
+        <p>Click in the map to draw a polygon</p>
+        <div id='map' style='height: 500px;'></div>
+       
+{% endblock %}
+
+{% block otherjs %}
+		{% load static %}
+		<script src="{% static 'map/javascript/mapbox-gl-draw.js' %}"></script>
+        
+        <script src="{% static 'map/javascript/mapByRegion.js' %}"></script>
+        
+        
+{% endblock %}
