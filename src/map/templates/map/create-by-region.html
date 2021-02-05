@@ -2,13 +2,13 @@
 
 
 {% block othercss %}
-	
+
+	{% load static %}
+	<link href="{% static 'map/css/mapbox-gl-draw.css' %}" rel="stylesheet" />
 {% endblock %}
 
 {% block mapcreate %}
 
-		{% load static %}
-    	<link href="{% static 'map/css/mapbox-gl-draw.css' %}" rel="stylesheet" />
 		
         <h3>Create by selecting region</h3>
         <p>Click in the map to draw a polygon</p>

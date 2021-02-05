@@ -1,6 +1,9 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from .models import Map
+import os
+import json
+import urllib
 
 #Main page of the map/ app
 def index(request):
@@ -42,4 +45,21 @@ def create_by_region(request):
 #By defining how many locations to set (or infinite),
 #Give random locations around the world
 def create_world(request):
-    return render(request, 'map/create-world.html')
+
+    #Check if the user submits numbers, 0, special characters and more than 1000
+    if request.method == 'POST':
+        locations_to_submit_final = []
+        submitted_number_of_locations = request.POST["num-of-locations"]
+
+        url = "https://a.mapillary.com/v3/images?client_id=" + os.environ.get("CLIENT_ID") + "&per_page=" + submitted_number_of_locations
+
+        request = urllib.request.urlopen(url)
+        data = json.load(request)
+        
+        #Add all the random pictures to the list that will be submitted
+        for i in range(0, len(data["features"])):
+            locations_to_submit_final.append(data["features"][i]["geometry"]["coordinates"])
+
+        return HttpResponse(locations_to_submit_final)
+    else:
+        return render(request, 'map/create-world.html')

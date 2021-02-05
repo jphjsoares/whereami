@@ -1,1 +1,24 @@
-<h1>UNDER DEV</h1>
+{% extends 'map/base-map.html' %}
+
+
+{% block othercss %}
+	
+{% endblock %}
+
+{% block mapcreate %}
+	
+        <h3>Generate a map with random locations of the world!</h3>
+        <p>Select how many locations you want the map to have below:</p>
+        <form action="" method="post">
+        	{% csrf_token %}
+        	<label>How many locations?</label>
+        	<input type="text" name="num-of-locations">
+        	<br />
+        	<input type="submit" value="Generate map!">
+        </form>
+        <div id='map' style='height: 500px;'></div>
+       
+{% endblock %}
+
+{% block otherjs %}
+{% endblock %}
