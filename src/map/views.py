@@ -24,7 +24,7 @@ def create_custom(request):
 
 			return HttpResponse("Oops... Please select 5 or more locations")
 		
-		# gets lng and lat separated, ready for storing
+		#gets lng and lat separated, ready for storing
 		for submitted_location in input:
 			locations_to_submit_final.append(submitted_location.split(','))
 
