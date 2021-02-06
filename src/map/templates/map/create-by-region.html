@@ -11,10 +11,17 @@
 
 		
         <h3>Create by selecting region</h3>
-        <p>Click in the map to draw a polygon</p>
+        <p>Use the top right toolbar to draw one or more polygon</p>
+        <p>This map creator will create 10 random locations which will never change!</p>
+        <p>A way to generate multiple locations by only using a selection is still under development</p>
         <div id='map' style='height: 500px;'></div>
-        <button id="debug" onclick="handleClick()">Get random locations!</button>
-       
+        <form action="" method="post" onsubmit="handleClick()" id="form">
+            {% csrf_token %}
+        	<textarea id="locations-to-submit" name="locations" style="display:none;"></textarea>
+       		<p>When you are done, click the button below!</p>
+       		<button type="submit" class="btn btn-success">Generate map!</button>
+        </form>
+        
 {% endblock %}
 
 {% block otherjs %}

@@ -83,13 +83,7 @@ function populateTable(index) {
 
 
 function handleSubmit() {
-    /**
-     * 
-     * WE CAN ALSO USE JSONFIELD ON THE BACKEND
-     * SEEMS EASIER
-     * https://docs.djangoproject.com/en/3.1/ref/contrib/postgres/forms/
-     * 
-     */
+
     for(i = 0; i < chosenCoords.coordinates.length; i++) {
         if(chosenCoords.coordinates[i] != "") {
             //Every line on the text area will be in the form lng,lat

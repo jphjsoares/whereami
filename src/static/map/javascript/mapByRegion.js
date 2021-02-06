@@ -16,36 +16,41 @@ var draw = new MapboxDraw({
 });
 map.addControl(draw);
 
-
 map.on('draw.create', updateArea);
 map.on('draw.delete', updateArea);
 map.on('draw.update', updateArea);
 
-
 function generateRandomPointsOnRegion(polygon) {
+
 	let polyBbox = turf.bboxPolygon(turf.bbox(polygon))
-	let points = turf.randomPoint(3, polyBbox);
-	if(turf.booleanPointInPolygon(points["features"][0]["geometry"], polygon)) {
+	let points = turf.randomPoint(1, polyBbox);
+
 
 		//TODO: Check if mapillary has available images in the polygon!
-		//remove the marker, use only for debugging, to see if the generator is working!
-		var marker = new mapboxgl.Marker()
-                .setLngLat([points["features"][0]["geometry"]["coordinates"][0], points["features"][0]["geometry"]["coordinates"][1]])
-                .addTo(map);
+
+	if(turf.booleanPointInPolygon(points["features"][0]["geometry"], polygon)) { //check if the point is inside the polygon
+		let generatedPoint = [points["features"][0]["geometry"]["coordinates"][0], points["features"][0]["geometry"]["coordinates"][1]];
+		
+		//marker and the console.log are only used for debugging
+		console.log(generatedPoint);
+		//var marker = new mapboxgl.Marker(generatedPoint).setLngLat().addTo(map);
 	} else {
 		generateRandomPointsOnRegion(polygon);
 	}
 }
 
 function handleClick() {
+	
 	let allPolygons = draw.getAll();
 	let polygon = draw.getAll().features;
+	let pointsToSubmit = []
 
 	for (numOfPolygons = 0; numOfPolygons < polygon.length; numOfPolygons++) {
 		
-		//Number of points wich will be inputed by the user
-		for(i = 0; i < 5; i++) {
+		//Number of points
+		for(i = 0; i < 10; i++) {
+
 			generateRandomPointsOnRegion(polygon[numOfPolygons]);
 		}
-	}	
+	}
 }
