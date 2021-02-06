@@ -7,32 +7,36 @@ let map = new mapboxgl.Map({
     zoom: 5 // starting zoom
 });
 
-var draw = new MapboxDraw({
+let draw = new MapboxDraw({
     displayControlsDefault: false,
     controls: {
         polygon: true,
         trash: true
     }
 });
+
+let coordinatesToSubmit = []
+
 map.addControl(draw);
 
 map.on('draw.create', updateArea);
 map.on('draw.delete', updateArea);
 map.on('draw.update', updateArea);
 
+
 function generateRandomPointsOnRegion(polygon) {
 
 	let polyBbox = turf.bboxPolygon(turf.bbox(polygon))
 	let points = turf.randomPoint(1, polyBbox);
 
-
-		//TODO: Check if mapillary has available images in the polygon!
+	//TODO: Check if mapillary has available images in the polygon!
 
 	if(turf.booleanPointInPolygon(points["features"][0]["geometry"], polygon)) { //check if the point is inside the polygon
 		let generatedPoint = [points["features"][0]["geometry"]["coordinates"][0], points["features"][0]["geometry"]["coordinates"][1]];
+		coordinatesToSubmit.push(generatedPoint);
 		
 		//marker and the console.log are only used for debugging
-		console.log(generatedPoint);
+		//console.log(generatedPoint);
 		//var marker = new mapboxgl.Marker(generatedPoint).setLngLat().addTo(map);
 	} else {
 		generateRandomPointsOnRegion(polygon);
@@ -49,8 +53,14 @@ function handleClick() {
 		
 		//Number of points
 		for(i = 0; i < 10; i++) {
-
 			generateRandomPointsOnRegion(polygon[numOfPolygons]);
 		}
 	}
+
+	for(locationIndex = 0; locationIndex < coordinatesToSubmit.length; locationIndex++) {
+		//Every line on the text area will be in the form lng,lat
+        //On the backend we must get every line and separate by comma and make an array for each pair
+		document.getElementById("locations-to-submit").value += coordinatesToSubmit[locationIndex][0] + "," + coordinatesToSubmit[locationIndex][1] + '\n';
+	}
+	
 }
