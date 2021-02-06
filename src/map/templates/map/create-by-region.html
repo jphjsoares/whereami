@@ -13,13 +13,14 @@
         <h3>Create by selecting region</h3>
         <p>Click in the map to draw a polygon</p>
         <div id='map' style='height: 500px;'></div>
+        <button id="debug" onclick="handleClick()">Get random locations!</button>
        
 {% endblock %}
 
 {% block otherjs %}
 		{% load static %}
 		<script src="{% static 'map/javascript/mapbox-gl-draw.js' %}"></script>
-        
+        <script src="{% static 'map/javascript/turf.min.js' %}"></script>
         <script src="{% static 'map/javascript/mapByRegion.js' %}"></script>
         
         
