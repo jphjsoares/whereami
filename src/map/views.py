@@ -69,10 +69,11 @@ def create_world(request):
 			
 			#Add all the random pictures to the list that will be submitted
 			for i in range(0, len(data["features"])):
-				locations_to_submit_final.append(data["features"][i]["geometry"]["coordinates"])
+				locations_to_submit_final.append(data["features"][i]["properties"]["key"])
 
 			#TODO: Create and save the new map
-
+			print(locations_to_submit_final)
+			
 			return HttpResponse(locations_to_submit_final)
 	else:
 		form = GenerateRandomWorld()
