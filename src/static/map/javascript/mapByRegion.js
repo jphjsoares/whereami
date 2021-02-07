@@ -17,27 +17,30 @@ let draw = new MapboxDraw({
 
 let coordinatesToSubmit = []
 
+
 map.addControl(draw);
 
-map.on('draw.create', updateArea);
-map.on('draw.delete', updateArea);
-map.on('draw.update', updateArea);
 
+function buildUrl( box0, box1, box2, box3, lng, lat) {
+	return "https://a.mapillary.com/v3/images?bbox=" + box0 + ',' + box1 + ',' + box2 + ',' + box3 + "&closeto=" + lng + ',' + lat + "&per_page=1&client_id=MGNWR1hFdWVhb3FQTTJxcDZPUExHZzo2NTE4YmM3NmY0YWYyNGYy";
+}
 
 function generateRandomPointsOnRegion(polygon) {
 
 	let polyBbox = turf.bboxPolygon(turf.bbox(polygon))
 	let points = turf.randomPoint(1, polyBbox);
 
-	//TODO: Check if mapillary has available images in the polygon!
+	let newUrl = buildUrl(polyBbox["bbox"][0], polyBbox["bbox"][1], polyBbox["bbox"][2], polyBbox["bbox"][3], 
+		points["features"][0]["geometry"]["coordinates"][0], 
+		points["features"][0]["geometry"]["coordinates"][1]);
+	
+	
+	console.log(newUrl)
 
+	//TODO: Check if mapillary has available images in the polygon!
 	if(turf.booleanPointInPolygon(points["features"][0]["geometry"], polygon)) { //check if the point is inside the polygon
 		let generatedPoint = [points["features"][0]["geometry"]["coordinates"][0], points["features"][0]["geometry"]["coordinates"][1]];
 		coordinatesToSubmit.push(generatedPoint);
-		
-		//marker and the console.log are only used for debugging
-		//console.log(generatedPoint);
-		//var marker = new mapboxgl.Marker(generatedPoint).setLngLat().addTo(map);
 	} else {
 		generateRandomPointsOnRegion(polygon);
 	}
