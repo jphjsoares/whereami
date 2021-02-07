@@ -20,27 +20,28 @@ def create_custom(request):
 		locations_to_submit_final = []
 
 		if len(input) < 5: #Also be careful with xss and other vulns
-			#Use django messages to show this error!
+			#TODO:Use django messages to show this error!
 
 			return HttpResponse("Oops... Please select 5 or more locations")
 		
-		#gets lng and lat separated, ready for storing
+		#Add all the image keys to an array for the db
 		for submitted_location in input:
-			locations_to_submit_final.append(submitted_location.split(','))
+			locations_to_submit_final.append(submitted_location)
 
-
+		
 		# Create and save the new map!
+		
 		map_to_submit = Map(name="testCustom",
 			creator="tester",
 			num_of_locations=len(locations_to_submit_final),
-			locations=locations_to_submit_final,
+			mapillary_image_key=locations_to_submit_final,
 			times_played=123
 		)
 
 		map_to_submit.save()
 		
-		return HttpResponse("Success!")
-		#And then redirect to a page!
+		return HttpResponse("SUCCESS!")
+		
 	else:
 		return render(request, 'map/create-custom.html')
 
@@ -71,10 +72,16 @@ def create_world(request):
 			for i in range(0, len(data["features"])):
 				locations_to_submit_final.append(data["features"][i]["properties"]["key"])
 
-			#TODO: Create and save the new map
-			print(locations_to_submit_final)
+			map_to_submit = Map(name="testRandomWorld",
+				creator="tester",
+				num_of_locations=len(locations_to_submit_final),
+				mapillary_image_key=locations_to_submit_final,
+				times_played=321
+			)
+
+			map_to_submit.save()
 			
-			return HttpResponse(locations_to_submit_final)
+			return HttpResponse("SUCCESS!")
 	else:
 		form = GenerateRandomWorld()
 	

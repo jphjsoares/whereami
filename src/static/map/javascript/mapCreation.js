@@ -39,13 +39,11 @@ let markersCoords = {
 
 let table = document.getElementById("show-coords");
 
-const isThereACloseImage = async (lng, lat) => {
-    //TODO: find a way to hide client id
-    const url = "https://a.mapillary.com/v3/images?client_id=MGNWR1hFdWVhb3FQTTJxcDZPUExHZzo2NTE4YmM3NmY0YWYyNGYy&closeto=" + lng + "," + lat;
-    const response = await fetch(url);
-    const json = await response.json();
-    return json;
+
+function isThereACloseImage(lng, lat) {
+    return "https://a.mapillary.com/v3/images?client_id=MGNWR1hFdWVhb3FQTTJxcDZPUExHZzo2NTE4YmM3NmY0YWYyNGYy&closeto=" + lng + "," + lat; 
 }
+
 
 function deleteSelection(indexToDelete) {
     //Instead of using delete, set it to an empty string and filter out on the backend
@@ -87,7 +85,7 @@ function handleSubmit() {
         if(chosenCoords.coordinates[i] != "") {
             //Every line on the text area will be in the form lng,lat
             //On the backend we must get every line and separate by comma and make an array for each pair
-            document.getElementById("locations-to-submit").value += chosenCoords.coordinates[i].lng + "," + chosenCoords.coordinates[i].lat + '\n';        
+            document.getElementById("locations-to-submit").value += chosenCoords.coordinates[i] + '\n';        
         }
     }    
 }
@@ -121,33 +119,34 @@ map.on('style.load', function() {
 
     let message = document.createElement("DIALOG");
     let errorText = document.createTextNode("Oops... There's no available street view close to that point. Choose one closer to a green spot! Must be at least 100 meters close!");
-    let successText = document.createTextNode("Point successfuly set!");
     map.on('click', function(e){
         message.remove();
-        //Check if there is a close image on the selected location
-        verifyCloseImage = isThereACloseImage(e.lngLat.wrap().lng, e.lngLat.wrap().lat).then(res => {
-            //TODO: Show the user a loading message while fetching mapillary api
-            if(res.features.length === 0) {
+        
+        $.ajaxSetup({
+            async: false
+        });
+        $.get(isThereACloseImage(e.lngLat.wrap().lng, e.lngLat.wrap().lat), function(data) {
+            if(data.features.length === 0) {			
                 message.setAttribute("open","open");
                 message.appendChild(errorText);
                 document.getElementById("dialog-container").appendChild(message);
             } else {
-                chosenCoords["coordinates"].push(e.lngLat.wrap()); // Add all the coordinates to a json object
-        
-                var marker = new mapboxgl.Marker()
-                .setLngLat([chosenCoords.coordinates[i].lng, chosenCoords.coordinates[i].lat])
+                
+                chosenCoords["coordinates"].push(data["features"][0]["properties"].key); // Add the key to a json object
+                
+                let marker = new mapboxgl.Marker()
+                .setLngLat([e.lngLat.wrap().lng, e.lngLat.wrap().lat])
                 .addTo(map);
         
                 markersCoords["markers"].push(marker); // Add every marker to a marker json object
-                
+
                 //Add elements to table
                 populateTable(i);
-        
-                //FOR DEBUG PORPUSES ONLY
-                //console.log(chosenCoords["coordinates"]);
+
                 i++;
             }
+            
         });
-        
+
     });
 });
