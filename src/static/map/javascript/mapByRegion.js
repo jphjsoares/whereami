@@ -75,5 +75,5 @@ function handleClick() {
 		//On the backend we must get every line and separate by comma and make an array for each pair
 		//TODO: Append keys in text area
 		document.getElementById("locations-to-submit").value += coordinatesToSubmit[locationIndex] + '\n';
-	}	
+	}
 }

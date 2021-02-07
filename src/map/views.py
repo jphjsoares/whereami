@@ -47,8 +47,28 @@ def create_custom(request):
 
 #Let the user draw a polygon on the map, creating the "perimter"
 #Give random coordinates, that are inside the polygon
-def create_by_region(request):                                      
-	return render(request, 'map/create-by-region.html')
+def create_by_region(request):
+	if request.method == "POST":
+		
+		input = request.POST["locations"].splitlines()
+		locations_to_submit_final = []
+
+
+		for random_location in input:
+			locations_to_submit_final.append(random_location)
+		
+		map_to_submit = Map(name="testByRegion",
+			creator="tester",
+			num_of_locations=len(locations_to_submit_final),
+			mapillary_image_key=locations_to_submit_final,
+			times_played=441
+		)
+
+		map_to_submit.save()
+		
+		return HttpResponse("SUCCESS!")
+	else: 
+		return render(request, 'map/create-by-region.html')
 
 #By defining how many locations to set,
 #Give random locations around the world
