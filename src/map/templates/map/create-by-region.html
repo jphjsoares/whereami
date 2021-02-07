@@ -21,6 +21,7 @@
        		<p>When you are done, click the button below!</p>
        		<button type="submit" class="btn btn-success">Generate map!</button>
         </form>
+        <button onclick="handleClick()">try</button>
         
 {% endblock %}
 
@@ -28,6 +29,7 @@
 		{% load static %}
 		<script src="{% static 'map/javascript/mapbox-gl-draw.js' %}"></script>
         <script src="{% static 'map/javascript/turf.min.js' %}"></script>
+        <script src="{% static 'map/javascript/jquery.min.js' %}"></script>
         <script src="{% static 'map/javascript/mapByRegion.js' %}"></script>
         
         

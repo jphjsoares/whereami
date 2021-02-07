@@ -25,6 +25,7 @@ function buildUrl( box0, box1, box2, box3, lng, lat) {
 	return "https://a.mapillary.com/v3/images?bbox=" + box0 + ',' + box1 + ',' + box2 + ',' + box3 + "&closeto=" + lng + ',' + lat + "&per_page=1&client_id=MGNWR1hFdWVhb3FQTTJxcDZPUExHZzo2NTE4YmM3NmY0YWYyNGYy";
 }
 
+
 function generateRandomPointsOnRegion(polygon) {
 
 	let polyBbox = turf.bboxPolygon(turf.bbox(polygon))
@@ -34,16 +35,16 @@ function generateRandomPointsOnRegion(polygon) {
 		points["features"][0]["geometry"]["coordinates"][0], 
 		points["features"][0]["geometry"]["coordinates"][1]);
 	
-	
-	console.log(newUrl)
-
-	//TODO: Check if mapillary has available images in the polygon!
-	if(turf.booleanPointInPolygon(points["features"][0]["geometry"], polygon)) { //check if the point is inside the polygon
-		let generatedPoint = [points["features"][0]["geometry"]["coordinates"][0], points["features"][0]["geometry"]["coordinates"][1]];
-		coordinatesToSubmit.push(generatedPoint);
-	} else {
-		generateRandomPointsOnRegion(polygon);
-	}
+	$.get(newUrl, function(data) {
+		if(data.features.length !== 0 && turf.booleanPointInPolygon(points["features"][0]["geometry"], polygon)) {			
+			//console.log(data["features"][0]["properties"].key) FOR DEBUG
+			coordinatesToSubmit.push(data["features"][0]["properties"].key);
+		} else {
+			//console.error("No close image found, trying again!")  FOR DEBUG
+			generateRandomPointsOnRegion(polygon);
+		}
+		
+	})
 }
 
 function handleClick() {
@@ -62,8 +63,10 @@ function handleClick() {
 
 	for(locationIndex = 0; locationIndex < coordinatesToSubmit.length; locationIndex++) {
 		//Every line on the text area will be in the form lng,lat
-        //On the backend we must get every line and separate by comma and make an array for each pair
-		document.getElementById("locations-to-submit").value += coordinatesToSubmit[locationIndex][0] + "," + coordinatesToSubmit[locationIndex][1] + '\n';
+		//On the backend we must get every line and separate by comma and make an array for each pair
+		//TODO: Append keys in text area
+		console.log(coordinatesToSubmit)
+		document.getElementById("locations-to-submit").value += coordinatesToSubmit[i] + '\n';
 	}
 	
 }
