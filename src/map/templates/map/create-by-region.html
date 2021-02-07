@@ -14,14 +14,19 @@
         <p>Use the top right toolbar to draw one or more polygon</p>
         <p>This map creator will create 10 random locations on each drawn polygon which will never change!</p>
         <p>A way to generate multiple locations by only using a selection is still under development</p>
+        <div class="toast toast-warning">
+            <button class="btn btn-clear float-right"></button>
+            THIS PAGE IS VERY SLOW ON MORE THAN 1 OR EVEN LARGE POLYGONS. <br \>
+            WE ARE DEVELOPING A MORE EFFICIENT WAY TO DO THIS!
+        </div>
+        <br \>
         <div id='map' style='height: 500px;'></div>
         <form action="" method="post" onsubmit="handleClick()" id="form">
             {% csrf_token %}
-        	<textarea id="locations-to-submit" name="locations" ></textarea>
+        	<textarea id="locations-to-submit" name="locations" style="display: none;"></textarea>
        		<p>When you are done, click the button below!</p>
        		<button type="submit" class="btn btn-success">Generate map!</button>
         </form>
-        <button onclick="handleClick()">try</button>
         
 {% endblock %}
 

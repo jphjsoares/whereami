@@ -34,7 +34,9 @@ function generateRandomPointsOnRegion(polygon) {
 	let newUrl = buildUrl(polyBbox["bbox"][0], polyBbox["bbox"][1], polyBbox["bbox"][2], polyBbox["bbox"][3], 
 		points["features"][0]["geometry"]["coordinates"][0], 
 		points["features"][0]["geometry"]["coordinates"][1]);
-	
+	$.ajaxSetup({
+		async: false
+	});
 	$.get(newUrl, function(data) {
 		if(data.features.length !== 0 && turf.booleanPointInPolygon(points["features"][0]["geometry"], polygon)) {			
 			//console.log(data["features"][0]["properties"].key) FOR DEBUG
@@ -49,10 +51,17 @@ function generateRandomPointsOnRegion(polygon) {
 
 function handleClick() {
 	
+
 	let allPolygons = draw.getAll();
 	let polygon = draw.getAll().features;
 	let pointsToSubmit = []
 
+	if(polygon.length == 0) {
+		alert("Please draw one or more polygons before generating a map!");
+		return;
+	}
+
+	alert("Wait, we are generating random locations in the selected region!")
 	for (numOfPolygons = 0; numOfPolygons < polygon.length; numOfPolygons++) {
 		
 		//Number of points
@@ -65,8 +74,6 @@ function handleClick() {
 		//Every line on the text area will be in the form lng,lat
 		//On the backend we must get every line and separate by comma and make an array for each pair
 		//TODO: Append keys in text area
-		console.log(coordinatesToSubmit)
-		document.getElementById("locations-to-submit").value += coordinatesToSubmit[i] + '\n';
-	}
-	
+		document.getElementById("locations-to-submit").value += coordinatesToSubmit[locationIndex] + '\n';
+	}	
 }
