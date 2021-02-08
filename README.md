@@ -1,5 +1,10 @@
 # whereami
 
+## Possible architecture changes!
+At the moment we have 2 different architectures in mind. 
+First, using users to track everything is way more difficult but may seem interesting for employers.
+Second, use links to join private games without having users to sign in.
+
 
 ### To create a virtual environment
 ``` sh
