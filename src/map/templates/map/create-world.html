@@ -9,6 +9,14 @@
 	
         <h3>Generate a map with random locations of the world!</h3>
         <p>Select how many locations you want the map to have below:</p>
+        {% if messages %}
+                <div class="toast toast-warning messages">
+                        {% for message in messages %}
+                                <p class="{{ message.tags }}">{{ message }}</p>
+                        {% endfor %}
+                </div>
+                <br />
+        {% endif %}
         <form action="" method="post">
         	{% csrf_token %}
         	<label>How many locations?</label>

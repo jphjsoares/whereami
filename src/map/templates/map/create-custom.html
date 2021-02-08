@@ -9,6 +9,14 @@
 {% block mapcreate %}
         <h3>CUSTOM MAP CREATOR</h3>
         <p>Click in the map to choose a location</p>
+        {% if messages %}
+                <div class="toast toast-warning messages">
+                        {% for message in messages %}
+                                <p class="{{ message.tags }}">{{ message }}</p>
+                        {% endfor %}
+                </div>
+                <br />
+        {% endif %}
         <div id="dialog-container"></div>
         <div id='map' style='height: 500px;'></div>
         <table id="show-coords">

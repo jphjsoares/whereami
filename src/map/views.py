@@ -1,5 +1,6 @@
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib import messages
 from .models import Map
 from .forms import GenerateRandomWorld
 import os
@@ -21,8 +22,8 @@ def create_custom(request):
 
 		if len(input) < 5: #Also be careful with xss and other vulns
 			#TODO:Use django messages to show this error!
-
-			return HttpResponse("Oops... Please select 5 or more locations")
+			messages.error(request, "Oops... Please select 5 or more locations")
+			return redirect("/map/createcustom")
 		
 		#Add all the image keys to an array for the db
 		for submitted_location in input:
@@ -39,11 +40,11 @@ def create_custom(request):
 		)
 
 		map_to_submit.save()
-		
-		return HttpResponse("SUCCESS!")
+		messages.success(request, "Custom map created!")
+		return redirect("/")
 		
 	else:
-		return render(request, 'map/create-custom.html')
+		return render(request, 'map/create-custom.html') 
 
 #Let the user draw a polygon on the map, creating the "perimter"
 #Give random coordinates, that are inside the polygon
@@ -66,7 +67,8 @@ def create_by_region(request):
 
 		map_to_submit.save()
 		
-		return HttpResponse("SUCCESS!")
+		messages.success(request, "Random map by region created!")
+		return redirect("/")
 	else: 
 		return render(request, 'map/create-by-region.html')
 
@@ -85,8 +87,8 @@ def create_world(request):
 
 			url = "https://a.mapillary.com/v3/images?client_id=" + os.environ.get("CLIENT_ID") + "&per_page=" + submitted_number_of_locations
 
-			request = urllib.request.urlopen(url)
-			data = json.load(request)
+			req = urllib.request.urlopen(url)
+			data = json.load(req)
 			
 			#Add all the random pictures to the list that will be submitted
 			for i in range(0, len(data["features"])):
@@ -101,7 +103,11 @@ def create_world(request):
 
 			map_to_submit.save()
 			
-			return HttpResponse("SUCCESS!")
+			messages.success(request, "Random map created!")
+			return redirect("/")
+		else:
+			messages.error(request, "Something wrong with your input! Is it more than 5?")
+			return redirect("/map/createworld") 
 	else:
 		form = GenerateRandomWorld()
 	
