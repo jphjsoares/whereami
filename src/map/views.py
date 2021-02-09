@@ -1,4 +1,4 @@
-from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.http import HttpResponse, HttpResponseRedirect, Http404, JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import Map
@@ -6,7 +6,8 @@ from .forms import GenerateRandomWorld
 import os
 import json
 import urllib
-from django.core import serializers
+
+
 
 #Main page of the map/ app
 def index(request):
@@ -114,8 +115,8 @@ def create_world(request):
 def get_map(request, id):
 	try:
 		#TODO (must do ASAP): Return a JSON instead
-		obj = Map.objects.get(pk=id)
-		return HttpResponse(obj)
+		map = Map.objects.filter(pk=id).values()
+		return JsonResponse({"map": list(map)})
 	except Map.DoesNotExist:
 		raise Http404("No map with that id")
 	
