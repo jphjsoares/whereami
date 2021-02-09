@@ -40,7 +40,10 @@ def create_custom(request):
 		)
 
 		map_to_submit.save()
-		messages.success(request, "Custom map created!")
+
+
+		message_to_send = "Created map ID: " + str(map_to_submit.id)
+		messages.success(request, message_to_send)
 		return redirect("/")
 		
 	else:
@@ -67,7 +70,8 @@ def create_by_region(request):
 
 		map_to_submit.save()
 		
-		messages.success(request, "Random map by region created!")
+		message_to_send = "Created map ID: " + str(map_to_submit.id)
+		messages.success(request, message_to_send)
 		return redirect("/")
 	else: 
 		return render(request, 'map/create-by-region.html')
@@ -102,7 +106,8 @@ def create_world(request):
 
 			map_to_submit.save()
 			
-			messages.success(request, "Random map created!")
+			message_to_send = "Created map ID: " + str(map_to_submit.id)
+			messages.success(request, message_to_send)
 			return redirect("/")
 		else:
 			messages.error(request, "Something wrong with your input! Is it more than 5?")
