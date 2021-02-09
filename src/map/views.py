@@ -113,7 +113,7 @@ def create_world(request):
 
 def get_map(request, id):
 	try:
-		#TODO: Return a JSON instead
+		#TODO (must do ASAP): Return a JSON instead
 		obj = Map.objects.get(pk=id)
 		return HttpResponse(obj)
 	except Map.DoesNotExist:
