@@ -1,8 +1,15 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField, HStoreField
 
+def make_hash_id():
+    import random, string
+    allowed_chars = ''.join((string.ascii_letters, string.digits))
+    return ''.join(random.choices(allowed_chars, k=12))
+
+
 class Map(models.Model):
     # ID field is added automatically
+    hash_id = models.CharField(max_length=13, default=make_hash_id)
     name = models.CharField(max_length=50)
     creator = models.CharField(max_length=40)
     num_of_locations = models.IntegerField(default=0)
@@ -20,4 +27,5 @@ class Map(models.Model):
 
     def __str__(self):
         return '%s, %s, %s' % (self.name, self.creator, self.mapillary_image_key)
+
 

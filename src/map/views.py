@@ -42,7 +42,7 @@ def create_custom(request):
 		map_to_submit.save()
 
 
-		message_to_send = "Created map ID: " + str(map_to_submit.id)
+		message_to_send = "Created map ID: " + str(map_to_submit.hash_id)
 		messages.success(request, message_to_send)
 		return redirect("/")
 		
@@ -70,7 +70,7 @@ def create_by_region(request):
 
 		map_to_submit.save()
 		
-		message_to_send = "Created map ID: " + str(map_to_submit.id)
+		message_to_send = "Created map ID: " + str(map_to_submit.hash_id)
 		messages.success(request, message_to_send)
 		return redirect("/")
 	else: 
@@ -106,7 +106,7 @@ def create_world(request):
 
 			map_to_submit.save()
 			
-			message_to_send = "Created map ID: " + str(map_to_submit.id)
+			message_to_send = "Created map ID: " + str(map_to_submit.hash_id)
 			messages.success(request, message_to_send)
 			return redirect("/")
 		else:
@@ -117,10 +117,10 @@ def create_world(request):
 	
 	return render(request, 'map/create-world.html')
 
-def get_map(request, id):
+def get_map(request, hash):
 	try:
 		#TODO (must do ASAP): Return a JSON instead
-		map = Map.objects.filter(pk=id).values()
+		map = Map.objects.filter(hash_id=hash).values()
 		return JsonResponse({"map": list(map)})
 	except Map.DoesNotExist:
 		raise Http404("No map with that id")
