@@ -1,4 +1,4 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import Map
@@ -6,6 +6,7 @@ from .forms import GenerateRandomWorld
 import os
 import json
 import urllib
+from django.core import serializers
 
 #Main page of the map/ app
 def index(request):
@@ -14,14 +15,12 @@ def index(request):
 #Let the user choose what places to add to a new map, by clicking
 def create_custom(request):
 	
-	#TODO: Only allow POST requests if the user is signed in
 	if request.method == 'POST':
 
 		input = request.POST["locations"].splitlines()
 		locations_to_submit_final = []
 
 		if len(input) < 5: #Also be careful with xss and other vulns
-			#TODO:Use django messages to show this error!
 			messages.error(request, "Oops... Please select 5 or more locations")
 			return redirect("/map/createcustom")
 		
@@ -76,7 +75,6 @@ def create_by_region(request):
 #Give random locations around the world
 def create_world(request):
 
-	#TODO: Only allow POST requests if the user is signed in
 	if request.method == "POST":
 		form = GenerateRandomWorld(request.POST)
 		if form.is_valid():
@@ -112,3 +110,12 @@ def create_world(request):
 		form = GenerateRandomWorld()
 	
 	return render(request, 'map/create-world.html')
+
+def get_map(request, id):
+	try:
+		#TODO: Return a JSON instead
+		obj = Map.objects.get(pk=id)
+		return HttpResponse(obj)
+	except Map.DoesNotExist:
+		raise Http404("No map with that id")
+	
