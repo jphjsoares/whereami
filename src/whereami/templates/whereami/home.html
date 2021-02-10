@@ -16,13 +16,29 @@
             </div>
             <br />
     {% endif %}
-    <div id="main-content">
-        <div class="container">
-            <div class="columns col-oneline">
-            <div class="col-6"><a href="{% url 'map-home' %}">Map</a>.</div>
-            <div class="col-6"><a href="{% url 'game-home' %}">Game</a>.</div>
-            <div class="col-6"><a href="{% url 'user-home' %}">User</a>.</div>
+    <div id="main-content" class="position-absolute top-50 start-50 translate-middle">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card" style="width: 25rem;">
+                  <img src="..." class="card-img-top" alt="...">
+                  <div class="card-body">
+                    <h5 class="card-title">Single Player</h5>
+                    <p class="card-text">Select this if you want to play a single player game.</p>
+                    <a href="{% url 'singleplayer' %}" class="btn btn-primary">Let's play!</a>
+                  </div>
+                </div>
             </div>
+            <div class="col-lg-6">
+                <div class="card" style="width: 25rem;">
+                  <img src="..." class="card-img-top" alt="...">
+                  <div class="card-body">
+                    <h5 class="card-title">Multiplayer</h5>
+                    <p class="card-text">Do you want to guess random locations with a group of friends? Click here! A link will be created so you can share it with your friends! You can also create a game with handpicked locations and see if they guess them all right!</p>
+                    <a href="{% url 'multiplayer' %}" class="btn btn-primary">Let's play!</a>
+                  </div>
+                </div>
+            </div>    
         </div>
+    </div>
 </body>
 </html>
