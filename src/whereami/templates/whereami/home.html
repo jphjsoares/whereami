@@ -9,18 +9,19 @@
 <body>
     {% include "whereami/nav.html" %}
     {% if messages %}
-            <div class="toast toast-success messages">
+            <div class="alert alert-success messages" role="alert">
                     {% for message in messages %}
                             <p class="{{ message.tags }}">{{ message }}</p>
                     {% endfor %}
             </div>
             <br />
     {% endif %}
+    {% load static %}
     <div id="main-content" class="position-absolute top-50 start-50 translate-middle">
         <div class="row">
             <div class="col-lg-6">
                 <div class="card" style="width: 25rem;">
-                  <img src="..." class="card-img-top" alt="...">
+                  <img style="height: 450px;" src="{% static 'lost-alone.jpg' %}" class="card-img-top" alt="...">
                   <div class="card-body">
                     <h5 class="card-title">Single Player</h5>
                     <p class="card-text">Select this if you want to play a single player game.</p>
@@ -30,7 +31,7 @@
             </div>
             <div class="col-lg-6">
                 <div class="card" style="width: 25rem;">
-                  <img src="..." class="card-img-top" alt="...">
+                  <img style="height: 450px;" src="{% static 'lost-group.jpg' %}" class="card-img-top" alt="...">
                   <div class="card-body">
                     <h5 class="card-title">Multiplayer</h5>
                     <p class="card-text">Do you want to guess random locations with a group of friends? Click here! A link will be created so you can share it with your friends! You can also create a game with handpicked locations and see if they guess them all right!</p>

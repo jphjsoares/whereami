@@ -64,7 +64,7 @@ function populateTable(index) {
     let deleteCoordinateButton = document.createElement("input");
     deleteCoordinateButton.setAttribute("type", "button");
     deleteCoordinateButton.setAttribute("id", index);
-    deleteCoordinateButton.setAttribute("class", "btn btn-error");
+    deleteCoordinateButton.setAttribute("class", "btn btn-danger");
     deleteCoordinateButton.value = "Delete";
     cellToInsertInput.appendChild(deleteCoordinateButton);
 

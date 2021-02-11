@@ -10,7 +10,7 @@
         <h3>Generate a map with random locations of the world!</h3>
         <p>Select how many locations you want the map to have below:</p>
         {% if messages %}
-                <div class="toast toast-warning messages">
+                <div class="alert alert-warning messages" role="alert">
                         {% for message in messages %}
                                 <p class="{{ message.tags }}">{{ message }}</p>
                         {% endfor %}
