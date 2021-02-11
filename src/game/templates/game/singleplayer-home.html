@@ -13,16 +13,46 @@
                         <p class="card-text">Do you have a map id or do you wish to create a map now?</p>
                         <div class="row">
                                 <div class="col-lg-6">
-                                        <a href="#" class="card-link btn btn-secondary">I have a map</a>
+                                        <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#form-modal">
+                                                <a id="open-form" href="#" class="card-link btn btn-secondary">I have a map</a>
+                                        </button>
                                 </div>
                                 <div class="col-lg-6">
-                                        <a href="{% url 'map-home' %}" class="card-link btn btn-secondary">Create a map</a>
+                                       <button type="button" class="btn btn-secondary"><a href="{% url 'map-home' %}" class="card-link btn btn-secondary">Create a map</a></button>
                                 </div>
                         </div>
                 </div>
         </div>
+
+        <div class="modal fade" id="form-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                        <div class="modal-content">
+                                <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">SELECT MAP ID</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                        <form id="select-map-id" action="" method="POST">
+                                                {% csrf_token %} 
+                                                <div class="mb-3">
+                                                        <label for="map-id" class="form-label">Enter the map id that was given to you after map creation</label>
+                                                        <input id="map-id" class="form-control" aria-describedby="enter map id">
+                                                </div>
+                                                <button type="submit" class="btn btn-success">Start game!</button>
+                                        </form> 
+                                </div>
+                        </div>
+                </div>
+        </div>
+ 
+        </div>
+       
 {% endblock %}
 
 {% block otherjs %}
-       
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+{% load static %}
+
+<script src="{% static 'map/javascript/jquery.min.js' %}"></script>
+<script src="{% static 'game/javascript/gameHomeSPLogic.js' %}"></script>
 {% endblock %}
