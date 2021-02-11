@@ -59,6 +59,7 @@ TEMPLATES = [
         'DIRS': [
             './whereami/templates',
             './map/templates',
+            './game/templates'
         ],
         'APP_DIRS': True,
         'OPTIONS': {

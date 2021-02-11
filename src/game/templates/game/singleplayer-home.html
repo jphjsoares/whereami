@@ -1,0 +1,28 @@
+{% extends 'game/base-game.html' %}
+
+
+{% block othercss %}
+{% load static %}
+<link href="{% static 'game/css/custom_game.css' %}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+        <div id="singleplayer-home-card" class="card" style="width: 23rem;">
+                <div class="card-body">
+                        <h5 class="card-title">Single player game</h5>
+                        <p class="card-text">Do you have a map id or do you wish to create a map now?</p>
+                        <div class="row">
+                                <div class="col-lg-6">
+                                        <a href="#" class="card-link btn btn-secondary">I have a map</a>
+                                </div>
+                                <div class="col-lg-6">
+                                        <a href="{% url 'map-home' %}" class="card-link btn btn-secondary">Create a map</a>
+                                </div>
+                        </div>
+                </div>
+        </div>
+{% endblock %}
+
+{% block otherjs %}
+       
+{% endblock %}
