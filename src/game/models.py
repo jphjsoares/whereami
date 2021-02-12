@@ -1,18 +1,27 @@
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
+
+
+def make_hash_id():
+	import random, string
+	base_name = "single"
+    allowed_chars = ''.join((string.ascii_letters, string.digits))
+    return ''.join(random.choices(allowed_chars, k=16))
+
 
 class Game(models.Model):
-    #game_name
-    #game_hash
-    #current_map
-    #current_guess_timer
+    game_hash = models.CharField(max_length=17, default=make_hash_id)    
+    current_map_hash = models.CharField(max_length=13)
 
 
 #delete the player after playing the map
+
 class Players(models.Model):
-    #username - charfield (assign a default when using singleplayer)
-    #current_game_id - fk to Game
-    #guessed_trigger - boolean
-    #current_guess_coordinates - arrayfield
-    #score - integerfield
+    #when playing singleplayer, a username will be automatically created by the view
+    username = models.CharField(max_length=20, blank=False)
+    current_game_id = models.ForeignKey(Game, on_delete=models.CASCADE)
+    guessed_trigger = models.BooleanField()
+    current_guess_coordinates = ArrayField(models.FloatField())
+    score = models.PositiveIntegerField()
 
 

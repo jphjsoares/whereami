@@ -22,6 +22,7 @@ map.addControl(draw);
 
 
 function buildUrl( box0, box1, box2, box3, lng, lat) {
+	//Be careful with radius, might generate a point out of polygon, requires more testing
 	return "https://a.mapillary.com/v3/images?bbox=" + box0 + ',' + box1 + ',' + box2 + ',' + box3 + "&closeto=" + lng + ',' + lat + "&radius=50000&per_page=1&client_id=MGNWR1hFdWVhb3FQTTJxcDZPUExHZzo2NTE4YmM3NmY0YWYyNGYy";
 }
 
