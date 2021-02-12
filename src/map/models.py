@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.postgres.fields import ArrayField, HStoreField
+from django.contrib.postgres.fields import ArrayField
 
 def make_hash_id():
     import random, string
@@ -10,6 +10,10 @@ def make_hash_id():
 class Map(models.Model):
     # ID field is added automatically
     hash_id = models.CharField(max_length=13, default=make_hash_id)
+    #1 - custom
+    #2 - region
+    #3 - world
+    map_type = models.IntegerField(default=1)
     name = models.CharField(max_length=50)
     creator = models.CharField(max_length=40)
     num_of_locations = models.IntegerField(default=0)

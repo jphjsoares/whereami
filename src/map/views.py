@@ -34,6 +34,7 @@ def create_custom(request):
 		
 		map_to_submit = Map(name="testCustom",
 			creator="tester",
+			map_type=1,
 			num_of_locations=len(locations_to_submit_final),
 			mapillary_image_key=locations_to_submit_final,
 			times_played=123
@@ -63,6 +64,7 @@ def create_by_region(request):
 		
 		map_to_submit = Map(name="testByRegion",
 			creator="tester",
+			map_type=2,
 			num_of_locations=len(locations_to_submit_final),
 			mapillary_image_key=locations_to_submit_final,
 			times_played=441
@@ -99,6 +101,7 @@ def create_world(request):
 
 			map_to_submit = Map(name="testRandomWorld",
 				creator="tester",
+				map_type=3,
 				num_of_locations=len(locations_to_submit_final),
 				mapillary_image_key=locations_to_submit_final,
 				times_played=321
