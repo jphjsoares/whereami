@@ -13,6 +13,7 @@
 </head>
 <body>
     {% include "whereami/nav.html" %}
+    {% block index %} {% endblock %}
     <div id="main-content" style="margin: 0 auto; width: 50%;">
             {% block mapcreate %} {% endblock %}
     </div>
