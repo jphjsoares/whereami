@@ -32,4 +32,7 @@ class Map(models.Model):
     def __str__(self):
         return '%s, %s, %s' % (self.name, self.creator, self.mapillary_image_key)
 
+    def get_absolute_url(self):
+        from django.urls import reverse
+        return reverse('get-map',args=[str(self.hash_id)])
 
