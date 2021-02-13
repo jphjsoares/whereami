@@ -1,12 +1,12 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 
-
 def make_hash_id():
-	import random, string
-	base_name = "single"
+    import random, string
+    base_name = "single"
     allowed_chars = ''.join((string.ascii_letters, string.digits))
     return ''.join(random.choices(allowed_chars, k=16))
+
 
 
 class Game(models.Model):
