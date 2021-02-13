@@ -108,6 +108,8 @@ def create_world(request):
 			)
 
 			map_to_submit.save()
+
+			print(map_to_submit.get_absolute_url())
 			
 			message_to_send = "Created map ID: " + str(map_to_submit.hash_id)
 			messages.success(request, message_to_send)
