@@ -17,8 +17,24 @@ let draw = new MapboxDraw({
 
 let coordinatesToSubmit = []
 
-
 map.addControl(draw);
+
+document.getElementById("submit-button").disabled = true;
+
+map.on('draw.create', checkForPolygons);
+map.on('draw.delete', checkForPolygons);
+map.on('draw.update', checkForPolygons);
+
+
+
+function checkForPolygons() {
+	let polygon = draw.getAll().features;
+	if(polygon.length > 0) {
+		document.getElementById("submit-button").disabled = false;
+	} else {
+		document.getElementById("submit-button").disabled = true;
+	}		
+}
 
 
 function buildUrl( box0, box1, box2, box3, lng, lat) {
@@ -51,30 +67,24 @@ function generateRandomPointsOnRegion(polygon) {
 }
 
 function handleClick() {
-	let polygon = draw.getAll().features;
-
-	if(polygon.length == 0) {
-		alert("Please draw one or more polygons before generating a map!");
-		return false;
-	
-	} else {
-		document.getElementById("slow-alert").remove();
-		document.getElementById("generating-alert").style.visibility = "visible";
+ 	let polygon = draw.getAll().features;
+	document.getElementById("slow-alert").remove();
+	document.getElementById("generating-alert").style.visibility = "visible";
 
 
-		for (numOfPolygons = 0; numOfPolygons < polygon.length; numOfPolygons++) {
-			
-			//Number of points
-			for(i = 0; i < 10; i++) {
-				generateRandomPointsOnRegion(polygon[numOfPolygons]);
+	for (numOfPolygons = 0; numOfPolygons < polygon.length; numOfPolygons++) {
+		
+		//Number of points
+		for(i = 0; i < 10; i++) {
+			generateRandomPointsOnRegion(polygon[numOfPolygons]);
 
-			}
-		}
-
-		for(locationIndex = 0; locationIndex < coordinatesToSubmit.length; locationIndex++) {
-			//Every line on the text area will be in the form lng,lat
-			//On the backend we must get every line and separate by comma and make an array for each pair
-			document.getElementById("locations-to-submit").value += coordinatesToSubmit[locationIndex] + '\n';
 		}
 	}
+
+	for(locationIndex = 0; locationIndex < coordinatesToSubmit.length; locationIndex++) {
+		//Every line on the text area will be in the form lng,lat
+		//On the backend we must get every line and separate by comma and make an array for each pair
+		document.getElementById("locations-to-submit").value += coordinatesToSubmit[locationIndex] + '\n';
+	}
+
 }
