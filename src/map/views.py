@@ -18,6 +18,7 @@ def create_custom(request):
 	
 	if request.method == 'POST':
 
+		#TODO:Check if post input is null
 		input = request.POST["locations"].splitlines()
 		locations_to_submit_final = []
 
@@ -55,6 +56,7 @@ def create_custom(request):
 def create_by_region(request):
 	if request.method == "POST":
 		
+		#TODO:Check if post input is null
 		input = request.POST["locations"].splitlines()
 		locations_to_submit_final = []
 
@@ -108,8 +110,6 @@ def create_world(request):
 			)
 
 			map_to_submit.save()
-
-			print(map_to_submit.get_absolute_url())
 			
 			message_to_send = "Created map ID: " + str(map_to_submit.hash_id)
 			messages.success(request, message_to_send)

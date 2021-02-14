@@ -20,8 +20,8 @@ class Players(models.Model):
     #when playing singleplayer, a username will be automatically created by the view
     username = models.CharField(max_length=20, blank=False)
     current_game_id = models.ForeignKey(Game, on_delete=models.CASCADE)
-    guessed_trigger = models.BooleanField()
-    current_guess_coordinates = ArrayField(models.FloatField())
+    guessed_trigger = models.BooleanField() #make default or blank
+    current_guess_coordinates = ArrayField(models.FloatField()) #make blank
     score = models.PositiveIntegerField()
 
 
