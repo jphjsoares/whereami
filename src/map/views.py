@@ -116,7 +116,7 @@ def create_world(request):
 			return redirect("/")
 		else:
 			messages.error(request, "Something wrong with your input! Is it more than 5?")
-			return redirect("/map/createworld") 
+			return redirect("/map/createworld")
 	else:
 		form = GenerateRandomWorld()
 	

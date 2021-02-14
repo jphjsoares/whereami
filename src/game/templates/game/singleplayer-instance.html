@@ -1,10 +1,15 @@
 {% extends 'game/base-game.html' %}
-
+{% block othercss %}
+	<script src='https://unpkg.com/mapillary-js@3.1.0/dist/mapillary.min.js'></script>
+	<link href='https://unpkg.com/mapillary-js@3.1.0/dist/mapillary.min.css' rel='stylesheet' />
+{% endblock %}
 {% block content %}
-        <h1>Welcome to game instance</h1>
+        
+        <div id='mly' style="margin: 0 auto;height: 500px;"></div>
         
 {% endblock %}
 
 {% block otherjs %}
-
+{% load static %}
+<script src="{% static 'game/javascript/gameInstance.js' %}"></script>
 {% endblock %}

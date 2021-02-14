@@ -23,13 +23,15 @@ def singleplayer(request):
                     current_guess_coordinates=[0.0,0.0],
                     score=0
                 )
+
             user_to_create.save()
+            
             url_of_game = "/game/singleplayer/" + game_instance_to_create.game_hash
+            
             return redirect(url_of_game)
     return render(request, "game/singleplayer-home.html")
 
 def singleplayer_game_instance(request, hash):
-
     return render(request, "game/singleplayer-instance.html")
 
 def multiplayer(request):
