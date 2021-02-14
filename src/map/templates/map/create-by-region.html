@@ -15,12 +15,14 @@
         <p>Use the top right toolbar to draw one or more polygon</p>
         <p>This map creator will create 10 random locations on each drawn polygon which will never change!</p>
         <p>A way to generate multiple locations by only using a selection is still under development</p>
-        <div class="alert alert-warning messages" role="alert">
+        <div id="slow-alert" class="alert alert-warning messages" role="alert">
             THIS PAGE IS VERY SLOW ON MORE THAN 1 OR EVEN LARGE POLYGONS. <br \>
             WE ARE DEVELOPING A MORE EFFICIENT WAY TO DO THIS!
         </div>
+        <div id="generating-alert" class="alert alert-info" role="alert">
+            Generating new map. Please wait! <div class="lds-dual-ring"></div>
+        </div>
         <br \>
-        <div id="loading" class="lds-hourglass"></div>
         <div id='map' style='height: 500px;'></div>
         <form action="" method="post" onsubmit="handleClick()" id="form">
             {% csrf_token %}

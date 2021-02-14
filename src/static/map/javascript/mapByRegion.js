@@ -51,32 +51,30 @@ function generateRandomPointsOnRegion(polygon) {
 }
 
 function handleClick() {
-	
-
-	let allPolygons = draw.getAll();
 	let polygon = draw.getAll().features;
-	let pointsToSubmit = []
 
 	if(polygon.length == 0) {
 		alert("Please draw one or more polygons before generating a map!");
-		return;
-	}
+		return false;
+	
+	} else {
+		document.getElementById("slow-alert").remove();
+		document.getElementById("generating-alert").style.visibility = "visible";
 
-	document.getElementById("loading").style.display = "block";
 
+		for (numOfPolygons = 0; numOfPolygons < polygon.length; numOfPolygons++) {
+			
+			//Number of points
+			for(i = 0; i < 10; i++) {
+				generateRandomPointsOnRegion(polygon[numOfPolygons]);
 
-	for (numOfPolygons = 0; numOfPolygons < polygon.length; numOfPolygons++) {
-		
-		//Number of points
-		for(i = 0; i < 10; i++) {
-			generateRandomPointsOnRegion(polygon[numOfPolygons]);
+			}
 		}
-	}
 
-	for(locationIndex = 0; locationIndex < coordinatesToSubmit.length; locationIndex++) {
-		//Every line on the text area will be in the form lng,lat
-		//On the backend we must get every line and separate by comma and make an array for each pair
-		//TODO: Append keys in text area
-		document.getElementById("locations-to-submit").value += coordinatesToSubmit[locationIndex] + '\n';
+		for(locationIndex = 0; locationIndex < coordinatesToSubmit.length; locationIndex++) {
+			//Every line on the text area will be in the form lng,lat
+			//On the backend we must get every line and separate by comma and make an array for each pair
+			document.getElementById("locations-to-submit").value += coordinatesToSubmit[locationIndex] + '\n';
+		}
 	}
 }

@@ -124,9 +124,6 @@ map.on('style.load', function() {
 
         message.remove();
         
-        $.ajaxSetup({
-            async: false
-        });
         $.get(isThereACloseImage(e.lngLat.wrap().lng, e.lngLat.wrap().lat), function(data) {
             if(data.features.length === 0) {			
                 message.setAttribute("open","open");
