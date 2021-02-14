@@ -120,6 +120,8 @@ map.on('style.load', function() {
     let message = document.createElement("DIALOG");
     let errorText = document.createTextNode("Oops... There's no available street view close to that point. Choose one closer to a green spot! Must be at least 100 meters close!");
     map.on('click', function(e){
+        document.getElementById("loading").style.display = "block";
+
         message.remove();
         
         $.ajaxSetup({
@@ -131,7 +133,7 @@ map.on('style.load', function() {
                 message.appendChild(errorText);
                 document.getElementById("dialog-container").appendChild(message);
             } else {
-                
+
                 chosenCoords["coordinates"].push(data["features"][0]["properties"].key); // Add the key to a json object
                 
                 let marker = new mapboxgl.Marker()
@@ -147,6 +149,6 @@ map.on('style.load', function() {
             }
             
         });
-
+        document.getElementById("loading").style.display = "none";
     });
 });

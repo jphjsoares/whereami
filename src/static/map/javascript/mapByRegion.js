@@ -62,7 +62,9 @@ function handleClick() {
 		return;
 	}
 
-	alert("Wait, we are generating random locations in the selected region!")
+	document.getElementById("loading").style.display = "block";
+
+
 	for (numOfPolygons = 0; numOfPolygons < polygon.length; numOfPolygons++) {
 		
 		//Number of points

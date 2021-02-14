@@ -5,6 +5,7 @@
 
 	{% load static %}
 	<link href="{% static 'map/css/mapbox-gl-draw.css' %}" rel="stylesheet" />
+    <link href="{% static 'map/css/loading.css' %}" rel="stylesheet" />
 {% endblock %}
 
 {% block mapcreate %}
@@ -19,6 +20,7 @@
             WE ARE DEVELOPING A MORE EFFICIENT WAY TO DO THIS!
         </div>
         <br \>
+        <div id="loading" class="lds-hourglass"></div>
         <div id='map' style='height: 500px;'></div>
         <form action="" method="post" onsubmit="handleClick()" id="form">
             {% csrf_token %}

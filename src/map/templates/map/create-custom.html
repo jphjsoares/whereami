@@ -4,6 +4,7 @@
 {% block othercss %}
     {% load static %}
     <link href="{% static 'map/css/custom_map.css' %}" rel="stylesheet" />
+    <link href="{% static 'map/css/loading.css' %}" rel="stylesheet" />
 {% endblock %}
 
 {% block mapcreate %}
@@ -17,6 +18,7 @@
                 </div>
                 <br />
         {% endif %}
+        <div id="loading" class="lds-hourglass"></div>
         <div id="dialog-container"></div>
         <div id='map' style='height: 500px;'></div>
         <table id="show-coords">
