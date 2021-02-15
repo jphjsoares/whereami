@@ -99,14 +99,6 @@ def create_world(request):
 				if len(data["features"]) is not 0:
 					locations_to_submit_final.append(data["features"][0]["properties"]["key"])					
 
-			"""
-			req = urllib.request.urlopen(url)
-			data = json.load(req)
-			
-			#Add all the random pictures to the list that will be submitted
-			for i in range(0, len(data["features"])):
-				locations_to_submit_final.append(data["features"][i]["properties"]["key"])
-			"""
 			map_to_submit = Map(name="testRandomWorld",
 				creator="tester",
 				map_type=3,
