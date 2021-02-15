@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import Map
 from .forms import GenerateRandomWorld
+from random import uniform
 import os
 import json
 import urllib
@@ -90,17 +91,22 @@ def create_world(request):
 
 			locations_to_submit_final = []
 			submitted_number_of_locations = request.POST["numoflocations"]
+			while len(locations_to_submit_final) < int(submitted_number_of_locations):
+				x, y = uniform(-180,180), uniform(-90, 90)
+				url = "https://a.mapillary.com/v3/images?client_id=" + os.environ.get("CLIENT_ID") + "&per_page=1" + "&closeto=" + str(x) + ',' + str(y) + "&radius=100000"
+				req = urllib.request.urlopen(url)
+				data = json.load(req)
+				if len(data["features"]) is not 0:
+					locations_to_submit_final.append(data["features"][0]["properties"]["key"])					
 
-
-			url = "https://a.mapillary.com/v3/images?client_id=" + os.environ.get("CLIENT_ID") + "&per_page=" + submitted_number_of_locations
-
+			"""
 			req = urllib.request.urlopen(url)
 			data = json.load(req)
 			
 			#Add all the random pictures to the list that will be submitted
 			for i in range(0, len(data["features"])):
 				locations_to_submit_final.append(data["features"][i]["properties"]["key"])
-
+			"""
 			map_to_submit = Map(name="testRandomWorld",
 				creator="tester",
 				map_type=3,
@@ -110,10 +116,10 @@ def create_world(request):
 			)
 
 			map_to_submit.save()
-			
 			message_to_send = "Created map ID: " + str(map_to_submit.hash_id)
 			messages.success(request, message_to_send)
 			return redirect("/")
+			
 		else:
 			messages.error(request, "Something wrong with your input! Is it more than 5?")
 			return redirect("/map/createworld")
