@@ -7,6 +7,14 @@
 {% endblock %}
 
 {% block content %}
+        {% if messages %}
+            <div class="alert alert-danger messages" role="alert">
+                    {% for message in messages %}
+                            <p class="{{ message.tags }}">{{ message }}</p>
+                    {% endfor %}
+            </div>
+            <br />
+        {% endif %}
         <div id="singleplayer-home-card" class="card" style="width: 23rem;">
                 <div class="card-body">
                         <h5 class="card-title">Single player game</h5>

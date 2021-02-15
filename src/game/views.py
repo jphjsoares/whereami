@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.contrib import messages
 from .forms import StartNewGame
 from .models import Game, Players
 from map.models import Map
@@ -40,10 +41,26 @@ Cycle through map in the game:
 
 
 def singleplayer_game_instance(request, hash):
-    current_game_instance = Game.objects.get(game_hash=hash)
+    try:
+        current_game_instance = Game.objects.get(game_hash=hash)
+    except Game.DoesNotExist:
+        messages.success(request, "There's no available game with this id!")
+        return redirect("/game/singleplayer")
+
+
     map_being_played = Map.objects.get(hash_id=current_game_instance.current_map_hash)
-    locations = map_being_played.mapillary_image_key
-    return render(request, "game/singleplayer-instance.html", context={'loc_array':locations})
+    """
+    if map_being_played.map_type == 1:
+        messages.success(request, "")
+        return redirect("/game/singleplayer")
+    """
+    if current_game_instance.is_active == False:
+        messages.success(request, "This game exists, but is expired. Create a new game!")
+        return redirect("/game/singleplayer")
+    
+    else:
+        locations = map_being_played.mapillary_image_key
+        return render(request, "game/singleplayer-instance.html", context={'loc_array':locations})
 
 def multiplayer(request):
    return HttpResponse("multiplayer")
