@@ -1,15 +1,18 @@
 from django import forms
 from map.models import Map
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 
  #TODO: show form errors somehow
 def clean_map_id(value):
     if len(value) < 12 or len(value) > 12:
-        raise forms.ValidationError('Something wrong with that hash!')
+        raise ValidationError(_('Something wrong with that hash length!'), code="invalid hash (length)")
     
     try:
         map_submitted = Map.objects.get(hash_id=value)
     except Map.DoesNotExist:
-        raise forms.ValidationError('Something wrong with that map hash!')        
+        raise ValidationError(_('Something wrong with that map hash!'), code="no map found")        
+    
     #TODO: Check if it's only numbers
     return value
 
