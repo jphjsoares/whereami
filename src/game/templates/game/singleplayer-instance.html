@@ -1,15 +1,27 @@
-{% extends 'game/base-game.html' %}
-{% block othercss %}
-	<script src='https://unpkg.com/mapillary-js@3.1.0/dist/mapillary.min.js'></script>
-	<link href='https://unpkg.com/mapillary-js@3.1.0/dist/mapillary.min.css' rel='stylesheet' />
-{% endblock %}
-{% block content %}
-        
-        <div id='mly' style="margin: 0 auto;height: 500px;"></div>
-        
-{% endblock %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>whereami</title>
 
-{% block otherjs %}
-{% load static %}
-<script src="{% static 'game/javascript/gameInstance.js' %}"></script>
-{% endblock %}
+    <!-- All the common css in the app will go on here -->
+    {% include "whereami/common_css.html" %}
+    <script src='https://unpkg.com/mapillary-js@3.1.0/dist/mapillary.min.js'></script>
+	<link href='https://unpkg.com/mapillary-js@3.1.0/dist/mapillary.min.css' rel='stylesheet' />
+</head>
+<body>
+    {% include "whereami/nav.html" %}
+    <div style="height: 90%;">
+    	<div id='mly' style="height: 100%;"></div>    	
+    </div>    
+    {% load static %}
+	<script type="text/javascript">
+		const keys = [];
+		{% for key in loc_array %}
+		keys.push('{{key}}');
+		{% endfor %}
+	</script>
+	<script src="{% static 'game/javascript/gameInstance.js' %}"></script>
+</body>
+</html>
