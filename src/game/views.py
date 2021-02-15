@@ -11,7 +11,8 @@ def singleplayer(request):
         if form.is_valid():
             
             game_instance_to_create = Game(
-                    current_map_hash=request.POST["map_id"]
+                    current_map_hash=request.POST["map_id"],
+                    is_active=True
                 )
 
             game_instance_to_create.save()
@@ -19,8 +20,7 @@ def singleplayer(request):
             user_to_create = Players(
                     username="single",
                     current_game_id=game_instance_to_create,
-                    guessed_trigger=False,
-                    current_guess_coordinates=[0.0,0.0],
+                    current_guess_coordinates=[],
                     score=0
                 )
 
@@ -32,6 +32,7 @@ def singleplayer(request):
     return render(request, "game/singleplayer-home.html")
 
 def singleplayer_game_instance(request, hash):
+    #TODO: Pass map images to the frontend
     return render(request, "game/singleplayer-instance.html")
 
 def multiplayer(request):

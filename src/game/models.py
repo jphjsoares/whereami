@@ -10,18 +10,18 @@ def make_hash_id():
 
 
 class Game(models.Model):
-    game_hash = models.CharField(max_length=17, default=make_hash_id)    
+    game_hash = models.CharField(max_length=17, default=make_hash_id)
+    is_active = models.BooleanField(default=False)    
     current_map_hash = models.CharField(max_length=13)
 
 
-#delete the player after playing the map
+#TODO: delete the player after playing the map
 
 class Players(models.Model):
-    #when playing singleplayer, a username will be automatically created by the view
     username = models.CharField(max_length=20, blank=False)
     current_game_id = models.ForeignKey(Game, on_delete=models.CASCADE)
-    guessed_trigger = models.BooleanField() #make default or blank
-    current_guess_coordinates = ArrayField(models.FloatField()) #make blank
-    score = models.PositiveIntegerField()
+    guessed_trigger = models.BooleanField(default=False)
+    current_guess_coordinates = ArrayField(models.FloatField(blank=True)) 
+    score = models.PositiveIntegerField(default=0)
 
 
