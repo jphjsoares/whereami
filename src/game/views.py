@@ -26,13 +26,20 @@ def singleplayer(request):
 
             user_to_create.save()
             
-            url_of_game = "/game/singleplayer/" + game_instance_to_create.game_hash
+            url_of_game = "/game/" + game_instance_to_create.game_hash
             
             return redirect(url_of_game)
     return render(request, "game/singleplayer-home.html")
 
+"""
+Cycle through map in the game:
+    #Pass index of image key on url
+    #Pass all image keys on game instance creation to the front end
+"""
+
+
 def singleplayer_game_instance(request, hash):
-    #TODO: Pass map images to the frontend
+    
     return render(request, "game/singleplayer-instance.html")
 
 def multiplayer(request):
