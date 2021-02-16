@@ -18,12 +18,20 @@ let map = new mapboxgl.Map({
 window.addEventListener("resize", function() { mly.resize(); });
 
 
-
 let toGuess = []; //[imageIndex, [lnt,lat]]
 let markers = [];
 let nextImage = 1;
 
-//Get the exact locs to guess
+
+/*
+*
+*
+*
+*   NETWORK REQUESTS FOR IMAGE KEYS
+*
+*
+*/
+
 for(let i = 0; i < keys.length; i++) {
 
     //TODO:get the image in the same order
@@ -33,7 +41,16 @@ for(let i = 0; i < keys.length; i++) {
     });
 }
 
-//Change viewer
+
+/*
+*
+*
+*
+*   CLEAN INTERFACE AND HANDLE THE NEXT VIEW
+*
+*
+*/
+
 function nextImageSetup() {
     mly.remove();
     mly = new Mapillary.Viewer({
@@ -46,6 +63,17 @@ function nextImageSetup() {
     });
     nextImage++;
 }
+
+
+
+/*
+*
+*
+*
+*   HANDLE MARKER PLACEMENT
+*
+*
+*/
 
 map.on('click', function(e){
     if (markers.length > 0) {
@@ -60,6 +88,17 @@ map.on('click', function(e){
 });
 
 
+
+/*
+*
+*
+*
+*   HANDLE "I THINK I KNOW"
+*
+*
+*/
+
+
 $("#open-map").click(function(){
     document.getElementById("open-map").style.display = "none";
     $("#mly").css("width", "65%");
@@ -68,16 +107,47 @@ $("#open-map").click(function(){
 });
 
 
-
+/*
+*
+*
+*
+*   HANDLE GUESS
+*
+*
+*/
 
 
 $("#trigger-guess").click(function() {
-    $('#map').click(false); //Dont allow clicks
+
     document.getElementById("trigger-guess").style.display = "none";
+    
     let realLng;
     let realLat;
     let guessedLng = markers[0]["_lngLat"].lng;
     let guessedLat = markers[0]["_lngLat"].lat;
+
+    //This gets the coordinates of the image being seen
+    //Very weird, but it works lol
+    for(let i = 0; i < toGuess.length; i++) {
+        if(toGuess[i][0] === nextImage-1) {
+            realLng = toGuess[i][1][0]; //lng of real location
+            realLat = toGuess[i][1][1]; //lat of real location
+        }
+    }
+    
+    
+    //Add real location marker
+    let exactLocation = new mapboxgl.Marker({
+            color:"#fc0303"
+        })
+        .setLngLat([realLng, realLat])
+        .addTo(map);
+    markers.push(exactLocation);
+
+    //Calculate the distance in km
+    let distanceBetweenPoints = turf.distance(turf.point([guessedLng, guessedLat]), turf.point([realLng, realLat]));
+
+    //This is to draw the line string on the map
     let lineOfDistance = {
         'type': 'FeatureCollection',
             'features': [
@@ -92,31 +162,8 @@ $("#trigger-guess").click(function() {
         ]
     };
 
-
-    let guessTurfPoint = turf.point([guessedLng, guessedLat]); //Guess made by user
-
-
-    for(let i = 0; i < toGuess.length; i++) {
-        if(toGuess[i][0] === nextImage-1) {
-            realLng = toGuess[i][1][0]; //lng of real location
-            realLat = toGuess[i][1][1]; //lat of real location
-        }
-    }
-    
     lineOfDistance["features"][0]["geometry"]["coordinates"].push([realLng,realLat]);
     lineOfDistance["features"][0]["geometry"]["coordinates"].push([guessedLng,guessedLat]);
-
-    let exactLocation = new mapboxgl.Marker({
-            color:"#fc0303"
-        })
-        .setLngLat([realLng, realLat])
-        .addTo(map);
-
-    markers.push(exactLocation);
-
-    let realTurfPoint = turf.point([markers[1]["_lngLat"].lng, markers[1]["_lngLat"].lat]);
-
-    let distanceBetweenPoints = turf.distance(guessTurfPoint, realTurfPoint);
 
     map.addSource('LineString', {
         'type': 'geojson',
