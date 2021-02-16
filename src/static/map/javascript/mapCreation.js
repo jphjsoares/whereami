@@ -120,8 +120,6 @@ map.on('style.load', function() {
     let message = document.createElement("DIALOG");
     let errorText = document.createTextNode("Oops... There's no available street view close to that point. Choose one closer to a green spot! Must be at least 100 meters close!");
     map.on('click', function(e){
-        document.getElementById("loading").style.display = "block";
-
         message.remove();
         
         $.get(isThereACloseImage(e.lngLat.wrap().lng, e.lngLat.wrap().lat), function(data) {
@@ -146,6 +144,5 @@ map.on('style.load', function() {
             }
             
         });
-        document.getElementById("loading").style.display = "none";
     });
 });

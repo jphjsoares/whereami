@@ -96,7 +96,7 @@ def create_world(request):
 				url = "https://a.mapillary.com/v3/images?client_id=" + os.environ.get("CLIENT_ID") + "&per_page=1" + "&closeto=" + str(x) + ',' + str(y) + "&radius=100000"
 				req = urllib.request.urlopen(url)
 				data = json.load(req)
-				if len(data["features"]) is not 0:
+				if len(data["features"]) != 0:
 					locations_to_submit_final.append(data["features"][0]["properties"]["key"])					
 
 			map_to_submit = Map(name="testRandomWorld",
