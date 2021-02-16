@@ -12,7 +12,7 @@ let map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/streets-v11', // stylesheet location
     center: [-9.136068933525848, 38.74608203665869], // starting position [lng, lat]
-    zoom: 5 // starting zoom
+    zoom: 3 // starting zoom
 });
 
 window.addEventListener("resize", function() { mly.resize(); });
@@ -57,6 +57,13 @@ map.on('click', function(e){
 	document.getElementById("trigger-guess").style.display = "block";
 });
 
+
+$("#open-map").click(function(){
+	document.getElementById("open-map").style.display = "none";
+	$("#mly").css("width", "65%");
+	$("#map").css("flex-grow", "1");
+	map.resize();	
+});
 
 $("#trigger-guess").click(function() {
 	let guessTurfPoint = turf.point([markers[0]["_lngLat"]. lng,markers[0]["_lngLat"].lat]);
