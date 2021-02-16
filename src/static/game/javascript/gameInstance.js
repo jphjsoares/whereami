@@ -17,9 +17,9 @@ let map = new mapboxgl.Map({
 
 window.addEventListener("resize", function() { mly.resize(); });
 
-let toGuess = {
-	"coordinatesToGuess": []
-};
+
+
+let toGuess = []; //[imageIndex, [lnt,lat]]
 let markers = [];
 let nextImage = 1;
 
@@ -29,7 +29,7 @@ for(let i = 0; i < keys.length; i++) {
 	//TODO:get the image in the same order
 	let url = "https://a.mapillary.com/v3/images/"  + keys[i] + "?client_id=MGNWR1hFdWVhb3FQTTJxcDZPUExHZzo2NTE4YmM3NmY0YWYyNGYy";
 	$.get(url, function(data) {
-		toGuess["coordinatesToGuess"].push([i, data["geometry"]["coordinates"]]); //store it in a way so that we can access the
+		toGuess.push([i, data["geometry"]["coordinates"]]); //store it in a way so that we can access the
 																				 //index of an image and the respective coordinates
 	});
 }
@@ -73,10 +73,10 @@ $("#trigger-guess").click(function() {
 	let realLng;
 	let realLat;
 
-	for(let i = 0; i < toGuess["coordinatesToGuess"].length; i++) {
-		if(toGuess["coordinatesToGuess"][i][0] === nextImage-1) {
-			realLng = toGuess["coordinatesToGuess"][i][1][0]; //lng of real location
-			realLat = toGuess["coordinatesToGuess"][i][1][1]; //lat of real location
+	for(let i = 0; i < toGuess.length; i++) {
+		if(toGuess[i][0] === nextImage-1) {
+			realLng = toGuess[i][1][0]; //lng of real location
+			realLat = toGuess[i][1][1]; //lat of real location
 		}
 	}
 	

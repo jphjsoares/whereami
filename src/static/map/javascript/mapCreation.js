@@ -1,6 +1,6 @@
 
 /*
-TO FIND IMAGES CLOSE TO COORDINATES
+TO FIND IMAGES CLOSE TO keys
 https://www.mapillary.com/developer/api-documentation/#search-images
 https://a.mapillary.com/v3/images?client_id=MGNWR1hFdWVhb3FQTTJxcDZPUExHZzo2NTE4YmM3NmY0YWYyNGYy&closeto=-122.3079,47.6537 (lng,lat) (RADIUS IS 100m, by default)
 */
@@ -29,8 +29,8 @@ let i = 0;
 
 let mapillarySource;
 
-let chosenCoords = {
-    "coordinates": []
+let mapillaryImages = {
+    "keys": []
 }
 
 let markersCoords = {
@@ -47,7 +47,7 @@ function isThereACloseImage(lng, lat) {
 
 function deleteSelection(indexToDelete) {
     //Instead of using delete, set it to an empty string and filter out on the backend
-    chosenCoords.coordinates[indexToDelete] = ""; 
+    mapillaryImages.keys[indexToDelete] = ""; 
     markersCoords.markers[indexToDelete].remove(); //Remove marker from map
     markersCoords.markers[indexToDelete] = "";
 }
@@ -61,31 +61,29 @@ function populateTable(index) {
     let cellToInsertCoords = rowToInsert.insertCell(1); //Select cell for coords
 
     //Add the content to the cells
-    let deleteCoordinateButton = document.createElement("input");
-    deleteCoordinateButton.setAttribute("type", "button");
+    let deleteCoordinateButton = document.createElement("button");
     deleteCoordinateButton.setAttribute("id", index);
     deleteCoordinateButton.setAttribute("class", "btn btn-danger");
-    deleteCoordinateButton.value = "Delete";
-    cellToInsertInput.appendChild(deleteCoordinateButton);
+    deleteCoordinateButton.innerText = "Delete";
+    cellToInsertInput.appendChild(deleteCoordinateButton); //Add button
 
-    let coordinateText = document.createTextNode(chosenCoords.coordinates[index]);
-    cellToInsertCoords.appendChild(coordinateText);
-    
+    let imageKey = document.createTextNode(mapillaryImages.keys[index]);
+    cellToInsertCoords.appendChild(imageKey); //Add description
 
     deleteCoordinateButton.onclick = function() {
         table.deleteRow(rowToInsert.rowIndex);
-        deleteSelection(deleteCoordinateButton.getAttribute("id")); //Delete chosenCoords and markersCoords info about that object
+        deleteSelection(deleteCoordinateButton.getAttribute("id")); //Delete mapillaryImages and markersCoords info about that object
     }
 }
 
 
 function handleSubmit() {
 
-    for(i = 0; i < chosenCoords.coordinates.length; i++) {
-        if(chosenCoords.coordinates[i] != "") {
+    for(i = 0; i < mapillaryImages.keys.length; i++) {
+        if(mapillaryImages.keys[i] != "") {
             //Every line on the text area will be in the form lng,lat
             //On the backend we must get every line and separate by comma and make an array for each pair
-            document.getElementById("locations-to-submit").value += chosenCoords.coordinates[i] + '\n';        
+            document.getElementById("locations-to-submit").value += mapillaryImages.keys[i] + '\n';        
         }
     }    
 }
@@ -119,21 +117,23 @@ map.on('style.load', function() {
 
     let message = document.createElement("DIALOG");
     let errorText = document.createTextNode("Oops... There's no available street view close to that point. Choose one closer to a green spot! Must be at least 100 meters close!");
+    
     map.on('click', function(e){
         message.remove();
         
         $.get(isThereACloseImage(e.lngLat.wrap().lng, e.lngLat.wrap().lat), function(data) {
-            if(data.features.length === 0) {			
+            
+            if(data.features.length === 0) { //Show error if no close image			
                 message.setAttribute("open","open");
                 message.appendChild(errorText);
                 document.getElementById("dialog-container").appendChild(message);
             } else {
 
-                chosenCoords["coordinates"].push(data["features"][0]["properties"].key); // Add the key to a json object
+                mapillaryImages["keys"].push(data["features"][0]["properties"].key); // Add the key to a json object
                 
                 let marker = new mapboxgl.Marker()
-                .setLngLat([e.lngLat.wrap().lng, e.lngLat.wrap().lat])
-                .addTo(map);
+                            .setLngLat([e.lngLat.wrap().lng, e.lngLat.wrap().lat])
+                            .addTo(map);
         
                 markersCoords["markers"].push(marker); // Add every marker to a marker json object
 
