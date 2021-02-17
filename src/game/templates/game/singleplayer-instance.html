@@ -30,11 +30,29 @@
             margin-bottom: 35px;
             padding: 10px;
         }
+        #progress-nav {
+            background-color: white;
+            position: fixed;
+            z-index: 1;
+            margin-top: 10%;
+            width: 80px;
+            height: 175px;
+        }
+        .progress-nav-fields {
+            margin-left: 20px;
+        }
     </style>
 </head>
 <body>
     {% include "whereami/nav.html" %}
     <div style="height: 90%; display: flex;">
+        <div id="progress-nav">
+            <div id="img-index" style="margin-top:5px" class="progress-nav-fields"></div>
+            <hr>
+            <div id="timer" class="progress-nav-fields">2:52</div>
+            <hr>
+            <div id="game-score" class="progress-nav-fields">Score: 3214</div>
+        </div>
     	<div id='mly' style="width: 100%; height: 100%;">
             <button id="open-map" class="btn btn-secondary" style="position: absolute; z-index: 1; bottom: 0; right: 50%; margin-bottom: 35px;">I think I know...</button>
         </div>
