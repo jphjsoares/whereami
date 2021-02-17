@@ -102,13 +102,13 @@ map.on('click', function(e){
 *
 */
 
-
-$("#open-map").click(function(){
+function openMap() {
     document.getElementById("open-map").style.display = "none";
     $("#mly").css("width", "65%");
     $("#map").css("flex-grow", "1");
     map.resize();   
-});
+}
+
 
 
 /*
@@ -120,8 +120,7 @@ $("#open-map").click(function(){
 *
 */
 
-
-$("#trigger-guess").click(function() {
+function handleGuess() {
     hasGuessed = true; //Notify the code that the user has submitted a guess
 
     document.getElementById("trigger-guess").style.display = "none"; //Hide guess button to prevent bugs
@@ -192,15 +191,55 @@ $("#trigger-guess").click(function() {
             'line-width': 1
         }
     });
-    let guessResultText = "You were " + Math.round(distanceBetweenPoints) + " km far!";
-    let parToInsert = "<p class='lead'>" + guessResultText + "</p>";
+
+    //Show results div
+    let guessResultText = "You were " + (Math.round(distanceBetweenPoints * 10) / 10) + " km far!";
+    let parToInsert = "<p class='lead distance-result'>" + guessResultText + "</p>";
     $(parToInsert).insertBefore('#next-img');
-    /*
-    let guessMessageParagraph =  document.createElement("p");
-    let guessResultText = document.createTextNode("You were " + distanceBetweenPoints + " km far!");
-    guessMessageParagraph.appendChild(guessResultText);
-    */
+  
     document.getElementById("guess-results").style.display = "block";
-    //document.getElementById("guess-results").appendChild(guessMessageParagraph);
-    console.log(distanceBetweenPoints);
-});
+}
+
+/*
+*
+*
+*
+*   CLEAN INTERFACE AND SHOW NEXT IMAGE
+*
+*
+*/
+
+
+function cleanUp() {
+    document.getElementById("guess-results").style.display = "none";  //remove the div with results
+    document.getElementById("open-map").style.display = "block"; //show button to open map
+    $("#mly").css("width", "100%"); //make viewer page width
+    $("#map").css("width", "0"); //hide map again
+    hasGuessed = false; //Be able to take guess next round
+    $(".distance-result").remove(); //Remove all the messages with distance of guesses
+
+
+    //remove all markers from the map
+    for(let i = 0; i < markers.length; i++) {
+        markers[i].remove(); 
+    }
+
+    //remove all markers from the array so they can be reused
+    markers = [];
+
+    //Remove linestrings from previous guesses
+    map.removeLayer("LineString");
+    map.removeSource("LineString");
+
+    map.resize();
+    nextImageSetup();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+
+$("#open-map").click(openMap);
+
+$("#trigger-guess").click(handleGuess);
+
+$("#next-img").click(cleanUp);
