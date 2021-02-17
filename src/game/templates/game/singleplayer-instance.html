@@ -17,6 +17,19 @@
         .AttributionContainer {
             display: none !important; 
         }
+        #guess-results {
+            position: fixed;
+            display: none;
+            background-color: white;
+            z-index: 1;
+            bottom: 0;
+            width: 300px;
+            height: 100px;
+            left: 50%;
+            margin-left: 200px;
+            margin-bottom: 35px;
+            padding: 10px;
+        }
     </style>
 </head>
 <body>
@@ -26,6 +39,9 @@
             <button id="open-map" class="btn btn-secondary" style="position: absolute; z-index: 1; bottom: 0; right: 50%; margin-bottom: 35px;">I think I know...</button>
         </div>
         <div id="map" style="position: relative;">
+            <div id="guess-results">
+                <button id="next-img" class="btn btn-secondary">Next >></button>
+            </div>
             <button id="trigger-guess" class="btn btn-success" style="position: absolute; z-index: 1;bottom: 0;right: 50%;margin-bottom: 35px;width: 100px;height: 50px; display: none;">
                 Guess!
             </button>

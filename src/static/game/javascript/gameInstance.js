@@ -21,6 +21,7 @@ window.addEventListener("resize", function() { mly.resize(); });
 let toGuess = []; //[imageIndex, [lnt,lat]]
 let markers = [];
 let nextImage = 1;
+let hasGuessed = false;
 
 
 /*
@@ -76,6 +77,9 @@ function nextImageSetup() {
 */
 
 map.on('click', function(e){
+    if (hasGuessed) { //Don't allow map clicking after guess has been taken!
+        return;
+    }
     if (markers.length > 0) {
         markers[0].remove(); //remove marker from map
         markers.pop(); //remove marker from array
@@ -118,8 +122,13 @@ $("#open-map").click(function(){
 
 
 $("#trigger-guess").click(function() {
+    hasGuessed = true; //Notify the code that the user has submitted a guess
 
-    document.getElementById("trigger-guess").style.display = "none";
+    document.getElementById("trigger-guess").style.display = "none"; //Hide guess button to prevent bugs
+    document.getElementById("map").style.width = "65%"; //Make map bigger
+    document.getElementById("mly").style.width = "35%"; //Make viewer smaller
+    map.resize();
+    mly.resize();
     
     let realLng;
     let realLat;
@@ -183,6 +192,15 @@ $("#trigger-guess").click(function() {
             'line-width': 1
         }
     });
-
+    let guessResultText = "You were " + Math.round(distanceBetweenPoints) + " km far!";
+    let parToInsert = "<p class='lead'>" + guessResultText + "</p>";
+    $(parToInsert).insertBefore('#next-img');
+    /*
+    let guessMessageParagraph =  document.createElement("p");
+    let guessResultText = document.createTextNode("You were " + distanceBetweenPoints + " km far!");
+    guessMessageParagraph.appendChild(guessResultText);
+    */
+    document.getElementById("guess-results").style.display = "block";
+    //document.getElementById("guess-results").appendChild(guessMessageParagraph);
     console.log(distanceBetweenPoints);
 });
