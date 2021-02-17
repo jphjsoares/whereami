@@ -199,8 +199,15 @@ function handleGuess() {
     let guessResultText = "You were " + (Math.round(distanceBetweenPoints * 10) / 10) + " km far!";
     let parToInsert = "<p class='lead distance-result'>" + guessResultText + "</p>";
     $(parToInsert).insertBefore('#next-img');
-  
     document.getElementById("guess-results").style.display = "block";
+
+    //this will appear once we guessed the FINAL image
+    if(nextImage==keys.length) {
+        document.getElementById("next-img").innerHTML = "End of game!";
+        $("#next-img").click(function() {
+            window.location.href = "/";
+        });
+    }
 }
 
 /*
