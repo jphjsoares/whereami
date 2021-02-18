@@ -2,11 +2,52 @@
 
 
 {% block othercss %}
-	
+<style type="text/css">
+    .lds-ring {
+        width: 80px;
+        height: 80px;
+        position: absolute;
+        top:0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        
+        margin: auto;
+    }
+    .lds-ring div {
+      box-sizing: border-box;
+      display: block;
+      position: absolute;
+      width: 64px;
+      height: 64px;
+      margin: 8px;
+      border: 8px solid #000;
+      border-radius: 50%;
+      animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+      border-color: #000 transparent transparent transparent;
+    }
+    .lds-ring div:nth-child(1) {
+      animation-delay: -0.45s;
+    }
+    .lds-ring div:nth-child(2) {
+      animation-delay: -0.3s;
+    }
+    .lds-ring div:nth-child(3) {
+      animation-delay: -0.15s;
+    }
+    @keyframes lds-ring {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+</style>
 {% endblock %}
 
 {% block mapcreate %}
-	
+        
         <h3>Generate a map with random locations of the world!</h3>
         <p>Select how many locations you want the map to have below:</p>
         {% if messages %}
@@ -18,16 +59,22 @@
                 <br />
         {% endif %}
         <form action="" method="post">
-        	{% csrf_token %}
-        	<label>How many locations?</label>
-        	<input type="text" name="numoflocations">
-        	<br />
+            {% csrf_token %}
+            <label>How many locations?</label>
+            <input type="text" name="numoflocations">
+            <br />
                 {{ form }}
-        	<input type="submit" value="Generate map!">
+            <input type="submit" onclick="showLoading()" value="Generate map!">
         </form>
-        <div id='map' style='height: 500px;'></div>
        
 {% endblock %}
 
 {% block otherjs %}
+<script type="text/javascript">
+    function showLoading() {
+        document.getElementById("main-content").style.display = "none";
+        document.getElementById("loading").style.display = "block";
+        document.getElementById("loading-text").style.display = "block";
+    }
+    </script>
 {% endblock %}

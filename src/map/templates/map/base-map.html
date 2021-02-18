@@ -10,10 +10,15 @@
     <script src='https://api.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.js'></script>
     <link href='https://api.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.css' rel='stylesheet' />
     {% block othercss %} {% endblock %}
+
 </head>
 <body>
     {% include "whereami/nav.html" %}
     {% block index %} {% endblock %}
+    <div id="loading-text" style="display: none;">
+        <h1 style="text-align: center; margin-top: 50px;">Creating map, please wait</h1>
+    </div>
+    <div class="lds-ring" id="loading" style="display: none;"><div></div><div></div><div></div><div></div></div>
     <div id="main-content" style="margin: 0 auto; width: 50%;">
             {% block mapcreate %} {% endblock %}
     </div>
