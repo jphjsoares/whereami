@@ -42,7 +42,6 @@ function buildUrl( box0, box1, box2, box3, lng, lat) {
 	return "https://a.mapillary.com/v3/images?bbox=" + box0 + ',' + box1 + ',' + box2 + ',' + box3 + "&closeto=" + lng + ',' + lat + "&radius=50000&per_page=1&client_id=MGNWR1hFdWVhb3FQTTJxcDZPUExHZzo2NTE4YmM3NmY0YWYyNGYy";
 }
 
-
 function generateRandomPointsOnRegion(polygon) {
 
 	let polyBbox = turf.bboxPolygon(turf.bbox(polygon))
@@ -51,6 +50,7 @@ function generateRandomPointsOnRegion(polygon) {
 	let newUrl = buildUrl(polyBbox["bbox"][0], polyBbox["bbox"][1], polyBbox["bbox"][2], polyBbox["bbox"][3], 
 		points["features"][0]["geometry"]["coordinates"][0], 
 		points["features"][0]["geometry"]["coordinates"][1]);
+
 	$.ajaxSetup({
 		async: false
 	});
@@ -66,11 +66,15 @@ function generateRandomPointsOnRegion(polygon) {
 	})
 }
 
+
+
+
 function handleClick() {
  	let polygon = draw.getAll().features;
 	document.getElementById("slow-alert").remove();
-	document.getElementById("generating-alert").style.visibility = "visible";
-
+	document.getElementById("main-content").style.display = "none";
+    document.getElementById("loading").style.display = "block";
+    document.getElementById("loading-text").style.display = "block";
 
 	for (numOfPolygons = 0; numOfPolygons < polygon.length; numOfPolygons++) {
 		

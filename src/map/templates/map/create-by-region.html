@@ -19,9 +19,6 @@
             THIS PAGE IS VERY SLOW ON MORE THAN 1 OR EVEN LARGE POLYGONS. <br \>
             WE ARE DEVELOPING A MORE EFFICIENT WAY TO DO THIS!
         </div>
-        <div id="generating-alert" class="alert alert-info" role="alert">
-            Generating new map. Please wait! <div class="lds-dual-ring"></div>
-        </div>
         <br \>
         <div id='map' style='height: 500px;'></div>
         <form action="" method="post" onsubmit="handleClick()" id="form">
@@ -34,11 +31,14 @@
 {% endblock %}
 
 {% block otherjs %}
-		{% load static %}
-		<script src="{% static 'map/javascript/mapbox-gl-draw.js' %}"></script>
-        <script src="{% static 'map/javascript/turf.min.js' %}"></script>
-        <script src="{% static 'map/javascript/jquery.min.js' %}"></script>
-        <script src="{% static 'map/javascript/mapByRegion.js' %}"></script>
+<script type="text/javascript">
+
+</script>
+{% load static %}
+<script src="{% static 'map/javascript/mapbox-gl-draw.js' %}"></script>
+<script src="{% static 'map/javascript/turf.min.js' %}"></script>
+<script src="{% static 'map/javascript/jquery.min.js' %}"></script>
+<script src="{% static 'map/javascript/mapByRegion.js' %}"></script>
         
         
 {% endblock %}
