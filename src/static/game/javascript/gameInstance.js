@@ -22,6 +22,7 @@ let toGuess = []; //[imageIndex, [lnt,lat]]
 let markers = [];
 let nextImage = 1;
 let hasGuessed = false;
+let score = 0;
 
 
 /*
@@ -43,7 +44,7 @@ for(let i = 0; i < keys.length; i++) {
 }
 
 document.getElementById("img-index").innerHTML = nextImage + " / " + keys.length;
-
+document.getElementById("game-score").innerHTML = "Score " + score;
 
 /*
 *
@@ -157,6 +158,12 @@ function handleGuess() {
 
     //Calculate the distance in km
     let distanceBetweenPoints = turf.distance(turf.point([guessedLng, guessedLat]), turf.point([realLng, realLat]));
+
+    if (distanceBetweenPoints < 1000) {
+        let pointsToAdd = 1000-Math.round(distanceBetweenPoints);
+        score  = score + pointsToAdd;
+        document.getElementById("game-score").innerHTML = "Score " + score;
+    }
 
     //This is to draw the line string on the map
     let lineOfDistance = {
