@@ -212,7 +212,11 @@ function handleGuess() {
     if(nextImage==keys.length) {
         document.getElementById("next-img").innerHTML = "End of game!";
         $("#next-img").click(function() {
-            window.location.href = "/";
+            //window.location.href = "/";
+            let urlOfEndgame =  window.location.origin + '/game/eg/' + (window.location.href).split('/')[4];
+            $.get(urlOfEndgame, function(data) {
+                window.location.href = "/"; //Game was deleted
+            });
         });
     }
 }

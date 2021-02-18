@@ -44,7 +44,7 @@ def singleplayer_game_instance(request, hash):
     try:
         current_game_instance = Game.objects.get(game_hash=hash)
     except Game.DoesNotExist:
-        messages.success(request, "There's no available game with this id!")
+        messages.error(request, "There's no available game with this id!")
         return redirect("/game/singleplayer")
 
 
@@ -55,12 +55,23 @@ def singleplayer_game_instance(request, hash):
         return redirect("/game/singleplayer")
     """
     if current_game_instance.is_active == False:
-        messages.success(request, "This game exists, but is expired. Create a new game!")
+        messages.error(request, "This game exists, but is expired. Create a new game!")
         return redirect("/game/singleplayer")
     
     else:
         locations = map_being_played.mapillary_image_key
         return render(request, "game/singleplayer-instance.html", context={'loc_array':locations})
 
+def end_of_singleplayer_game(request, hash):
+    try:
+        current_game_instance = Game.objects.get(game_hash=hash)
+        current_game_instance.delete()
+        return redirect("/")
+    except Game.DoesNotExist:
+        print("Oops. Looks like there's no game with that id. Probably already deleted!")
+        messages.error(request, "Instance could not be deleted")
+        return redirect("/game/singleplayer")
+
+
 def multiplayer(request):
-   return HttpResponse("multiplayer")
+   return HttpResponse("Multiplayer is still being developed!")
