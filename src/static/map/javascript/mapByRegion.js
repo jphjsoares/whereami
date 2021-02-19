@@ -37,29 +37,33 @@ function checkForPolygons() {
 }
 
 
+//Be careful with radius, might generate a point out of polygon, requires more testing
 function buildUrl( box0, box1, box2, box3, lng, lat) {
-    //Be careful with radius, might generate a point out of polygon, requires more testing
     return "https://a.mapillary.com/v3/images?bbox=" + box0 + ',' + box1 + ',' + box2 + ',' + box3 + "&closeto=" + lng + ',' + lat + "&radius=50000&per_page=1&client_id=MGNWR1hFdWVhb3FQTTJxcDZPUExHZzo2NTE4YmM3NmY0YWYyNGYy";
 }
 
 function generateRandomPointsOnRegion(polygon) {
 
-    let polyBbox = turf.bboxPolygon(turf.bbox(polygon))
-    let points = turf.randomPoint(1, polyBbox);
+    let polyBbox = turf.bboxPolygon(turf.bbox(polygon)); //Generate a polybbox with the given polygon
+    let points = turf.randomPoint(1, polyBbox); //Generate one random point inside that polybox
 
     let newUrl = buildUrl(polyBbox["bbox"][0], polyBbox["bbox"][1], polyBbox["bbox"][2], polyBbox["bbox"][3], 
         points["features"][0]["geometry"]["coordinates"][0], 
-        points["features"][0]["geometry"]["coordinates"][1]);
+        points["features"][0]["geometry"]["coordinates"][1]); //Build url to get point inside the bbox
 
     $.get(newUrl, function(data) {
+
+        //If we get a valid image and if that image is INSIDE THE DRAWN POLYGON (not bbox)
         if(data.features.length !== 0 && turf.booleanPointInPolygon(points["features"][0]["geometry"], polygon)) {          
-            coordinatesToSubmit.push(data["features"][0]["properties"].key);
+            coordinatesToSubmit.push(data["features"][0]["properties"].key); //Submit the point
         } else {
             generateRandomPointsOnRegion(polygon);
         }
     });
 }
 
+
+// Populate inputs and submit the form
 function getReadyForSubmit() {
     for(locationIndex = 0; locationIndex < coordinatesToSubmit.length; locationIndex++) {
         //Every line on the text area will be in the form lng,lat
@@ -69,11 +73,12 @@ function getReadyForSubmit() {
     $('form').unbind('submit').submit();
 }
 
+//Every 50ms check if we got all our points.
+//If yes, submit
 function checkIfPopulated() {
     let timer = window.setInterval(function(){
         if (coordinatesToSubmit.length == 10) {
             window.clearInterval(timer);
-            console.log(coordinatesToSubmit);
             getReadyForSubmit();
         }
     }, 50);

@@ -53,7 +53,7 @@ function deleteSelection(indexToDelete) {
 }
 
 
-function populateTable(index) {
+function populateTable(index, colorOfMarker) {
     //Get the table and insert a row after the last element
     let rowToInsert = table.insertRow(-1); //Add a new row to end of table
 
@@ -64,6 +64,8 @@ function populateTable(index) {
     let deleteCoordinateButton = document.createElement("button");
     deleteCoordinateButton.setAttribute("id", index);
     deleteCoordinateButton.setAttribute("class", "btn btn-danger");
+    deleteCoordinateButton.style.backgroundColor = colorOfMarker;
+    deleteCoordinateButton.style.borderColor = colorOfMarker;
     deleteCoordinateButton.innerText = "Delete";
     cellToInsertInput.appendChild(deleteCoordinateButton); //Add button
 
@@ -86,6 +88,16 @@ function handleSubmit() {
             document.getElementById("locations-to-submit").value += mapillaryImages.keys[i] + '\n';        
         }
     }    
+}
+
+function getRandomColor() {
+    let letters = '0123456789ABCDEF';
+    let color = '#';
+    
+    for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
 }
 
 map.on('style.load', function() {
@@ -128,17 +140,20 @@ map.on('style.load', function() {
                 message.appendChild(errorText);
                 document.getElementById("dialog-container").appendChild(message);
             } else {
-
+                let colorOfMarker = getRandomColor(); //Generate a random color to identify each marker individually
+                
                 mapillaryImages["keys"].push(data["features"][0]["properties"].key); // Add the key to a json object
                 
-                let marker = new mapboxgl.Marker()
+                let marker = new mapboxgl.Marker({
+                                color:colorOfMarker
+                            })
                             .setLngLat([e.lngLat.wrap().lng, e.lngLat.wrap().lat])
                             .addTo(map);
         
                 markersCoords["markers"].push(marker); // Add every marker to a marker json object
 
                 //Add elements to table
-                populateTable(i);
+                populateTable(i, colorOfMarker);
 
                 i++;
             }
