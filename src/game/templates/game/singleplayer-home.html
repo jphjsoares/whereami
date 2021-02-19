@@ -15,23 +15,31 @@
             </div>
             <br />
         {% endif %}
-        <div id="singleplayer-home-card" class="card" style="width: 23rem;">
+        <div id="singleplayer-home-card" class="card" style="width: 33rem;">
                 <div class="card-body">
                         <h5 class="card-title">Single player game</h5>
                         <p class="card-text">Do you have a map id or do you wish to create a map now?</p>
                         <div class="row">
-                                <div class="col-lg-6">
-                                        <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#form-modal">
-                                            I have a map
-                                        </button>
+                                <div class="col-md-auto">
+                                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#form-modal">
+                                        <a href="#" class="card-link btn btn-secondary">I have a map</a>
+                                    </button>
                                 </div>
-                                <div class="col-lg-6">
-                                       <button type="button" class="btn btn-secondary"><a href="{% url 'map-home' %}" class="card-link btn btn-secondary">Create a map</a></button>
+                                <div class="col-md-auto">
+                                    <button type="button" class="btn btn-secondary">
+                                        <a href="{% url 'singplayer-random' %}" class="card-link btn btn-secondary">Random map</a>
+                                    </button>
+                                </div>
+                                <div class="col-md-auto">
+                                   <button type="button" class="btn btn-secondary">
+                                        <a href="{% url 'map-home' %}" class="card-link btn btn-secondary">Create a map</a>
+                                    </button>
                                 </div>
                         </div>
                 </div>
         </div>
 
+        <!-- What appears when user clicks "I have a map" -->
         <div class="modal fade" id="form-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                         <div class="modal-content">
@@ -47,7 +55,7 @@
                                                         <input id="map_id" name="map_id" class="form-control" aria-describedby="enter map id">
                                                 </div>
                                                 <button type="submit" class="btn btn-success">Start game!</button>
-                                        </form> 
+                                        </form>
                                 </div>
                         </div>
                 </div>

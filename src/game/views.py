@@ -4,6 +4,7 @@ from django.contrib import messages
 from .forms import StartNewGame
 from .models import Game, Players
 from map.models import Map
+import random
 
 # Create your views here.
 def singleplayer(request):
@@ -33,14 +34,33 @@ def singleplayer(request):
             return redirect(url_of_game)
     return render(request, "game/singleplayer-home.html")
 
-"""
-Cycle through map in the game:
-    #Pass index of image key on url
-    #Pass all image keys on game instance creation to the front end
-"""
+def singleplayer_random(request):
+    all_maps = Map.objects.all()
+    random_map = random.choice(all_maps)
+    print("Creating random map with id of: " + random_map.hash_id)
+    game_instance_to_create = Game(
+            current_map_hash=random_map.hash_id,
+            is_active=True
+        )
 
+    game_instance_to_create.save()
+    
+    user_to_create = Players(
+            username="single-random",
+            current_game_id=game_instance_to_create,
+            current_guess_coordinates=[],
+            score=0
+        )
+
+    user_to_create.save()
+    
+    url_of_game = "/game/" + game_instance_to_create.game_hash
+    return redirect(url_of_game)
+    
 
 def singleplayer_game_instance(request, hash):
+    
+    ### Check if there's an available game with that has
     try:
         current_game_instance = Game.objects.get(game_hash=hash)
     except Game.DoesNotExist:
@@ -49,11 +69,7 @@ def singleplayer_game_instance(request, hash):
 
 
     map_being_played = Map.objects.get(hash_id=current_game_instance.current_map_hash)
-    """
-    if map_being_played.map_type == 1:
-        messages.success(request, "")
-        return redirect("/game/singleplayer")
-    """
+    
     if current_game_instance.is_active == False:
         messages.error(request, "This game exists, but is expired. Create a new game!")
         return redirect("/game/singleplayer")

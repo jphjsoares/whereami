@@ -24,7 +24,6 @@ let map = new mapboxgl.Map({
  * GLOBAL VARIABLES
  * 
  */
-
 let i = 0;
 
 let mapillarySource;
@@ -134,7 +133,6 @@ map.on('style.load', function() {
         message.remove();
         
         $.get(isThereACloseImage(e.lngLat.wrap().lng, e.lngLat.wrap().lat), function(data) {
-            
             if(data.features.length === 0) { //Show error if no close image			
                 message.setAttribute("open","open");
                 message.appendChild(errorText);
@@ -157,7 +155,6 @@ map.on('style.load', function() {
 
                 i++;
             }
-            
         });
     });
 });
