@@ -159,8 +159,8 @@ function handleGuess() {
     //Calculate the distance in km
     let distanceBetweenPoints = turf.distance(turf.point([guessedLng, guessedLat]), turf.point([realLng, realLat]));
 
-    if (distanceBetweenPoints < 1000) {
-        let pointsToAdd = 1000-Math.round(distanceBetweenPoints);
+    if (distanceBetweenPoints < 2250) {
+        let pointsToAdd = 2250-Math.round(distanceBetweenPoints);
         score  = score + pointsToAdd;
         document.getElementById("game-score").innerHTML = "Score " + score;
     }

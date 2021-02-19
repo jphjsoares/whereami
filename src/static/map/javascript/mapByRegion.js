@@ -52,9 +52,9 @@ function generateRandomPointsOnRegion(polygon) {
         points["features"][0]["geometry"]["coordinates"][1]); //Build url to get point inside the bbox
 
     $.get(newUrl, function(data) {
-
-        //If we get a valid image and if that image is INSIDE THE DRAWN POLYGON (not bbox)
-        if(data.features.length !== 0 && turf.booleanPointInPolygon(points["features"][0]["geometry"], polygon)) {          
+        //If we get a valid image and if that image is INSIDE THE DRAWN POLYGON (not bbox) and if quality is more than 3
+        if(data.features.length !== 0 && turf.booleanPointInPolygon(points["features"][0]["geometry"], polygon) && data["features"][0]["properties"].quality_score > 3) {      
+            console.log(data["features"][0]["properties"].quality_score); 
             coordinatesToSubmit.push(data["features"][0]["properties"].key); //Submit the point
         } else {
             generateRandomPointsOnRegion(polygon);

@@ -92,11 +92,12 @@ def create_world(request):
 			locations_to_submit_final = []
 			submitted_number_of_locations = request.POST["numoflocations"]
 			while len(locations_to_submit_final) < int(submitted_number_of_locations):
-				x, y = uniform(-180,180), uniform(-90, 90)
-				url = "https://a.mapillary.com/v3/images?client_id=" + os.environ.get("CLIENT_ID") + "&per_page=1" + "&closeto=" + str(x) + ',' + str(y) + "&radius=100000"
-				req = urllib.request.urlopen(url)
-				data = json.load(req)
-				if len(data["features"]) != 0:
+				x, y = uniform(-180,180), uniform(-90, 90) #generate random point
+				url = "https://a.mapillary.com/v3/images?client_id=" + os.environ.get("CLIENT_ID") + "&per_page=1" + "&closeto=" + str(x) + ',' + str(y) + "&radius=1000000"
+				req = urllib.request.urlopen(url) 
+				data = json.load(req) #get random point close to the random point generated
+				if len(data["features"]) != 0 and data["features"][0]["properties"]["quality_score"] >= 3: #if the point is valid, add it to our keys
+					print(data["features"][0]["properties"]["quality_score"])
 					locations_to_submit_final.append(data["features"][0]["properties"]["key"])					
 
 			map_to_submit = Map(name="testRandomWorld",
