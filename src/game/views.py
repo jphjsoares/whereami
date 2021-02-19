@@ -76,6 +76,7 @@ def singleplayer_game_instance(request, hash):
     
     else:
         locations = map_being_played.mapillary_image_key
+        random.shuffle(locations) #shuffle locations
         return render(request, "game/singleplayer-instance.html", context={'loc_array':locations})
 
 def end_of_singleplayer_game(request, hash):
