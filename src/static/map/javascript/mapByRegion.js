@@ -16,11 +16,9 @@ let draw = new MapboxDraw({
 });
 
 let coordinatesToSubmit = []
-
-map.addControl(draw);
-
 document.getElementById("submit-button").disabled = true;
 
+map.addControl(draw);
 map.on('draw.create', checkForPolygons);
 map.on('draw.delete', checkForPolygons);
 map.on('draw.update', checkForPolygons);
@@ -54,7 +52,6 @@ function generateRandomPointsOnRegion(polygon) {
     $.get(newUrl, function(data) {
         //If we get a valid image and if that image is INSIDE THE DRAWN POLYGON (not bbox) and if quality is more than 3
         if(data.features.length !== 0 && turf.booleanPointInPolygon(points["features"][0]["geometry"], polygon) && data["features"][0]["properties"].quality_score > 3) {      
-            console.log(data["features"][0]["properties"].quality_score); 
             coordinatesToSubmit.push(data["features"][0]["properties"].key); //Submit the point
         } else {
             generateRandomPointsOnRegion(polygon);
@@ -87,11 +84,10 @@ function checkIfPopulated() {
 
 $("#form").on('submit', function(e) {
     e.preventDefault();
-    let polygon = draw.getAll().features;
+    let polygon = draw.getAll().features; //Get all drawn polygons
     document.getElementById("main-content").style.display = "none";
     document.getElementById("loading").style.display = "block";
     document.getElementById("loading-text").style.display = "block";
-    console.log("Starting....")
 
     for (numOfPolygons = 0; numOfPolygons < polygon.length; numOfPolygons++) {
         

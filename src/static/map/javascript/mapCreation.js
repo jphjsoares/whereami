@@ -1,16 +1,3 @@
-
-/*
-TO FIND IMAGES CLOSE TO keys
-https://www.mapillary.com/developer/api-documentation/#search-images
-https://a.mapillary.com/v3/images?client_id=MGNWR1hFdWVhb3FQTTJxcDZPUExHZzo2NTE4YmM3NmY0YWYyNGYy&closeto=-122.3079,47.6537 (lng,lat) (RADIUS IS 100m, by default)
-*/
-/*
-TO DELETE A MARKER, JUST USE markersCoords.markers[i].remove()
-AND FOR THE JSON
-delete markersaCoords.markers[i]
-*/
-
-
 mapboxgl.accessToken = 'pk.eyJ1IjoiY2FzZWlubWVsbCIsImEiOiJja2tpZWU3bG8wNXN4MnBzNzVibnN5dG90In0.D6Y43QmUBiirztruQeEFHA';
 let map = new mapboxgl.Map({
     container: 'map',
@@ -25,27 +12,23 @@ let map = new mapboxgl.Map({
  * 
  */
 let i = 0;
-
 let mapillarySource;
-
 let mapillaryImages = {
     "keys": []
 }
-
 let markersCoords = {
     "markers": []
 }
-
 let table = document.getElementById("show-coords");
 
-
+//Check if there's a close image on every marker placement
 function isThereACloseImage(lng, lat) {
     return "https://a.mapillary.com/v3/images?client_id=MGNWR1hFdWVhb3FQTTJxcDZPUExHZzo2NTE4YmM3NmY0YWYyNGYy&closeto=" + lng + "," + lat; 
 }
 
-
+//Gets called if a delete button is clicked
 function deleteSelection(indexToDelete) {
-    //Instead of using delete, set it to an empty string and filter out on the backend
+    //Instead of using delete, set it to an empty string and filter out on the backend (quickfix)
     mapillaryImages.keys[indexToDelete] = ""; 
     markersCoords.markers[indexToDelete].remove(); //Remove marker from map
     markersCoords.markers[indexToDelete] = "";
@@ -60,6 +43,8 @@ function populateTable(index, colorOfMarker) {
     let cellToInsertCoords = rowToInsert.insertCell(1); //Select cell for coords
 
     //Add the content to the cells
+
+    //Delete button
     let deleteCoordinateButton = document.createElement("button");
     deleteCoordinateButton.setAttribute("id", index);
     deleteCoordinateButton.setAttribute("class", "btn btn-danger");
@@ -68,12 +53,13 @@ function populateTable(index, colorOfMarker) {
     deleteCoordinateButton.innerText = "Delete";
     cellToInsertInput.appendChild(deleteCoordinateButton); //Add button
 
+    //Selected image key label
     let imageKey = document.createTextNode(mapillaryImages.keys[index]);
-    cellToInsertCoords.appendChild(imageKey); //Add description
+    cellToInsertCoords.appendChild(imageKey); 
 
     deleteCoordinateButton.onclick = function() {
-        table.deleteRow(rowToInsert.rowIndex);
-        deleteSelection(deleteCoordinateButton.getAttribute("id")); //Delete mapillaryImages and markersCoords info about that object
+        table.deleteRow(rowToInsert.rowIndex); //remove row from table
+        deleteSelection(deleteCoordinateButton.getAttribute("id")); //Delete mapillaryImages and markers about that object
     }
 }
 
@@ -89,6 +75,7 @@ function handleSubmit() {
     }    
 }
 
+//Generate random color for each selected location
 function getRandomColor() {
     let letters = '0123456789ABCDEF';
     let color = '#';
@@ -133,26 +120,23 @@ map.on('style.load', function() {
         message.remove();
         
         $.get(isThereACloseImage(e.lngLat.wrap().lng, e.lngLat.wrap().lat), function(data) {
-            if(data.features.length === 0) { //Show error if no close image			
+            
+            //Show error if no close image  
+            if(data.features.length === 0) { 		
                 message.setAttribute("open","open");
                 message.appendChild(errorText);
                 document.getElementById("dialog-container").appendChild(message);
+            
             } else {
                 let colorOfMarker = getRandomColor(); //Generate a random color to identify each marker individually
-                
-                mapillaryImages["keys"].push(data["features"][0]["properties"].key); // Add the key to a json object
-                
+                mapillaryImages["keys"].push(data["features"][0]["properties"].key); // Add the key to a json object    
                 let marker = new mapboxgl.Marker({
                                 color:colorOfMarker
                             })
                             .setLngLat([e.lngLat.wrap().lng, e.lngLat.wrap().lat])
                             .addTo(map);
-        
-                markersCoords["markers"].push(marker); // Add every marker to a marker json object
-
-                //Add elements to table
-                populateTable(i, colorOfMarker);
-
+                markersCoords["markers"].push(marker); //Add marker to a marker json object
+                populateTable(i, colorOfMarker); //Add elements to table
                 i++;
             }
         });

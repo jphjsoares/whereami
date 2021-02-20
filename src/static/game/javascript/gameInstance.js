@@ -36,15 +36,14 @@ let score = 0;
 
 for(let i = 0; i < keys.length; i++) {
 
-    //TODO:get the image in the same order
     let url = "https://a.mapillary.com/v3/images/"  + keys[i] + "?client_id=MGNWR1hFdWVhb3FQTTJxcDZPUExHZzo2NTE4YmM3NmY0YWYyNGYy";
     $.get(url, function(data) {
         toGuess.push([i, data["geometry"]["coordinates"]]); //store it in a way so that we can access the index of an image and the respective coordinates
     });
 }
 
-document.getElementById("img-index").innerHTML = nextImage + " / " + keys.length;
-document.getElementById("game-score").innerHTML = "Score " + score;
+document.getElementById("img-index").innerText = nextImage + " / " + keys.length;
+document.getElementById("game-score").innerText = "Score " + score;
 
 /*
 *
@@ -159,6 +158,7 @@ function handleGuess() {
     //Calculate the distance in km
     let distanceBetweenPoints = turf.distance(turf.point([guessedLng, guessedLat]), turf.point([realLng, realLat]));
 
+    //If the guess was under 2250 km give points
     if (distanceBetweenPoints < 2250) {
         let pointsToAdd = 2250-Math.round(distanceBetweenPoints);
         score  = score + pointsToAdd;
@@ -209,10 +209,10 @@ function handleGuess() {
     document.getElementById("guess-results").style.display = "block";
 
     //this will appear once we guessed the FINAL image
+    //handles end of game
     if(nextImage==keys.length) {
         document.getElementById("next-img").innerHTML = "End of game!";
         $("#next-img").click(function() {
-            //window.location.href = "/";
             let urlOfEndgame =  window.location.origin + '/game/eg/' + (window.location.href).split('/')[4];
             $.get(urlOfEndgame, function(data) {
                 window.location.href = "/"; //Game was deleted

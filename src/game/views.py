@@ -36,8 +36,8 @@ def singleplayer(request):
 
 def singleplayer_random(request):
     all_maps = Map.objects.all()
-    random_map = random.choice(all_maps)
-    print("Creating random map with id of: " + random_map.hash_id)
+    random_map = random.choice(all_maps) #Get random map
+
     game_instance_to_create = Game(
             current_map_hash=random_map.hash_id,
             is_active=True
@@ -60,7 +60,7 @@ def singleplayer_random(request):
 
 def singleplayer_game_instance(request, hash):
     
-    ### Check if there's an available game with that has
+    ### Check if there's an available game with that hash
     try:
         current_game_instance = Game.objects.get(game_hash=hash)
     except Game.DoesNotExist:
@@ -70,6 +70,7 @@ def singleplayer_game_instance(request, hash):
 
     map_being_played = Map.objects.get(hash_id=current_game_instance.current_map_hash)
     
+    #Make sure game is not active
     if current_game_instance.is_active == False:
         messages.error(request, "This game exists, but is expired. Create a new game!")
         return redirect("/game/singleplayer")
@@ -80,6 +81,8 @@ def singleplayer_game_instance(request, hash):
         return render(request, "game/singleplayer-instance.html", context={'loc_array':locations})
 
 def end_of_singleplayer_game(request, hash):
+    
+    #make sure the game actually exists
     try:
         current_game_instance = Game.objects.get(game_hash=hash)
         current_game_instance.delete()
