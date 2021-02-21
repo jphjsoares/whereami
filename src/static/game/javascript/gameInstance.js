@@ -276,10 +276,13 @@ function reportImage() {
     if(document.getElementById("wrong-coordinates-check").checked) {
         reason_wrong_coordinates = 1;
     }
+    
+    //Report the current image
     let urlOfReport = window.location.origin + "/map/report/"  + keys[nextImage-1] + "/" + reason_low_quality + "/" + reason_wrong_coordinates; 
     $.get(urlOfReport, function(data){
         console.log(data);
     });
+    
     //This will handle the report if it's made in the last viewer of the game
     if(nextImage==keys.length) {
         let urlOfEndgame =  window.location.origin + '/game/eg/' + (window.location.href).split('/')[4];
@@ -288,7 +291,7 @@ function reportImage() {
         });
     } else {
         nextImageSetup();
-    }
+    }           
     document.getElementById("report-div").style.display = "none";
 }
 

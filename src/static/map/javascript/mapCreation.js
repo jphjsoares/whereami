@@ -119,25 +119,33 @@ map.on('style.load', function() {
     map.on('click', function(e){
         message.remove();
         
-        $.get(isThereACloseImage(e.lngLat.wrap().lng, e.lngLat.wrap().lat), function(data) {
+        $.get(isThereACloseImage(e.lngLat.wrap().lng, e.lngLat.wrap().lat), function(content) {
             
             //Show error if no close image  
-            if(data.features.length === 0) { 		
+            if(content.features.length === 0) { 		
                 message.setAttribute("open","open");
                 message.appendChild(errorText);
                 document.getElementById("dialog-container").appendChild(message);
             
             } else {
-                let colorOfMarker = getRandomColor(); //Generate a random color to identify each marker individually
-                mapillaryImages["keys"].push(data["features"][0]["properties"].key); // Add the key to a json object    
-                let marker = new mapboxgl.Marker({
-                                color:colorOfMarker
-                            })
-                            .setLngLat([e.lngLat.wrap().lng, e.lngLat.wrap().lat])
-                            .addTo(map);
-                markersCoords["markers"].push(marker); //Add marker to a marker json object
-                populateTable(i, colorOfMarker); //Add elements to table
-                i++;
+                let checkIfReported = window.location.origin + "/map/check_reported/" + content["features"][0]["properties"].key;
+                $.get(checkIfReported, function(data) {
+                    if(data == 'REPORTED') {
+                        alert("Sorry, this image was reported, please use another one");
+                    } else {
+                        let colorOfMarker = getRandomColor(); //Generate a random color to identify each marker individually
+                        mapillaryImages["keys"].push(content["features"][0]["properties"].key); // Add the key to a json object    
+                        let marker = new mapboxgl.Marker({
+                                        color:colorOfMarker
+                                    })
+                                    .setLngLat([e.lngLat.wrap().lng, e.lngLat.wrap().lat])
+                                    .addTo(map);
+                        markersCoords["markers"].push(marker); //Add marker to a marker json object
+                        populateTable(i, colorOfMarker); //Add elements to table
+                        i++;
+                    }
+                });
+                
             }
         });
     });
