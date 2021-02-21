@@ -36,3 +36,11 @@ class Map(models.Model):
         from django.urls import reverse
         return reverse('get-map',args=[str(self.hash_id)])
 
+class ReportedImages(models.Model):
+    mapillary_image = models.CharField(max_length=25)
+
+    #0 - no reason given
+    #1 - image related
+    #2 - image location related
+    reason_is_low_quality = models.IntegerField(default=0)
+    reason_is_wrong_coordinates = models.IntegerField(default=0)

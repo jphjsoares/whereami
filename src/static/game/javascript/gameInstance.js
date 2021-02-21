@@ -257,18 +257,30 @@ function cleanUp() {
     nextImageSetup();
 }
 
-/////////////////////////////////////////////////////////////////////////////
-$("#report-view").click(function(){
-    let element = document.getElementById("report-div"); 
-    if(element.style.display == "none") {
-        element.style.display = "block";
-    } else {
-        element.style.display = "none";
-    }
-});
+/*
+*
+*
+*
+*   REPORT IMAGE
+*
+*
+*/
 
-$("#image-button-reporter").on('click', function(){
-    //console.log(keys[nextImage-1]);
+function reportImage() {
+    let reason_low_quality = 0;
+    let reason_wrong_coordinates = 0;
+
+    if(document.getElementById("low-quality-check").checked){
+        reason_low_quality = 1;
+    }
+    if(document.getElementById("wrong-coordinates-check").checked) {
+        reason_wrong_coordinates = 1;
+    }
+    let urlOfReport = window.location.origin + "/map/report/"  + keys[nextImage-1] + "/" + reason_low_quality + "/" + reason_wrong_coordinates; 
+    $.get(urlOfReport, function(data){
+        console.log(data);
+    });
+    //This will handle the report if it's made in the last viewer of the game
     if(nextImage==keys.length) {
         let urlOfEndgame =  window.location.origin + '/game/eg/' + (window.location.href).split('/')[4];
         $.get(urlOfEndgame, function(data) {
@@ -278,7 +290,22 @@ $("#image-button-reporter").on('click', function(){
         nextImageSetup();
     }
     document.getElementById("report-div").style.display = "none";
+}
+
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+
+$("#report-view").click(function(){
+    let element = document.getElementById("report-div"); 
+    if(element.style.display == "none") {
+        element.style.display = "block";
+    } else {
+        element.style.display = "none";
+    }
 });
+
+$("#image-button-reporter").click(reportImage);
 
 $("#open-map").click(openMap);
 

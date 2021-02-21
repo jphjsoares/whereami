@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect, Http404, JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .models import Map
+from .models import Map, ReportedImages
 from .forms import GenerateRandomWorld
 from random import uniform
 import os
@@ -121,9 +121,17 @@ def create_world(request):
 	
 	return render(request, 'map/create-world.html')
 
+def report_image(request, image_key, reason_low_quality, reason_wrong_coordinates):
+	new_report = ReportedImages(
+		mapillary_image=image_key,
+		reason_is_low_quality=reason_low_quality,
+		reason_is_wrong_coordinates=reason_wrong_coordinates
+	)
+	new_report.save()
+	return HttpResponse("reported")
+
 def get_map(request, hash):
 	try:
-		#TODO (must do ASAP): Return a JSON instead
 		map = Map.objects.filter(hash_id=hash).values()
 		return JsonResponse({"map": list(map)})
 	except Map.DoesNotExist:
