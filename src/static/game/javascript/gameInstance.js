@@ -1,5 +1,6 @@
+const mapillaryApiKey = "MGNWR1hFdWVhb3FQTTJxcDZPUExHZzo2NTE4YmM3NmY0YWYyNGYy";
 let mly = new Mapillary.Viewer({
-    apiClient:"MGNWR1hFdWVhb3FQTTJxcDZPUExHZzo2NTE4YmM3NmY0YWYyNGYy",
+    apiClient:mapillaryApiKey,
     component: {
         cover: false,
     },
@@ -57,7 +58,7 @@ document.getElementById("game-score").innerText = "Score " + score;
 function nextImageSetup() {
     mly.remove();
     mly = new Mapillary.Viewer({
-        apiClient:"MGNWR1hFdWVhb3FQTTJxcDZPUExHZzo2NTE4YmM3NmY0YWYyNGYy",
+        apiClient:mapillaryApiKey,
         component: {
             cover: false,
         },
@@ -257,7 +258,27 @@ function cleanUp() {
 }
 
 /////////////////////////////////////////////////////////////////////////////
+$("#report-view").click(function(){
+    let element = document.getElementById("report-div"); 
+    if(element.style.display == "none") {
+        element.style.display = "block";
+    } else {
+        element.style.display = "none";
+    }
+});
 
+$("#image-button-reporter").on('click', function(){
+    //console.log(keys[nextImage-1]);
+    if(nextImage==keys.length) {
+        let urlOfEndgame =  window.location.origin + '/game/eg/' + (window.location.href).split('/')[4];
+        $.get(urlOfEndgame, function(data) {
+            window.location.href = "/"; //Game was deleted
+        });
+    } else {
+        nextImageSetup();
+    }
+    document.getElementById("report-div").style.display = "none";
+});
 
 $("#open-map").click(openMap);
 

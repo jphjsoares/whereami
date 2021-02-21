@@ -30,6 +30,18 @@
             margin-bottom: 35px;
             padding: 10px;
         }
+        #report-div {
+            position: fixed;
+            display: none;
+            background-color: white;
+            z-index: 1;
+            bottom: 0;
+            width: 400px;
+            height: 100px;
+            margin-left: 10px;
+            margin-bottom: 60px;
+            padding: 10px;
+        }
         #progress-nav {
             background-color: white;
             position: fixed;
@@ -53,8 +65,20 @@
         </div>
     	<div id='mly' style="width: 100%; height: 100%;">
             <button id="open-map" class="btn btn-secondary" style="position: absolute; z-index: 1; bottom: 0; right: 50%; margin-bottom: 35px;">I think I know...</button>
+            <button id="report-view" class="btn btn-danger" style="position: absolute; z-index: 1; bottom: 0; margin-bottom: 10px; margin-left: 10px;">Report street view</button>
+            <div id="report-div" style="display: none;">
+                <input  type="checkbox" value="" id="low-quality-check">
+                <label class="form-check-label" for="low-quality-check">
+                    Low quality / not clear / pointing at something weird
+                </label>
+                <input  type="checkbox" value="" id="wrong-coordinates-check">
+                <label class="form-check-label" for="wrong-coordinates-check">
+                    Wrong coordinates (more than 10km difference)
+                </label>
+                <button id="image-button-reporter" style="margin-top:10px;" class="btn btn-secondary">Report it</button>
+            </div>
         </div>
-        <div id="map" style="position: relative;">
+        <div id="map">
             <div id="guess-results">
                 <button id="next-img" class="btn btn-secondary">Next >></button>
             </div>
