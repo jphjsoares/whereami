@@ -121,15 +121,19 @@ def create_world(request):
     
     return render(request, 'map/create-world.html')
 
-def report_image(request, image_key, reason_low_quality, reason_wrong_coordinates):
-    #TODO:Check if selected image actually exists
-    new_report = ReportedImages(
+def report_image(request, image_key, reason_low_quality, reason_wrong_coordinates): 
+    try:
+        is_already_reported = ReportedImages.objects.get(mapillary_image=image_key)
+        return HttpResponse("This image is already reported, therefore it will not be reported again")
+    except ReportedImages.DoesNotExist:
+        new_report = ReportedImages(
         mapillary_image=image_key,
         reason_is_low_quality=reason_low_quality,
         reason_is_wrong_coordinates=reason_wrong_coordinates
-    )
-    new_report.save()
-    return HttpResponse(new_report.mapillary_image + " reported")
+        )
+        new_report.save()
+        return HttpResponse(new_report.mapillary_image + " reported")
+
 
 def check_reported(request, image_key):
     try: 
