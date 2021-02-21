@@ -127,9 +127,9 @@ def report_image(request, image_key, reason_low_quality, reason_wrong_coordinate
         return HttpResponse("This image is already reported, therefore it will not be reported again")
     except ReportedImages.DoesNotExist:
         new_report = ReportedImages(
-        mapillary_image=image_key,
-        reason_is_low_quality=reason_low_quality,
-        reason_is_wrong_coordinates=reason_wrong_coordinates
+            mapillary_image=image_key,
+            reason_is_low_quality=reason_low_quality,
+            reason_is_wrong_coordinates=reason_wrong_coordinates
         )
         new_report.save()
         return HttpResponse(new_report.mapillary_image + " reported")
