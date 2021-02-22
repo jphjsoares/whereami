@@ -119,22 +119,22 @@ map.on('style.load', function() {
     map.on('click', function(e){
         message.remove();
         
-        $.get(isThereACloseImage(e.lngLat.wrap().lng, e.lngLat.wrap().lat), function(content) {
+        $.get(isThereACloseImage(e.lngLat.wrap().lng, e.lngLat.wrap().lat), function(data) {
             
             //Show error if no close image  
-            if(content.features.length === 0) { 		
+            if(data.features.length === 0) { 		
                 message.setAttribute("open","open");
                 message.appendChild(errorText);
                 document.getElementById("dialog-container").appendChild(message);
             
             } else {
-                let checkIfReported = window.location.origin + "/map/check_reported/" + content["features"][0]["properties"].key;
-                $.get(checkIfReported, function(data) {
-                    if(data == 'REPORTED') {
+                let checkIfReported = window.location.origin + "/map/check_reported/" + data["features"][0]["properties"].key;
+                $.get(checkIfReported, function(response) {
+                    if(response == 'REPORTED') {
                         alert("Sorry, this image was reported, please use another one");
                     } else {
                         let colorOfMarker = getRandomColor(); //Generate a random color to identify each marker individually
-                        mapillaryImages["keys"].push(content["features"][0]["properties"].key); // Add the key to a json object    
+                        mapillaryImages["keys"].push(data["features"][0]["properties"].key); // Add the key to a json object    
                         let marker = new mapboxgl.Marker({
                                         color:colorOfMarker
                                     })

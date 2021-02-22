@@ -52,7 +52,15 @@ function generateRandomPointsOnRegion(polygon) {
     $.get(newUrl, function(data) {
         //If we get a valid image and if that image is INSIDE THE DRAWN POLYGON (not bbox) and if quality is more than 3
         if(data.features.length !== 0 && turf.booleanPointInPolygon(points["features"][0]["geometry"], polygon) && data["features"][0]["properties"].quality_score > 3) {      
-            coordinatesToSubmit.push(data["features"][0]["properties"].key); //Submit the point
+            
+            //Check if the image is reported
+            let checkIfReported = window.location.origin + "/map/check_reported/" + data["features"][0]["properties"].key;
+            $.get(checkIfReported, function(response) {
+                if(response == 'OKAY') {
+                    console.log(response);
+                    coordinatesToSubmit.push(data["features"][0]["properties"].key); //Submit the point
+                }
+            });
         } else {
             generateRandomPointsOnRegion(polygon);
         }

@@ -35,11 +35,11 @@ def create_custom(request):
         # Create and save the new map!
         
         map_to_submit = Map(name="testCustom",
-            creator="tester",
+            creator="backend",
             map_type=1,
             num_of_locations=len(locations_to_submit_final),
             mapillary_image_key=locations_to_submit_final,
-            times_played=123
+            times_played=0
         )
 
         map_to_submit.save()
@@ -66,11 +66,11 @@ def create_by_region(request):
             locations_to_submit_final.append(random_location)
         
         map_to_submit = Map(name="testByRegion",
-            creator="tester",
+            creator="backend",
             map_type=2,
             num_of_locations=len(locations_to_submit_final),
             mapillary_image_key=locations_to_submit_final,
-            times_played=441
+            times_played=0
         )
 
         map_to_submit.save()
@@ -92,20 +92,27 @@ def create_world(request):
             locations_to_submit_final = []
             submitted_number_of_locations = request.POST["numoflocations"]
             while len(locations_to_submit_final) < int(submitted_number_of_locations):
+                
                 x, y = uniform(-180,180), uniform(-90, 90) #generate random point
                 url = "https://a.mapillary.com/v3/images?client_id=" + os.environ.get("CLIENT_ID") + "&per_page=1" + "&closeto=" + str(x) + ',' + str(y) + "&radius=1000000"
                 req = urllib.request.urlopen(url) 
                 data = json.load(req) #get random point close to the random point generated
+                
                 if len(data["features"]) != 0 and data["features"][0]["properties"]["quality_score"] >= 3: #if the point is valid, add it to our keys
-                    print(data["features"][0]["properties"]["quality_score"])
-                    locations_to_submit_final.append(data["features"][0]["properties"]["key"])					
+                    check_image_reported = check_reported(request, data["features"][0]["properties"]["key"]).content
+                    if check_image_reported.decode('utf-8') == 'OKAY':
+                        print("image accepted")
+                        locations_to_submit_final.append(data["features"][0]["properties"]["key"])
+                    else: 
+                        print("requested image is reported. getting another image...")
+                    					
 
             map_to_submit = Map(name="testRandomWorld",
-                creator="tester",
+                creator="backend",
                 map_type=3,
                 num_of_locations=len(locations_to_submit_final),
                 mapillary_image_key=locations_to_submit_final,
-                times_played=321
+                times_played=0
             )
 
             map_to_submit.save()
