@@ -23,6 +23,7 @@ let toGuess = []; //[imageIndex, [lnt,lat]]
 let markers = [];
 let nextImage = 1;
 let hasGuessed = false;
+let mapIsOpen = false;
 let score = 0;
 
 
@@ -56,6 +57,7 @@ document.getElementById("game-score").innerText = "Score " + score;
 */
 
 function nextImageSetup() {
+    mapIsOpen = false;
     mly.remove();
     mly = new Mapillary.Viewer({
         apiClient:mapillaryApiKey,
@@ -107,6 +109,7 @@ map.on('click', function(e){
 */
 
 function openMap() {
+    mapIsOpen = true;
     document.getElementById("open-map").style.display = "none";
     $("#mly").css("width", "65%");
     $("#map").css("flex-grow", "1");
@@ -126,7 +129,6 @@ function openMap() {
 
 function handleGuess() {
     hasGuessed = true; //Notify the code that the user has submitted a guess
-
     document.getElementById("trigger-guess").style.display = "none"; //Hide guess button to prevent bugs
     document.getElementById("map").style.width = "65%"; //Make map bigger
     document.getElementById("mly").style.width = "35%"; //Make viewer smaller
@@ -238,8 +240,8 @@ function cleanUp() {
     $("#mly").css("width", "100%"); //make viewer page width
     $("#map").css("width", "0"); //hide map again
     hasGuessed = false; //Be able to take guess next round
+    mapIsOpen = false;
     $(".distance-result").remove(); //Remove all the messages with distance of guesses
-
 
     //remove all markers from the map
     for(let i = 0; i < markers.length; i++) {
@@ -290,7 +292,23 @@ function reportImage() {
             window.location.href = "/"; //Game was deleted
         });
     } else {
-        nextImageSetup();
+        if(hasGuessed) {
+            cleanUp();
+        } else if (mapIsOpen) {
+            document.getElementById("open-map").style.display = "block"; //show button to open map
+            document.getElementById("trigger-guess").style.display = "none"; //Hide guess button to prevent bugs
+            $("#mly").css("width", "100%"); //make viewer page width
+            $("#map").css("width", "0"); //hide map again
+            
+            //remove all markers from the map
+            for(let i = 0; i < markers.length; i++) {
+                markers[i].remove(); 
+            }
+            mapIsOpen = false;
+            nextImageSetup();
+        } else {
+            nextImageSetup();
+        }
     }           
     document.getElementById("report-div").style.display = "none";
 }
