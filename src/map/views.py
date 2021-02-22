@@ -133,6 +133,19 @@ def report_image(request, image_key, reason_low_quality, reason_wrong_coordinate
         is_already_reported = ReportedImages.objects.get(mapillary_image=image_key)
         return HttpResponse("This image is already reported, therefore it will not be reported again")
     except ReportedImages.DoesNotExist:
+        all_the_maps = Map.objects.all()
+
+        #Cycle through all the existent maps delete the image key from the map if it has it
+        #If the leftover len(locations) is less than 5 delete the map, else save
+        for current_map in all_the_maps:
+            if image_key in current_map.mapillary_image_key:
+                current_map.mapillary_image_key.remove(image_key)
+                current_map.num_of_locations -= 1
+                if current_map.num_of_locations < 5:
+                    current_map.delete()
+                else:
+                    current_map.save()
+        #save reported image            
         new_report = ReportedImages(
             mapillary_image=image_key,
             reason_is_low_quality=reason_low_quality,
