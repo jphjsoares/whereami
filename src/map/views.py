@@ -3,7 +3,8 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import Map, ReportedImages
 from .forms import GenerateRandomWorld
-from random import uniform
+from random import uniform, choice
+import random
 import os
 import json
 import urllib
@@ -92,21 +93,26 @@ def create_world(request):
             locations_to_submit_final = []
             submitted_number_of_locations = request.POST["numoflocations"]
             while len(locations_to_submit_final) < int(submitted_number_of_locations):
-                
+                #TODO: Make bbox list with http://bboxfinder.com and get a random bbox every request
                 x, y = uniform(-180,180), uniform(-90, 90) #generate random point
-                url = "https://a.mapillary.com/v3/images?client_id=" + os.environ.get("CLIENT_ID") + "&per_page=1" + "&closeto=" + str(x) + ',' + str(y) + "&radius=1000000"
+                print(str(x) + ", " + str(y))
+                url = "https://a.mapillary.com/v3/images?client_id=" + os.environ.get("CLIENT_ID") + "&per_page=100" + "&closeto=" + str(x) + ',' + str(y) + "&radius=80000"
                 req = urllib.request.urlopen(url) 
                 data = json.load(req) #get random point close to the random point generated
                 
-                if len(data["features"]) != 0 and data["features"][0]["properties"]["quality_score"] >= 3: #if the point is valid, add it to our keys
-                    check_image_reported = check_reported(request, data["features"][0]["properties"]["key"]).content
-                    if check_image_reported.decode('utf-8') == 'OKAY':
-                        print("image accepted")
-                        locations_to_submit_final.append(data["features"][0]["properties"]["key"])
-                    else: 
-                        print("requested image is reported. getting another image...")
-                    					
+                
+                if len(data["features"]) != 0:
+                    randomly_selected_image = random.choice(data["features"])
 
+                    if randomly_selected_image["properties"]["quality_score"] >= 3 and randomly_selected_image["properties"]["username"] != "wbs": #if the point is valid, add it to our keys
+                        check_image_reported = check_reported(request, randomly_selected_image["properties"]["key"]).content
+                        
+                        if check_image_reported.decode('utf-8') == 'OKAY':
+                            print("image accepted")
+                            locations_to_submit_final.append(randomly_selected_image["properties"]["key"])
+                        else: 
+                            print("requested image is reported. getting another image...")
+            		
             map_to_submit = Map(name="testRandomWorld",
                 creator="backend",
                 map_type=3,
@@ -123,6 +129,8 @@ def create_world(request):
         else:
             messages.error(request, "Something wrong with your input! Is it more than 5?")
             return redirect("/map/createworld")
+                        
+
     else:
         form = GenerateRandomWorld()
     
