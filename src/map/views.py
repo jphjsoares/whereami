@@ -87,10 +87,10 @@ def create_world(request):
     if request.method == "POST":
         form = GenerateRandomWorld(request.POST)
         if form.is_valid():
+            # x, y = uniform(-180,180), uniform(-90, 90) #generate random point
+
             #TODO:
             #Tried to use https://a.mapillary.com/v3/images?bbox=-12.54,33.95,41.81,62.64&per_page=50&client_id=MGNWR1hFdWVhb3FQTTJxcDZPUExHZzo2NTE4YmM3NmY0YWYyNGYy
-            #But for the same bbox the per_page returns always the same result
-            #WE NEED TO FIND A WAY TO RANDOMIZE THIS!
             #One way to randomize is to get change by 2 or less degrees every bbox coordinate
             #Ways to increase randomization:
                 #Get random part of the world
@@ -124,27 +124,52 @@ def create_world(request):
                 "94.2,-12.2,154.3,6.2", #south asia
                 "112.79,-44.08,153.92,-10.39", #australia
                 "113.0,-39.0,156.1,-11.5",  #new zealend
-                "161.39,-51.2,-173.65,-32.76" #islands of fiji, etc...
+                "8.72,45.51,27.88,53.76", #middle europe 2
+                "-31.71,32.4,10.31,43.63", #penisule iberic and some european islands
+                "5.3,53.85,31.58,63.86", #south scandinavia
+                "-126.54,31.73,-100.52,51.89", #west coast us and canada
+                "-74.3,-55.2,-36.5,-13.6", #shouth america 2
+                "111.56,-35.17,132.22,19.31", #australia 2
+                "140.61,-47.43,179.28,-9.31", #australia 3 and fiji
+                "-116.6,25.7,-80.2,57.5", #central usa and canada
+                "63.26,4.43,110.37,31.47", #india
             ]
 
             locations_to_submit_final = []
             submitted_number_of_locations = request.POST["numoflocations"]
+            
             while len(locations_to_submit_final) < int(submitted_number_of_locations):
-                #TODO: Make bbox list with http://bboxfinder.com and get a random bbox every request
-                x, y = uniform(-180,180), uniform(-90, 90) #generate random point
-                url = "https://a.mapillary.com/v3/images?client_id=" + os.environ.get("CLIENT_ID") + "&per_page=50" + "&closeto=" + str(x) + ',' + str(y) + "&radius=80000"
+                picked_box = random.choice(bboxes_for_create_world).split(',') #choose a random box and prepare it
+                
+                #Get the difference between coordinates and divide by two
+                #This will be used in calculations
+                #All bboxes were chosen so that none of these operations outputs negative
+                long_difference = float(picked_box[2]) - float(picked_box[0])
+                lat_difference = float(picked_box[3]) - float(picked_box[1])
+                to_divide_long = long_difference/2 
+                to_divide_lat = lat_difference/2
+                
+                #For each coordinate randomly subtract, or sum based on what was calculated
+                picked_box[0] = str(float(picked_box[0]) - random.uniform(to_divide_long*(-1), to_divide_long))
+                picked_box[2] = str(float(picked_box[2]) - random.uniform(to_divide_long*(-1), to_divide_long))
+                picked_box[1] = str(float(picked_box[1]) - random.uniform(to_divide_lat*(-1), to_divide_lat))
+                picked_box[3] = str(float(picked_box[3]) - random.uniform(to_divide_lat*(-1), to_divide_lat))
+                picked_box = ','.join(picked_box)
+                
+                url = "https://a.mapillary.com/v3/images?client_id=" + os.environ.get("CLIENT_ID") + "&per_page=50&min_quality_score=3&bbox=" + picked_box
                 req = urllib.request.urlopen(url) 
                 data = json.load(req) #get random point close to the random point generated
                 
-                
+                #Make sure we have some results
                 if len(data["features"]) != 0:
-                    randomly_selected_image = random.choice(data["features"])
 
-                    if randomly_selected_image["properties"]["quality_score"] >= 3 and randomly_selected_image["properties"]["username"] != "wbs" and randomly_selected_image["properties"]["username"] != "adminmapillary": 
+                    randomly_selected_image = random.choice(data["features"]) #pick random location given by per_page
+                    
+                    #filter user 'wbs' and 'adminmapillary' low quality and wrong coordinates
+                    if randomly_selected_image["properties"]["username"] != "wbs" and randomly_selected_image["properties"]["username"] != "adminmapillary": 
                         check_image_reported = check_reported(request, randomly_selected_image["properties"]["key"]).content
-                        
+                        #If image is not reported add it to our map
                         if check_image_reported.decode('utf-8') == 'OKAY':
-                            print("image accepted")
                             locations_to_submit_final.append(randomly_selected_image["properties"]["key"])
                         else: 
                             print("requested image is reported. getting another image...")
