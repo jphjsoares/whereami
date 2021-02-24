@@ -162,7 +162,7 @@ function handleGuess() {
     let distanceBetweenPoints = turf.distance(turf.point([guessedLng, guessedLat]), turf.point([realLng, realLat]));
 
     //If the guess was under 2250 km give points
-    if (distanceBetweenPoints < 2250) {
+    if (distanceBetweenPoints <= 2250) {
         let pointsToAdd = 2250-Math.round(distanceBetweenPoints);
         score  = score + pointsToAdd;
         document.getElementById("game-score").innerHTML = "Score " + score;
@@ -216,10 +216,8 @@ function handleGuess() {
     if(nextImage==keys.length) {
         document.getElementById("next-img").innerHTML = "End of game!";
         $("#next-img").click(function() {
-            let urlOfEndgame =  window.location.origin + '/game/eg/' + (window.location.href).split('/')[4];
-            $.get(urlOfEndgame, function(data) {
-                window.location.href = "/"; //Game was deleted
-            });
+            let urlOfEndgame =  window.location.origin + '/game/eg/' + (window.location.href).split('/')[4] + '/' + score;
+            window.location.href = urlOfEndgame;
         });
     }
 }
@@ -287,10 +285,8 @@ function reportImage() {
     
     //This will handle the report if it's made in the last viewer of the game
     if(nextImage==keys.length) {
-        let urlOfEndgame =  window.location.origin + '/game/eg/' + (window.location.href).split('/')[4];
-        $.get(urlOfEndgame, function(data) {
-            window.location.href = "/"; //Game was deleted
-        });
+        let urlOfEndgame =  window.location.origin + '/game/eg/' + (window.location.href).split('/')[4] + '/' + score;
+        window.location.href = urlOfEndgame; //Deleted game
     } else {
         if(hasGuessed) {
             cleanUp();

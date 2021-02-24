@@ -15,7 +15,6 @@ class Game(models.Model):
     current_map_hash = models.CharField(max_length=13)
 
 
-#TODO: delete the player after playing the map
 
 class Players(models.Model):
     username = models.CharField(max_length=20, blank=False)

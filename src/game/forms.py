@@ -8,11 +8,13 @@ def clean_map_id(value):
     if len(value) < 12 or len(value) > 12:
         raise ValidationError(_('Something wrong with that hash length!'), code="invalid hash (length)")
     
+    """
+    For now it will be handled on views
     try:
         map_submitted = Map.objects.get(hash_id=value)
     except Map.DoesNotExist:
         raise ValidationError(_('Something wrong with that map hash!'), code="no map found")        
-    
+    """
     #TODO: Check if it's only numbers
     return value
 
