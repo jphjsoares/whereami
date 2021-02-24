@@ -95,9 +95,22 @@ map.on('style.load', function() {
     };
 
     map.addSource('mapillary', mapillarySource);
-
+    
+    //For long range
     map.addLayer({
         'id': 'mapillary',
+        'type': 'circle',
+        'source': 'mapillary',
+        'source-layer':'mapillary-sequence-overview',
+        'paint': {
+            'circle-opacity': 0.2,
+            'circle-color': 'rgb(53, 175, 109)',
+        } 
+    });
+
+    //For close range
+    map.addLayer({
+        'id': 'mapillary2',
         'type': 'line',
         'source': 'mapillary',
         'source-layer': 'mapillary-sequences',
@@ -109,7 +122,7 @@ map.on('style.load', function() {
             'line-opacity': 0.6,
             'line-color': 'rgb(53, 175, 109)',
             'line-width': 3
-        }
+        } 
     });
     
 
