@@ -4,7 +4,7 @@
 </style>
 {% endblock %}
 {% block content %}
-<h1>Wow! Your score was {{score}} out of {{max_possible_score}}</h1>
+<h1 id="result-heading"></h1>
 <br />
 <br />
 <h4>Challenge your friends! Can they get a better score than you in this map?</h4>
@@ -17,9 +17,22 @@
 <script src="{% static 'map/javascript/jquery.min.js' %}"></script>
 <script src="{% static 'game/javascript/confetti.min.js' %}"></script>
 <script>
+    const score = {{score}};
+    const maxPossibleScore = {{max_possible_score}};
+    const tenPercentOfMax = {{max_possible_score}}/10;
+    if(score > tenPercentOfMax) {
+        document.getElementById("result-heading").innerText = "Wow! Your score was {{score}} points out of {{max_possible_score}}";
+        confetti.start();
+        setTimeout(function(){
+            confetti.stop();
+        }, 4000);
+    } else {
+        document.getElementById("result-heading").innerText = " {{score}} points out of {{max_possible_score}}\n\nNot the best score. Better luck next time though :)";
+    }
+    
     //TODO: show confetti based on score
     //POSSIBLE TODO: show voices based on score
-    confetti.start();
+    
 </script>
 </script>
 {% endblock %}
