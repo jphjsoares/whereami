@@ -75,7 +75,7 @@ def singleplayer_game_instance(request, hash):
     
     #Make sure game has not ended
     if current_game_instance.has_ended == True:
-        messages.error(request, "This game has ended!")
+        messages.error(request, "This game has ended! Start a new one!")
         return redirect("/game/singleplayer")
     
     else:
@@ -90,7 +90,11 @@ def end_of_singleplayer_game(request, hash):
         current_game_instance = Game.objects.get(game_hash=hash)
         current_player = Players.objects.get(current_game_id=current_game_instance)
         score = current_player.score
-        
+
+        #This will make the game unplayable, but will preserve the end game link
+        current_game_instance.has_ended = True 
+        current_game_instance.save()
+
         try:
             current_map = Map.objects.get(hash_id=current_game_instance.current_map_hash)
         except Map.DoesNotExist:
@@ -98,9 +102,8 @@ def end_of_singleplayer_game(request, hash):
             return redirect("/game/singleplayer")
 
         max_points = current_map.num_of_locations * 2250
-        #TODO: DONT FORGET TO REMOVE COMMENT
-        #current_game_instance.delete() #delete game instance
-        return render(request, "game/end-of-game.html", {'score': score, 'max_possible_score': max_points})
+
+        return render(request, "game/end-of-game.html", {'score': score, 'max_possible_score': max_points, 'map_hash': current_map.hash_id})
     
     except Game.DoesNotExist:
         messages.error(request, "Game instance could not be deleted. Probably already deleted, not a problem!")

@@ -1,5 +1,25 @@
 {% extends 'game/base-game.html' %}
+{% block othercss %} 
+<style>
+</style>
+{% endblock %}
 {% block content %}
-<h1>Wow! Your score was of {{score}} out of {{max_possible_score}}</h1>
-<p>Share it with your friends</p>
+<h1>Wow! Your score was {{score}} out of {{max_possible_score}}</h1>
+<br />
+<br />
+<h4>Challenge your friends! Can they get a better score than you in this map?</h4>
+<p>Give them the following id so they can try this map too: <b>{{map_hash}}<b></p>
+
+{% endblock %}
+
+{% block otherjs%}
+{% load static %}
+<script src="{% static 'map/javascript/jquery.min.js' %}"></script>
+<script src="{% static 'game/javascript/confetti.min.js' %}"></script>
+<script>
+    //TODO: show confetti based on score
+    //POSSIBLE TODO: show voices based on score
+    confetti.start();
+</script>
+</script>
 {% endblock %}
