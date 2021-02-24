@@ -11,7 +11,7 @@ def make_hash_id():
 
 class Game(models.Model):
     game_hash = models.CharField(max_length=17, default=make_hash_id)
-    is_active = models.BooleanField(default=False)    
+    has_ended = models.BooleanField(default=False)    #will act as a controller
     current_map_hash = models.CharField(max_length=13)
 
 

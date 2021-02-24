@@ -216,8 +216,12 @@ function handleGuess() {
     if(nextImage==keys.length) {
         document.getElementById("next-img").innerHTML = "End of game!";
         $("#next-img").click(function() {
-            let urlOfEndgame =  window.location.origin + '/game/eg/' + (window.location.href).split('/')[4] + '/' + score;
-            window.location.href = urlOfEndgame;
+            let updatePlayer = window.location.origin + '/game/ps/' + (window.location.href).split('/')[4] + '/' + score;
+            $.get(updatePlayer, function(data) {
+                let urlOfEndgame =  window.location.origin + '/game/eg/' + (window.location.href).split('/')[4];
+                window.location.href = urlOfEndgame;
+                console.log(data);    
+            });
         });
     }
 }

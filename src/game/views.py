@@ -20,7 +20,6 @@ def singleplayer(request):
 
             game_instance_to_create = Game(
                     current_map_hash=request.POST["map_id"],
-                    is_active=True
                 )
 
             game_instance_to_create.save()
@@ -45,7 +44,6 @@ def singleplayer_random(request):
 
     game_instance_to_create = Game(
             current_map_hash=random_map.hash_id,
-            is_active=True
         )
 
     game_instance_to_create.save()
@@ -75,9 +73,9 @@ def singleplayer_game_instance(request, hash):
     
     map_being_played = Map.objects.get(hash_id=current_game_instance.current_map_hash)
     
-    #Make sure game is not active
-    if current_game_instance.is_active == False:
-        messages.error(request, "This game exists, but is expired. Create a new game!")
+    #Make sure game has not ended
+    if current_game_instance.has_ended == True:
+        messages.error(request, "This game has ended!")
         return redirect("/game/singleplayer")
     
     else:
@@ -85,12 +83,13 @@ def singleplayer_game_instance(request, hash):
         random.shuffle(locations) #shuffle locations
         return render(request, "game/singleplayer-instance.html", context={'loc_array':locations})
 
-def end_of_singleplayer_game(request, hash, final_score):
+def end_of_singleplayer_game(request, hash):
     
     #make sure the game actually exists
     try:
         current_game_instance = Game.objects.get(game_hash=hash)
         current_player = Players.objects.get(current_game_id=current_game_instance)
+        score = current_player.score
         
         try:
             current_map = Map.objects.get(hash_id=current_game_instance.current_map_hash)
@@ -99,14 +98,24 @@ def end_of_singleplayer_game(request, hash, final_score):
             return redirect("/game/singleplayer")
 
         max_points = current_map.num_of_locations * 2250
-        current_game_instance.delete()
-
-        return render(request, "game/end-of-game.html", {'score': final_score, 'max_possible_score': max_points})
+        #TODO: DONT FORGET TO REMOVE COMMENT
+        #current_game_instance.delete() #delete game instance
+        return render(request, "game/end-of-game.html", {'score': score, 'max_possible_score': max_points})
     
     except Game.DoesNotExist:
-        print("Oops. Looks like there's no game with that id. Probably already deleted!")
         messages.error(request, "Game instance could not be deleted. Probably already deleted, not a problem!")
         return redirect("/game/singleplayer")
+
+def update_singleplayer_score(request, hash, final_score):
+    try:
+        current_game_instance = Game.objects.get(game_hash=hash)
+    except Game.DoesNotExist:
+        return HttpResponse("No such active game")
+    
+    current_player = Players.objects.get(current_game_id=current_game_instance)
+    current_player.score = final_score
+    current_player.save()
+    return HttpResponse('UPDATED')
 
 
 def multiplayer(request):
