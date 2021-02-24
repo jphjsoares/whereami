@@ -8,6 +8,7 @@ import random
 import os
 import json
 import urllib
+import concurrent.futures
 
 #Main page of the map/ app
 def index(request):
@@ -80,6 +81,58 @@ def create_by_region(request):
     else: 
         return render(request, 'map/create-by-region.html')
 
+bboxes_for_create_world = [
+    "-168.38,55.81,-107.82,71.49", #top canada and alaska
+    "-131.2,23.45,-51.0,56.05", #north america
+    "-114.5,-1.4,-49.4,27.5", #central and north of south america
+    "-56.76,59.65,-36.19,73.99", #greenland
+    "-24.63,63.24,-13.29,66.59", #iceland
+    "5.03,62.03,32.23,71.28", #north scandinavia
+    "30.7,44.0,163.8,69.5", #russia and top asia
+    "-11.54,33.95,41.81,62.64", #europe and south scandinavia
+    "-18.0,3.7,35.8,36.3", #North and middle africa
+    "34.8,2.6,97.9,44.2", #middle east
+    "90.9,-4.4,146.8,47.6", #china, east and south asias
+    "-81.7,-55.8,-33.3,1.2", #south america
+    "4.6,-34.9,60.8,12.8", #south africa
+    "94.2,-12.2,154.3,6.2", #south asia
+    "112.79,-44.08,153.92,-10.39", #australia
+    "113.0,-39.0,156.1,-11.5",  #new zealend
+    "8.72,45.51,27.88,53.76", #middle europe 2
+    "-31.71,32.4,10.31,43.63", #penisule iberic and some european islands
+    "5.3,53.85,31.58,63.86", #south scandinavia
+    "-126.54,31.73,-100.52,51.89", #west coast us and canada
+    "-74.3,-55.2,-36.5,-13.6", #shouth america 2
+    "111.56,-35.17,132.22,19.31", #australia 2
+    "140.61,-47.43,179.28,-9.31", #australia 3 and fiji
+    "-116.6,25.7,-80.2,57.5", #central usa and canada
+    "63.26,4.43,110.37,31.47", #india
+]
+
+locations_to_submit_final = []
+
+
+def get_location(picked_box, request):
+    url = "https://a.mapillary.com/v3/images?client_id=" + os.environ.get("CLIENT_ID") + "&per_page=50&min_quality_score=3&bbox=" + picked_box
+    req = urllib.request.urlopen(url) 
+    data = json.load(req) #get random point close to the random point generated
+
+    #Make sure we have some results
+    if len(data["features"]) != 0:
+        randomly_selected_image = random.choice(data["features"]) #pick random location given by per_page
+        
+        #filter user 'wbs' and 'adminmapillary' (low quality and wrong coordinates)
+        if randomly_selected_image["properties"]["username"] != "wbs" and randomly_selected_image["properties"]["username"] != "adminmapillary": 
+            check_image_reported = check_reported(request, randomly_selected_image["properties"]["key"]).content #If image is not reported add it to our map
+            
+            if check_image_reported.decode('utf-8') == 'OKAY':
+                locations_to_submit_final.append(randomly_selected_image["properties"]["key"])
+            else: 
+                print("requested image is reported. getting another image...")
+                get_location(picked_box)
+    else:
+         get_location(picked_box)
+
 #By defining how many locations to set,
 #Give random locations around the world
 def create_world(request):
@@ -87,58 +140,14 @@ def create_world(request):
     if request.method == "POST":
         form = GenerateRandomWorld(request.POST)
         if form.is_valid():
-            # x, y = uniform(-180,180), uniform(-90, 90) #generate random point
-
-            #TODO:
-            #Tried to use https://a.mapillary.com/v3/images?bbox=-12.54,33.95,41.81,62.64&per_page=50&client_id=MGNWR1hFdWVhb3FQTTJxcDZPUExHZzo2NTE4YmM3NmY0YWYyNGYy
-            #One way to randomize is to get change by 2 or less degrees every bbox coordinate
-            #Ways to increase randomization:
-                #Get random part of the world
-                #More pictures given by per_page (on some occasions per_page might give us lots of images in the same sequence)
-                #Change bbox degrees a little randomly (get different images possibly)
-                #Randomly select one of the given images
-            """
-            THE CODE BELOW MIGHT WORK
-            Possibly change random.uniform based on bbox size (bigger sizes can subtract more)
-            picked_box = random.choice(bboxes_for_create_world).split(',')
-            for i in range(0, len(picked_box)):
-                picked_box[i] =  float(picked_box[i]) - random.uniform(-2,2)
-                picked_box[i] = str(picked_box[i])
-                
-            picked_box = ','.join(picked_box)
-            """
-            bboxes_for_create_world = [
-                "-168.38,55.81,-107.82,71.49", #top canada and alaska
-                "-131.2,23.45,-51.0,56.05", #north america
-                "-114.5,-1.4,-49.4,27.5", #central and north of south america
-                "-56.76,59.65,-36.19,73.99", #greenland
-                "-24.63,63.24,-13.29,66.59", #iceland
-                "5.03,62.03,32.23,71.28", #north scandinavia
-                "30.7,44.0,163.8,69.5", #russia and top asia
-                "-11.54,33.95,41.81,62.64", #europe and south scandinavia
-                "-18.0,3.7,35.8,36.3", #North and middle africa
-                "34.8,2.6,97.9,44.2", #middle east
-                "90.9,-4.4,146.8,47.6", #china, east and south asias
-                "-81.7,-55.8,-33.3,1.2", #south america
-                "4.6,-34.9,60.8,12.8", #south africa
-                "94.2,-12.2,154.3,6.2", #south asia
-                "112.79,-44.08,153.92,-10.39", #australia
-                "113.0,-39.0,156.1,-11.5",  #new zealend
-                "8.72,45.51,27.88,53.76", #middle europe 2
-                "-31.71,32.4,10.31,43.63", #penisule iberic and some european islands
-                "5.3,53.85,31.58,63.86", #south scandinavia
-                "-126.54,31.73,-100.52,51.89", #west coast us and canada
-                "-74.3,-55.2,-36.5,-13.6", #shouth america 2
-                "111.56,-35.17,132.22,19.31", #australia 2
-                "140.61,-47.43,179.28,-9.31", #australia 3 and fiji
-                "-116.6,25.7,-80.2,57.5", #central usa and canada
-                "63.26,4.43,110.37,31.47", #india
-            ]
-
-            locations_to_submit_final = []
-            submitted_number_of_locations = request.POST["numoflocations"]
             
-            while len(locations_to_submit_final) < int(submitted_number_of_locations):
+            chosen_bboxes = []
+            submitted_number_of_locations = request.POST["numoflocations"]
+        
+            #Chooses boxes for new map
+            for i in range(0, int(submitted_number_of_locations)):
+                
+                
                 picked_box = random.choice(bboxes_for_create_world).split(',') #choose a random box and prepare it
                 
                 #Get the difference between coordinates and divide by two
@@ -155,25 +164,12 @@ def create_world(request):
                 picked_box[1] = str(float(picked_box[1]) - random.uniform(to_divide_lat*(-1), to_divide_lat))
                 picked_box[3] = str(float(picked_box[3]) - random.uniform(to_divide_lat*(-1), to_divide_lat))
                 picked_box = ','.join(picked_box)
-                
-                url = "https://a.mapillary.com/v3/images?client_id=" + os.environ.get("CLIENT_ID") + "&per_page=50&min_quality_score=3&bbox=" + picked_box
-                req = urllib.request.urlopen(url) 
-                data = json.load(req) #get random point close to the random point generated
-                
-                #Make sure we have some results
-                if len(data["features"]) != 0:
-
-                    randomly_selected_image = random.choice(data["features"]) #pick random location given by per_page
-                    
-                    #filter user 'wbs' and 'adminmapillary' low quality and wrong coordinates
-                    if randomly_selected_image["properties"]["username"] != "wbs" and randomly_selected_image["properties"]["username"] != "adminmapillary": 
-                        check_image_reported = check_reported(request, randomly_selected_image["properties"]["key"]).content
-                        #If image is not reported add it to our map
-                        if check_image_reported.decode('utf-8') == 'OKAY':
-                            locations_to_submit_final.append(randomly_selected_image["properties"]["key"])
-                        else: 
-                            print("requested image is reported. getting another image...")
-            		
+                chosen_bboxes.append(picked_box)
+            
+            with concurrent.futures.ThreadPoolExecutor(max_workers=int(submitted_number_of_locations)) as e:
+                for i in range(0, int(submitted_number_of_locations)):
+                    e.submit(get_location, chosen_bboxes[i], request)
+            
             map_to_submit = Map(name="random-world",
                 creator="backend",
                 map_type=3,
@@ -190,11 +186,9 @@ def create_world(request):
         else:
             messages.error(request, "Something wrong with your input! Is it more than 5?")
             return redirect("/map/createworld")
-                        
 
     else:
         form = GenerateRandomWorld()
-    
     return render(request, 'map/create-world.html')
 
 def report_image(request, image_key, reason_low_quality, reason_wrong_coordinates): 
