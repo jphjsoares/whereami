@@ -125,10 +125,19 @@ map.on('style.load', function() {
         } 
     });
     
+    //Show loading icon after choosing location
+    $(document).on({
+        ajaxStart: function(){
+            $("#loading-for-custom").css("display", "block");
+        },
+        ajaxStop: function(){ 
+            $("#loading-for-custom").css("display", "none");
+        }    
+    });
 
     let message = document.createElement("DIALOG");
     let errorText = document.createTextNode("Oops... There's no available street view close to that point. Choose one closer to a green spot! Must be at least 100 meters close!");
-    
+
     map.on('click', function(e){
         message.remove();
         
@@ -158,7 +167,6 @@ map.on('style.load', function() {
                         i++;
                     }
                 });
-                
             }
         });
     });
