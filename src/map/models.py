@@ -8,25 +8,18 @@ def make_hash_id():
 
 
 class Map(models.Model):
-    # ID field is added automatically
     hash_id = models.CharField(max_length=13, default=make_hash_id)
-    #1 - custom
-    #2 - region
-    #3 - world
+    """
+    MAP TYPES:
+    1 - custom
+    2 - region
+    3 - world
+    """
     map_type = models.IntegerField(default=1)
     name = models.CharField(max_length=50)
     creator = models.CharField(max_length=40)
-    num_of_locations = models.IntegerField(default=0)
-    
-    #Deleted datefield because I dont find it really useful and might be a pain to debug
-    
-    #We will be using ArrayField(models.Charfield()) and store the key instead of coordinates
-    #Mainly for ease of development
-    mapillary_image_key = ArrayField(models.CharField(max_length=25))
-    
-    # [ [lat, lng],[lat, lng],[lat, lng],[lat, lng] ] -> locations = ArrayField(ArrayField(models.FloatField()))
-    #users_who_played = HStoreField() will be implemented after users app creation probably will be a fk!
-    
+    num_of_locations = models.IntegerField(default=0)    
+    mapillary_image_key = ArrayField(models.CharField(max_length=25))    
     times_played = models.IntegerField(default=0)
 
     def __str__(self):
@@ -38,9 +31,11 @@ class Map(models.Model):
 
 class ReportedImages(models.Model):
     mapillary_image = models.CharField(max_length=25)
-
-    #0 - no reason given
-    #1 - image related
-    #2 - image location related
+    """
+    REPORT REASONS:
+    0 - no reason given
+    1 - image related
+    2 - image location related
+    """
     reason_is_low_quality = models.IntegerField(default=0)
     reason_is_wrong_coordinates = models.IntegerField(default=0)

@@ -6,16 +6,13 @@ from django.utils.translation import gettext_lazy as _
  #TODO: show form errors somehow
 def clean_map_id(value):
     if len(value) < 12 or len(value) > 12:
-        raise ValidationError(_('Something wrong with that hash length!'), code="invalid hash (length)")
+        raise ValidationError(_('Looks like that id is too small or too big.'), code="map length problem")
     
-    """
-    For now it will be handled on views
     try:
         map_submitted = Map.objects.get(hash_id=value)
     except Map.DoesNotExist:
-        raise ValidationError(_('Something wrong with that map hash!'), code="no map found")        
-    """
-    #TODO: Check if it's only numbers
+        raise ValidationError(_('No map with that id.'), code="no map found")        
+    
     return value
 
 class StartNewGame(forms.Form):

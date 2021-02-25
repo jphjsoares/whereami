@@ -10,78 +10,8 @@ import json
 import urllib
 import concurrent.futures
 
-#Main page of the map/ app
-def index(request):
-    return render(request, 'map/index.html')
-
-#Let the user choose what places to add to a new map, by clicking
-def create_custom(request):
-    
-    if request.method == 'POST':
-
-        #TODO:Check if post input is null
-        input = request.POST["locations"].splitlines()
-        locations_to_submit_final = []
-
-        if len(input) < 5: #Also be careful with xss and other vulns
-            messages.error(request, "Oops... Please select 5 or more locations")
-            return redirect("/map/createcustom")
-        
-        #Add all the image keys to an array for the db
-        for submitted_location in input:
-            locations_to_submit_final.append(submitted_location)
-
-        
-        # Create and save the new map!
-        
-        map_to_submit = Map(name="custom",
-            creator="backend",
-            map_type=1,
-            num_of_locations=len(locations_to_submit_final),
-            mapillary_image_key=locations_to_submit_final,
-            times_played=0
-        )
-
-        map_to_submit.save()
-
-
-        message_to_send = "Created map ID: " + str(map_to_submit.hash_id)
-        messages.success(request, message_to_send)
-        return redirect("/")
-        
-    else:
-        return render(request, 'map/create-custom.html') 
-
-#Let the user draw a polygon on the map, creating the "perimter"
-#Give random coordinates, that are inside the polygon
-def create_by_region(request):
-    if request.method == "POST":
-        
-        #TODO:Check if post input is null
-        input = request.POST["locations"].splitlines()
-        locations_to_submit_final = []
-
-
-        for random_location in input:
-            locations_to_submit_final.append(random_location)
-        
-        map_to_submit = Map(name="by-region",
-            creator="backend",
-            map_type=2,
-            num_of_locations=len(locations_to_submit_final),
-            mapillary_image_key=locations_to_submit_final,
-            times_played=0
-        )
-
-        map_to_submit.save()
-        
-        message_to_send = "Created map ID: " + str(map_to_submit.hash_id)
-        messages.success(request, message_to_send)
-        return redirect("/")
-    else: 
-        return render(request, 'map/create-by-region.html')
-
 bboxes_for_create_world = [
+    #When inserting new boxes make sure the calculations for create_world() will work
     "-168.38,55.81,-107.82,71.49", #top canada and alaska
     "-131.2,23.45,-51.0,56.05", #north america
     "-114.5,-1.4,-49.4,27.5", #central and north of south america
@@ -111,30 +41,89 @@ bboxes_for_create_world = [
 
 locations_to_submit_final = []
 
+# ------- Main page ------- 
+def index(request):
+    return render(request, 'map/index.html')
 
+# ------- Let the user choose what places to add to a new map, by clicking ------- 
+def create_custom(request):
+    
+    if request.method == 'POST':
+
+        #TODO:Check if post input is null
+        input = request.POST["locations"].splitlines()
+        locations_to_submit_final = []
+
+        if len(input) < 5: #Also be careful with xss and other vulns
+            messages.error(request, "Oops... Please select 5 or more locations")
+            return redirect("/map/createcustom")
+        
+        for submitted_location in input:
+            locations_to_submit_final.append(submitted_location)
+
+        map_to_submit = Map(name="custom",
+            creator="backend",
+            map_type=1,
+            num_of_locations=len(locations_to_submit_final),
+            mapillary_image_key=locations_to_submit_final,
+            times_played=0
+        )
+        map_to_submit.save()
+
+        message_to_send = "Created map ID: " + str(map_to_submit.hash_id)
+        messages.success(request, message_to_send)
+        return redirect("/")        
+    else:
+        return render(request, 'map/create-custom.html') 
+
+# ------- Let the user draw a polygon on the map, creating the "perimter" ------- 
+def create_by_region(request):
+    if request.method == "POST":
+        
+        #TODO:Check if post input is null
+        input = request.POST["locations"].splitlines()
+        locations_to_submit_final = []
+
+        for random_location in input:
+            locations_to_submit_final.append(random_location)
+        
+        map_to_submit = Map(name="by-region",
+            creator="backend",
+            map_type=2,
+            num_of_locations=len(locations_to_submit_final),
+            mapillary_image_key=locations_to_submit_final,
+            times_played=0
+        )
+        map_to_submit.save()
+        
+        message_to_send = "Created map ID: " + str(map_to_submit.hash_id)
+        messages.success(request, message_to_send)
+        return redirect("/")
+    else: 
+        return render(request, 'map/create-by-region.html')
+
+# ------- Generate random locations for create_world() ------- 
 def get_location(picked_box, request):
     url = "https://a.mapillary.com/v3/images?client_id=" + os.environ.get("CLIENT_ID") + "&per_page=50&min_quality_score=3&bbox=" + picked_box
     req = urllib.request.urlopen(url) 
-    data = json.load(req) #get random point close to the random point generated
+    data = json.load(req)
 
-    #Make sure we have some results
+    # ------- Make sure we have some results ------- 
     if len(data["features"]) != 0:
-        randomly_selected_image = random.choice(data["features"]) #pick random location given by per_page
+        randomly_selected_image = random.choice(data["features"])
         
         #filter user 'wbs' and 'adminmapillary' (low quality and wrong coordinates)
         if randomly_selected_image["properties"]["username"] != "wbs" and randomly_selected_image["properties"]["username"] != "adminmapillary": 
-            check_image_reported = check_reported(request, randomly_selected_image["properties"]["key"]).content #If image is not reported add it to our map
-            
+            # ------- Check if the randomly chosen image is reported ------- 
+            check_image_reported = check_reported(request, randomly_selected_image["properties"]["key"]).content
             if check_image_reported.decode('utf-8') == 'OKAY':
                 locations_to_submit_final.append(randomly_selected_image["properties"]["key"])
             else: 
-                print("requested image is reported. getting another image...")
                 get_location(picked_box)
     else:
          get_location(picked_box)
 
-#By defining how many locations to set,
-#Give random locations around the world
+# ------- Give random locations around the world ------- 
 def create_world(request):
 
     if request.method == "POST":
@@ -144,14 +133,11 @@ def create_world(request):
             chosen_bboxes = []
             submitted_number_of_locations = request.POST["numoflocations"]
         
-            #Chooses boxes for new map
+            # ------- Choose boxes randomly for new map ------- 
             for i in range(0, int(submitted_number_of_locations)):
-                
                 
                 picked_box = random.choice(bboxes_for_create_world).split(',') #choose a random box and prepare it
                 
-                #Get the difference between coordinates and divide by two
-                #This will be used in calculations
                 #All bboxes were chosen so that none of these operations outputs negative
                 long_difference = float(picked_box[2]) - float(picked_box[0])
                 lat_difference = float(picked_box[3]) - float(picked_box[1])
@@ -166,6 +152,7 @@ def create_world(request):
                 picked_box = ','.join(picked_box)
                 chosen_bboxes.append(picked_box)
             
+            # ------- Each thread is responsible for 1 location ------- 
             with concurrent.futures.ThreadPoolExecutor(max_workers=int(submitted_number_of_locations)) as e:
                 for i in range(0, int(submitted_number_of_locations)):
                     e.submit(get_location, chosen_bboxes[i], request)
@@ -177,20 +164,22 @@ def create_world(request):
                 mapillary_image_key=locations_to_submit_final,
                 times_played=0
             )
-
             map_to_submit.save()
+
             message_to_send = "Created map ID: " + str(map_to_submit.hash_id)
             messages.success(request, message_to_send)
             return redirect("/")
             
         else:
-            messages.error(request, "Something wrong with your input! Is it more than 5?")
+            errors = json.loads(form.errors.as_json())
+            messages.error(request, errors["numoflocations"][0]["message"])
             return redirect("/map/createworld")
 
     else:
         form = GenerateRandomWorld()
     return render(request, 'map/create-world.html')
 
+# ------- Image reported ------- 
 def report_image(request, image_key, reason_low_quality, reason_wrong_coordinates): 
     try:
         is_already_reported = ReportedImages.objects.get(mapillary_image=image_key)
@@ -201,6 +190,7 @@ def report_image(request, image_key, reason_low_quality, reason_wrong_coordinate
         #Cycle through all the existent maps delete the image key from the map if it has it
         #If the leftover len(locations) is less than 5 delete the map, else save
         for current_map in all_the_maps:
+
             if image_key in current_map.mapillary_image_key:
                 current_map.mapillary_image_key.remove(image_key)
                 current_map.num_of_locations -= 1
@@ -208,16 +198,17 @@ def report_image(request, image_key, reason_low_quality, reason_wrong_coordinate
                     current_map.delete()
                 else:
                     current_map.save()
-        #save reported image            
+
         new_report = ReportedImages(
             mapillary_image=image_key,
             reason_is_low_quality=reason_low_quality,
             reason_is_wrong_coordinates=reason_wrong_coordinates
         )
         new_report.save()
+
         return HttpResponse(new_report.mapillary_image + " reported")
 
-
+# ------- Check if images are reported ------- 
 def check_reported(request, image_key):
     try: 
         #Be careful with images reported more than 1 time
@@ -228,7 +219,7 @@ def check_reported(request, image_key):
     except ReportedImages.DoesNotExist: 
         return HttpResponse("OKAY")
 
-
+# ------- Get the json for a map ------- 
 def get_map(request, hash):
     try:
         map = Map.objects.filter(hash_id=hash).values()
