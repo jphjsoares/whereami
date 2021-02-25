@@ -2,7 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404, JsonRespons
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import Map, ReportedImages
-from .forms import GenerateRandomWorld
+from .forms import GenerateRandomWorld, GenerateMapByRegion, GenerateCustomMap
 from random import uniform, choice
 import random
 import os
@@ -49,56 +49,62 @@ def index(request):
 def create_custom(request):
     
     if request.method == 'POST':
-
-        #TODO:Check if post input is null
-        input = request.POST["locations"].splitlines()
-        locations_to_submit_final = []
-
-        if len(input) < 5: #Also be careful with xss and other vulns
-            messages.error(request, "Oops... Please select 5 or more locations")
-            return redirect("/map/createcustom")
+        form = GenerateCustomMap(request.POST)
+        if form.is_valid():
         
-        for submitted_location in input:
-            locations_to_submit_final.append(submitted_location)
+            input = request.POST["locationscustom"].splitlines()
+            locations_to_submit_final = []
 
-        map_to_submit = Map(name="custom",
-            creator="backend",
-            map_type=1,
-            num_of_locations=len(locations_to_submit_final),
-            mapillary_image_key=locations_to_submit_final,
-            times_played=0
-        )
-        map_to_submit.save()
+            for submitted_location in input:
+                locations_to_submit_final.append(submitted_location)
 
-        message_to_send = "Created map ID: " + str(map_to_submit.hash_id)
-        messages.success(request, message_to_send)
-        return redirect("/")        
+            map_to_submit = Map(name="custom",
+                creator="backend",
+                map_type=1,
+                num_of_locations=len(locations_to_submit_final),
+                mapillary_image_key=locations_to_submit_final,
+                times_played=0
+            )
+            map_to_submit.save()
+
+            message_to_send = "Created map ID: " + str(map_to_submit.hash_id)
+            messages.success(request, message_to_send)
+            return redirect("/") 
+        else:
+            errors = json.loads(form.errors.as_json())
+            messages.error(request, errors["locationscustom"][0]["message"])
+            return redirect("/map/createcustom")        
     else:
         return render(request, 'map/create-custom.html') 
 
 # ------- Let the user draw a polygon on the map, creating the "perimter" ------- 
 def create_by_region(request):
     if request.method == "POST":
-        
-        #TODO:Check if post input is null
-        input = request.POST["locations"].splitlines()
-        locations_to_submit_final = []
+        form = GenerateMapByRegion(request.POST)
+        if form.is_valid():        
+            
+            input = request.POST["locations"].splitlines()
+            locations_to_submit_final = []
 
-        for random_location in input:
-            locations_to_submit_final.append(random_location)
-        
-        map_to_submit = Map(name="by-region",
-            creator="backend",
-            map_type=2,
-            num_of_locations=len(locations_to_submit_final),
-            mapillary_image_key=locations_to_submit_final,
-            times_played=0
-        )
-        map_to_submit.save()
-        
-        message_to_send = "Created map ID: " + str(map_to_submit.hash_id)
-        messages.success(request, message_to_send)
-        return redirect("/")
+            for random_location in input:
+                locations_to_submit_final.append(random_location)
+            
+            map_to_submit = Map(name="by-region",
+                creator="backend",
+                map_type=2,
+                num_of_locations=len(locations_to_submit_final),
+                mapillary_image_key=locations_to_submit_final,
+                times_played=0
+            )
+            map_to_submit.save()
+            
+            message_to_send = "Created map ID: " + str(map_to_submit.hash_id)
+            messages.success(request, message_to_send)
+            return redirect("/")
+        else:
+            errors = json.loads(form.errors.as_json())
+            messages.error(request, errors["locations"][0]["message"])
+            return redirect("/map/createbyregion")
     else: 
         return render(request, 'map/create-by-region.html')
 

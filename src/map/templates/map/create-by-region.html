@@ -9,7 +9,14 @@
 {% endblock %}
 
 {% block mapcreate %}
-
+        {% if messages %}
+                <div class="alert alert-warning messages" role="alert">
+                        {% for message in messages %}
+                                <p class="{{ message.tags }}">{{ message }}</p>
+                        {% endfor %}
+                </div>
+                <br />
+        {% endif %}
 		
         <h3>Create by selecting region</h3>
         <p>Use the top right toolbar to draw one or more polygon</p>
