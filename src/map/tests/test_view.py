@@ -6,9 +6,12 @@ class IndexViewTests(TestCase):
         self.assertEqual(resp.status_code, 200)
 
 
-#TODO: test if we can successfuly submit a new map
-#       test if we can submit a null map
-#       testif we can submit a less than 5 map
+#TODO: 
+"""
+test if we can submit a null map
+test if we can submit a less than 5 map
+Test weird inputs
+"""
 class CreateCustomViewTests(TestCase):
     def test_create_custom_page(self):
         resp = self.client.get('/map/createcustom')

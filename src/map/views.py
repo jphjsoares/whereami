@@ -172,6 +172,8 @@ def create_world(request):
             )
             map_to_submit.save()
 
+            #clear locations because there was a bug where locations would persist (because it's global)
+            locations_to_submit_final.clear()
             message_to_send = "Created map ID: " + str(map_to_submit.hash_id)
             messages.success(request, message_to_send)
             return redirect("/")
