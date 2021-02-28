@@ -25,7 +25,9 @@ let nextImage = 1;
 let hasGuessed = false;
 let mapIsOpen = false;
 let score = 0;
-
+let howManyImages = keys.length;
+let alertOfReportHasBeenShown = false;
+let pointsToAdd = 0;
 
 /*
 *
@@ -163,7 +165,7 @@ function handleGuess() {
 
     //If the guess was under 2250 km give points
     if (distanceBetweenPoints <= 2250) {
-        let pointsToAdd = 2250-Math.round(distanceBetweenPoints);
+        pointsToAdd = 2250-Math.round(distanceBetweenPoints);
         score  = score + pointsToAdd;
         document.getElementById("game-score").innerHTML = "Score " + score;
     }
@@ -286,7 +288,9 @@ function reportImage() {
     $.get(urlOfReport, function(data){
         console.log(data);
     });
-    
+
+    howManyImages--;
+
     //This will handle the report if it's made in the last viewer of the game
     if(nextImage==keys.length) {
     
@@ -301,6 +305,8 @@ function reportImage() {
         window.location.href = urlOfEndgame; //Deleted game */
     } else {
         if(hasGuessed) {
+            score = score - pointsToAdd;
+            document.getElementById("game-score").innerHTML = "Score " + score;
             cleanUp();
         } else if (mapIsOpen) {
             document.getElementById("open-map").style.display = "block"; //show button to open map
@@ -326,7 +332,11 @@ function reportImage() {
 /////////////////////////////////////////////////////////////////////////////
 
 $("#report-view").click(function(){
-    let element = document.getElementById("report-div"); 
+    let element = document.getElementById("report-div");
+    if(howManyImages == 5 && !alertOfReportHasBeenShown) {
+        alert("WARNING: REPORTING STREET VIEWS ON A 5 ACTIVE LOCATIONS MAP, WILL CAUSE THE MAP TO BE DELETED.\n\nTherefore, it will most likely cause strange behaviour. We never recommend our users to play a 5 location map only")
+        alertOfReportHasBeenShown = true;
+    }  
     if(element.style.display == "none") {
         element.style.display = "block";
     } else {

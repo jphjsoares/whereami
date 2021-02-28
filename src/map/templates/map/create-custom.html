@@ -67,7 +67,9 @@
 {% endblock %}
 
 {% block mapcreate %}
-        <h3>CUSTOM MAP CREATOR</h3>
+        <h1 style="text-align: center; margin-top: 30px;">CUSTOM MAP CREATOR</h1>
+        <h3>Please select between 5 and 100 locations.</h3>
+        <h6 style="opacity: 0.5;">We never recommend to create 5 location maps only though!</h6>
         <p>Click in the map to choose a location</p>
         {% if messages %}
                 <div class="alert alert-warning messages" role="alert">
@@ -86,7 +88,7 @@
                 <div class="sk-chase-dot"></div>
         </div>
         <div id="dialog-container"></div>
-        <div id='map' style='height: 500px;'></div>
+        <div id='map' style='height: 500px;'></div>   
         <p>It might take a bit for the map to reload the new marker. Please be patient!</p>
         <table id="show-coords">
                 <tr>

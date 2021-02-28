@@ -72,9 +72,12 @@ def singleplayer_game_instance(request, hash):
     except Game.DoesNotExist:
         messages.error(request, "There's no available game with this id!")
         return redirect("/game/singleplayer")
-
-    map_being_played = Map.objects.get(hash_id=current_game_instance.current_map_hash)
-    
+    try:
+        map_being_played = Map.objects.get(hash_id=current_game_instance.current_map_hash)
+    except Map.DoesNotExist:
+        current_game_instance.delete()
+        messages.error(request, "The map you want to play has been deleted")
+        return redirect("/game/singleplayer")
     # ------- Make sure game has not ended ------- 
     if current_game_instance.has_ended == True:
         messages.error(request, "This game has ended! Start a new one!")
