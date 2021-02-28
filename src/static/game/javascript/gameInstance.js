@@ -289,8 +289,16 @@ function reportImage() {
     
     //This will handle the report if it's made in the last viewer of the game
     if(nextImage==keys.length) {
+    
+        let updatePlayer = window.location.origin + '/game/ps/' + (window.location.href).split('/')[4] + '/' + score;
+        $.get(updatePlayer, function(data) {
+            let urlOfEndgame =  window.location.origin + '/game/eg/' + (window.location.href).split('/')[4];
+            window.location.href = urlOfEndgame;
+            console.log(data);    
+        });
+        /*
         let urlOfEndgame =  window.location.origin + '/game/eg/' + (window.location.href).split('/')[4] + '/' + score;
-        window.location.href = urlOfEndgame; //Deleted game
+        window.location.href = urlOfEndgame; //Deleted game */
     } else {
         if(hasGuessed) {
             cleanUp();

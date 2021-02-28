@@ -19,19 +19,48 @@
 <script>
     const score = {{score}};
     const maxPossibleScore = {{max_possible_score}};
-    const tenPercentOfMax = {{max_possible_score}}/10;
-    if(score > tenPercentOfMax) {
-        document.getElementById("result-heading").innerText = "Wow! Your score was {{score}} points out of {{max_possible_score}}";
+    const tenPercentOfMax = {{max_possible_score}}*0.10;
+    const twentyFivePercentOfMax = {{max_possible_score}}*0.25;
+    const fiftyPercentOfMax = {{max_possible_score}}*0.50;
+    const seventyFivePercentOfMax = {{max_possible_score}}*0.75;
+    const godlikeScore = {{max_possible_score}}*0.9;
+    console.log(tenPercentOfMax);
+    console.log(twentyFivePercentOfMax);
+    console.log(fiftyPercentOfMax);
+    console.log(seventyFivePercentOfMax);
+    console.log(godlikeScore);
+    //Score below 10%
+    //Score above 10% and below 25%
+    //Score above 25% and below 50%
+    //Score above 50% and below 75%
+    //Score above 75%
+    if(score < tenPercentOfMax) {
+        document.getElementById("result-heading").innerText = "Well, that was... Bad. Like really bad...\nYour score was {{score}} points out of {{max_possible_score}}\nYou need to try again!";
+    }
+    if(score >= tenPercentOfMax && score < twentyFivePercentOfMax) {
+        document.getElementById("result-heading").innerText = "What happened?! Your score was {{score}} points out of {{max_possible_score}}\n";
+    }
+    if(score >= twentyFivePercentOfMax && score < fiftyPercentOfMax) {
+        document.getElementById("result-heading").innerText = "Could've been better. Your score was {{score}} points out of {{max_possible_score}}\n";        
+    }
+    if(score >=fiftyPercentOfMax && score < seventyFivePercentOfMax) {
+        document.getElementById("result-heading").innerText = "That was really good! Congrats! Your score was {{score}} points out of {{max_possible_score}}\n";
+        confetti.start();
+        setTimeout(function(){
+            confetti.stop();
+        }, 1000);
+    } 
+    if (score >= seventyFivePercentOfMax && score < godlikeScore) {
+        document.getElementById("result-heading").innerText = "Wow!? That's an amazing score, congrats!\nYour score was {{score}} points out of {{max_possible_score}}\n";
         confetti.start();
         setTimeout(function(){
             confetti.stop();
         }, 4000);
-    } else {
-        document.getElementById("result-heading").innerText = " {{score}} points out of {{max_possible_score}}\n\nNot the best score. Better luck next time though :)";
     }
-    
-    //TODO: show confetti based on score
-    //POSSIBLE TODO: show voices based on score
+    if(score >= godlikeScore) {
+        document.getElementById("result-heading").innerText = "OMG! YOU ARE SO GOOD AT THIS! You probably have super powers...\nYour score was {{score}} points out of {{max_possible_score}}\n";
+        confetti.start();
+    }
     
 </script>
 </script>
