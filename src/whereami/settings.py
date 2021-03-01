@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
+import django_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,13 +27,16 @@ ADMIN_ENABLED = False
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG", default=False)
+DEBUG = False
+
+CSRF_COOKIE_SECURE = True
+
+SESSION_COOKIE_SECURE = True
 
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS")
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'game',
     'map.apps.MapConfig',
@@ -132,3 +136,7 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATICFILES_DIRS =[(os.path.join(BASE_DIR, "static"))]
+
+
+django_heroku.settings(locals())
+print(django_heroku.settings(locals()))
