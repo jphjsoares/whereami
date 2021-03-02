@@ -31,7 +31,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 DEBUG = False
 DEBUG_PROPAGATE_EXCEPTIONS = True
 CSRF_COOKIE_SECURE = True
-
+SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True #This is causing the messages to not appear
 
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS")
