@@ -82,7 +82,7 @@ TEMPLATES = [
         },
     },
 ]
-
+print(BASE_DIR)
 
 WSGI_APPLICATION = 'whereami.wsgi.application'
 
