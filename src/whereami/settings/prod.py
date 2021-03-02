@@ -36,7 +36,6 @@ SESSION_COOKIE_SECURE = True #This is causing the messages to not appear
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS")
 
 
-
 # Application definition
 INSTALLED_APPS = [
     'game',
@@ -71,9 +70,6 @@ TEMPLATES = [
             os.path.join(BASE_DIR, 'whereami/templates'),
             os.path.join(BASE_DIR, 'map/templates'),
             os.path.join(BASE_DIR, 'game/templates')
-            #'./whereami/templates',
-            #'./map/templates',
-            #'./game/templates'
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -86,7 +82,7 @@ TEMPLATES = [
         },
     },
 ]
-print(TEMPLATES)
+
 
 WSGI_APPLICATION = 'whereami.wsgi.application'
 
@@ -94,16 +90,7 @@ WSGI_APPLICATION = 'whereami.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 """
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'db',
-        'PORT': 5432,
-    }
-}
+
 """
 
 DATABASES = {
