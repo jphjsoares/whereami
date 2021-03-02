@@ -15,7 +15,8 @@ import os
 import django_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+#BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.realpath(os.path.dirname(__file__) + "/.."))
 
 #Disable admin on production
 ADMIN_ENABLED = False
@@ -82,7 +83,6 @@ TEMPLATES = [
         },
     },
 ]
-print(BASE_DIR)
 
 WSGI_APPLICATION = 'whereami.wsgi.application'
 
