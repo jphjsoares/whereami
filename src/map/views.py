@@ -110,10 +110,11 @@ def create_by_region(request):
 
 # ------- Generate random locations for create_world() ------- 
 def get_location(picked_box, request):
+    print("Starting threads...")
     url = "https://a.mapillary.com/v3/images?client_id=" + os.environ.get("CLIENT_ID") + "&per_page=50&min_quality_score=3&bbox=" + picked_box
     req = urllib.request.urlopen(url) 
     data = json.load(req)
-
+    
     # ------- Make sure we have some results ------- 
     if len(data["features"]) != 0:
         randomly_selected_image = random.choice(data["features"])

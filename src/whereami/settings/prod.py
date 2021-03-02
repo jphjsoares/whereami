@@ -12,10 +12,14 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
+import django_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+#BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.realpath(os.path.dirname(__file__) + "/.."))
 
+#Disable admin on production
+ADMIN_ENABLED = False
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -24,13 +28,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG", default=0)
+DEBUG = False
+DEBUG_PROPAGATE_EXCEPTIONS = True
+CSRF_COOKIE_SECURE = True
+
+SESSION_COOKIE_SECURE = True #This is causing the messages to not appear
 
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS")
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'game',
     'map.apps.MapConfig',
@@ -53,15 +60,17 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 ROOT_URLCONF = 'whereami.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            './whereami/templates',
-            './map/templates',
-            './game/templates'
+            os.path.join(BASE_DIR, 'whereami/templates'),
+            os.path.join(BASE_DIR, 'map/templates'),
+            os.path.join(BASE_DIR, 'game/templates')
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -80,17 +89,21 @@ WSGI_APPLICATION = 'whereami.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
+"""
+
+"""
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'db',
+        'NAME': os.environ.get("DB_NAME"),
+        'USER': os.environ.get("DB_USER"),
+        'PASSWORD': os.environ.get("DB_PASSWORD"),
+        'HOST': os.environ.get("DB_HOST"),
         'PORT': 5432,
     }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -130,3 +143,6 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATICFILES_DIRS =[(os.path.join(BASE_DIR, "static"))]
+
+
+django_heroku.settings(locals())

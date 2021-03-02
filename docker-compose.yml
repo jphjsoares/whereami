@@ -1,9 +1,6 @@
 version: '3.7'
-# to get the db command line type:
-#docker-compose run db bash
 #psql --host=db --username=postgres --dbname=postgres
-#https://medium.com/analytics-vidhya/getting-started-with-postgresql-using-docker-compose-34d6b808c47c
-#command: gunicorn --bind 0.0.0.0:8000 whereami.wsgi -> for production
+#command: gunicorn --bind 0.0.0.0:8000 whereami.wsgi --log-level debug -> for production
 #command: python manage.py runserver 0.0.0.0:8000  -> for development
 #this comment is just to test the new dev branch
 
@@ -16,13 +13,13 @@ services:
             - POSTGRES_PASSWORD=postgres
     web:
         build: ./src
-        command: gunicorn --bind 0.0.0.0:8000 whereami.wsgi
+        command: python manage.py runserver 0.0.0.0:8000
         volumes: 
             - ./src:/code/
         ports: 
             - 8000:8000
         env_file: 
-            - .dev.env
+            - .prod.env
             - .creds.env
         depends_on: 
             - db
