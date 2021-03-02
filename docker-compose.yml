@@ -2,6 +2,7 @@ version: '3.7'
 #psql --host=db --username=postgres --dbname=postgres
 #command: gunicorn --bind 0.0.0.0:8000 whereami.wsgi --log-level debug -> for production
 #command: python manage.py runserver 0.0.0.0:8000  -> for development
+#this comment is just to test the new dev branch
 
 services:
     db:
