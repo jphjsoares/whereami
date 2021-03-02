@@ -68,7 +68,9 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR, 'templates')
+            os.path.join(BASE_DIR, 'whereami/templates'),
+            os.path.join(BASE_DIR, 'map/templates'),
+            os.path.join(BASE_DIR, 'game/templates')
             #'./whereami/templates',
             #'./map/templates',
             #'./game/templates'
@@ -84,6 +86,7 @@ TEMPLATES = [
         },
     },
 ]
+print(TEMPLATES)
 
 WSGI_APPLICATION = 'whereami.wsgi.application'
 
