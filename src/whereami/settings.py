@@ -68,9 +68,10 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            './whereami/templates',
-            './map/templates',
-            './game/templates'
+            os.path.join(BASE_DIR, 'templates')
+            #'./whereami/templates',
+            #'./map/templates',
+            #'./game/templates'
         ],
         'APP_DIRS': True,
         'OPTIONS': {
