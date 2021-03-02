@@ -27,13 +27,14 @@ ADMIN_ENABLED = False
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-
+DEBUG = True
+DEBUG_PROPAGATE_EXCEPTIONS = True
 CSRF_COOKIE_SECURE = True
 
-SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True #This is causing the messages to not appear
 
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS")
+
 
 
 # Application definition
@@ -58,6 +59,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 ROOT_URLCONF = 'whereami.urls'
 
@@ -139,4 +142,3 @@ STATICFILES_DIRS =[(os.path.join(BASE_DIR, "static"))]
 
 
 django_heroku.settings(locals())
-print(django_heroku.settings(locals()))

@@ -1,2 +1,2 @@
 release: python src/manage.py migrate
-web: gunicorn whereami.wsgi
+web: gunicorn --pythonpath src whereami.wsgi
