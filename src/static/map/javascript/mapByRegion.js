@@ -94,6 +94,7 @@ $("#form").on('submit', function(e) {
     e.preventDefault();
     let polygon = draw.getAll().features; //Get all drawn polygons
     document.getElementById("main-content").style.display = "none";
+    document.getElementById("footer").style.display = "none";
     document.getElementById("loading").style.display = "block";
     document.getElementById("loading-text").style.display = "block";
 
