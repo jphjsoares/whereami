@@ -1,12 +1,12 @@
-{% extends 'game/base-game.html' %}
+    {% extends 'game/base-game.html' %}
 
 
-{% block othercss %}
-{% load static %}
-<link href="{% static 'game/css/custom_game.css' %}" rel="stylesheet" />
-{% endblock %}
+    {% block othercss %}
+    {% load static %}
+    <link href="{% static 'game/css/custom_game.css' %}" rel="stylesheet" />
+    {% endblock %}
 
-{% block content %}
+    {% block content %}
         {% if messages %}
             <div class="alert alert-danger messages" role="alert">
                     {% for message in messages %}
@@ -31,14 +31,49 @@
                                     </button>
                                 </div>
                                 <div class="col-md-auto">
-                                   <button type="button" class="btn btn-secondary">
+                                    <button type="button" class="btn btn-secondary">
                                         <a href="{% url 'map-home' %}" class="card-link btn btn-secondary">Create a map</a>
                                     </button>
                                 </div>
                         </div>
                 </div>
+                <div class="col text-center" style="margin-top: 20px; margin-bottom: 10px;">
+                    <button type="button" class="btn btn-outline-secondary mx-auto" data-bs-toggle="modal" data-bs-target="#explain" >
+                        How it works
+                    </button>
+                </div>
+                <!-- What appears when user clicks "I have a map" -->
+                <div class="modal fade" id="explain" tabindex="-1" aria-labelledby="explainModal" aria-hidden="true">
+                    <div class="modal-dialog">
+                            <div class="modal-content">
+                                    <div class="modal-header">
+                                            <h5 class="modal-title" id="explainModal">How does this work?</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                            <p>
+                                                To start a game you need a map id. Or you can also try a random map.
+                                            </p>
+                                            <p>
+                                                If don't have a map id, please create a map by clicking "Create a map".
+                                            </p>
+                                            <p>
+                                                After you create a map, a popup box will be shown with the id of the map you just created.
+                                            </p>
+                                            <p>
+                                                When you have a valid map id either created by you or given to you by a friend, click "I have a map".
+                                                Paste the id on there and you are good to go!
+                                            </p>
+                                            <p>
+                                                At the end of each game you can share the link with the game summary and share it with your friends.
+                                            </p>
+                                            <p><b>Good luck!</b></p>
+                                    </div>
+                            </div>
+                    </div>
+            </div>
         </div>
-
+        
         <!-- What appears when user clicks "I have a map" -->
         <div class="modal fade" id="form-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -60,13 +95,13 @@
                         </div>
                 </div>
         </div>
- 
-        </div>
-       
-{% endblock %}
 
-{% block otherjs %}
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
-{% load static %}
-<script src="{% static 'map/javascript/jquery.min.js' %}"></script>
-{% endblock %}
+        
+        
+    {% endblock %}
+
+    {% block otherjs %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+    {% load static %}
+    <script src="{% static 'map/javascript/jquery.min.js' %}"></script>
+    {% endblock %}
