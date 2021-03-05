@@ -26,15 +26,14 @@ bboxes_for_create_world = [
     "-81.7,-55.8,-33.3,1.2", #south america
     "4.6,-34.9,60.8,12.8", #south africa
     "94.2,-12.2,154.3,6.2", #south asia
-    "112.79,-44.08,153.92,-10.39", #australia
     "113.0,-39.0,156.1,-11.5",  #new zealend
     "8.72,45.51,27.88,53.76", #middle europe 2
     "-31.71,32.4,10.31,43.63", #penisule iberic and some european islands
     "5.3,53.85,31.58,63.86", #south scandinavia
     "-126.54,31.73,-100.52,51.89", #west coast us and canada
     "-74.3,-55.2,-36.5,-13.6", #shouth america 2
-    "111.56,-35.17,132.22,19.31", #australia 2
-    "140.61,-47.43,179.28,-9.31", #australia 3 and fiji
+    "111.56,-35.17,132.22,19.31", #australia 1
+    "140.61,-47.43,179.28,-9.31", #australia 2 and fiji
     "-116.6,25.7,-80.2,57.5", #central usa and canada
     "63.26,4.43,110.37,31.47", #india
 ]
