@@ -8,7 +8,7 @@ let mly = new Mapillary.Viewer({
     imageKey: keys[0],
 });
 
-mapboxgl.accessToken = 'pk.eyJ1IjoiY2FzZWlubWVsbCIsImEiOiJja2x4d3ZobnAweWYyMndvNmw5d3Z6M2Q2In0.Oot19uqvGNmeGXD066LMJQ';
+mapboxgl.accessToken = 'pk.eyJ1IjoiY2FzZWlubWVsbCIsImEiOiJja2tpZWU3bG8wNXN4MnBzNzVibnN5dG90In0.D6Y43QmUBiirztruQeEFHA';
 let map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/streets-v11', // stylesheet location
