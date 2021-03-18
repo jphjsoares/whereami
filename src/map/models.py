@@ -38,7 +38,7 @@ class Map(models.Model):
         return reverse('get-map',args=[str(self.hash_id)])
 
 class ReportedImages(models.Model):
-    """ Game instance model
+    """ Report system model
 
     Fields
     ----------
