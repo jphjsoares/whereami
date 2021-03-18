@@ -10,10 +10,9 @@ import json
 import urllib
 import concurrent.futures
 
+#List of bboxes with points to choose from
+#When inserting new boxes make sure the calculations for create_world() will work
 bboxes_for_create_world = [
-    """List of bboxes with points to choose from"""
-    #When inserting new boxes make sure the calculations for create_world() will work
-
     "-168.38,55.81,-107.82,71.49", #top canada and alaska
     "-131.2,23.45,-51.0,56.05", #north america
     "-114.5,-1.4,-49.4,27.5", #central and north of south america
