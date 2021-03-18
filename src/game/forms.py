@@ -16,7 +16,8 @@ def clean_map_id(value):
     Raises
     -----
     ValidationError : 
-        If the length is wrong or the map does not exists  
+        If the length is wrong
+        Map does not exists  
     """
 
     if len(value) < 12 or len(value) > 12:
