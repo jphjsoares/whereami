@@ -12,6 +12,8 @@ import concurrent.futures
 
 bboxes_for_create_world = [
     #When inserting new boxes make sure the calculations for create_world() will work
+    #List of bboxes with points to choose from
+
     "-168.38,55.81,-107.82,71.49", #top canada and alaska
     "-131.2,23.45,-51.0,56.05", #north america
     "-114.5,-1.4,-49.4,27.5", #central and north of south america
@@ -38,13 +40,13 @@ bboxes_for_create_world = [
     "63.26,4.43,110.37,31.47", #india
 ]
 
+# Will be filled with all the locations in random world generator
 locations_to_submit_final = []
 
 # ------- Main page ------- 
 def index(request):
     return render(request, 'map/index.html')
 
-# ------- Let the user choose what places to add to a new map, by clicking ------- 
 def create_custom(request):
     
     if request.method == 'POST':
@@ -57,12 +59,10 @@ def create_custom(request):
             for submitted_location in input:
                 locations_to_submit_final.append(submitted_location)
 
-            map_to_submit = Map(name="custom",
-                creator="backend",
+            map_to_submit = Map(
                 map_type=1,
                 num_of_locations=len(locations_to_submit_final),
-                mapillary_image_key=locations_to_submit_final,
-                times_played=0
+                mapillary_image_key=locations_to_submit_final
             )
             map_to_submit.save()
 
@@ -88,12 +88,10 @@ def create_by_region(request):
             for random_location in input:
                 locations_to_submit_final.append(random_location)
             
-            map_to_submit = Map(name="by-region",
-                creator="backend",
+            map_to_submit = Map(
                 map_type=2,
                 num_of_locations=len(locations_to_submit_final),
-                mapillary_image_key=locations_to_submit_final,
-                times_played=0
+                mapillary_image_key=locations_to_submit_final
             )
             map_to_submit.save()
             
@@ -164,12 +162,10 @@ def create_world(request):
                 for i in range(0, int(submitted_number_of_locations)):
                     e.submit(get_location, chosen_bboxes[i], request)
             
-            map_to_submit = Map(name="random-world",
-                creator="backend",
+            map_to_submit = Map(
                 map_type=3,
                 num_of_locations=len(locations_to_submit_final),
-                mapillary_image_key=locations_to_submit_final,
-                times_played=0
+                mapillary_image_key=locations_to_submit_final
             )
             map_to_submit.save()
 
