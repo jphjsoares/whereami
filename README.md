@@ -1,5 +1,4 @@
 # whereami
-![(PNG Image, 16 × 16 pixels)](https://user-images.githubusercontent.com/24354644/111800977-65557900-88c4-11eb-99da-b1679aaa015f.png)
 ## What is whereami?
 Whereami is a free alternative to geoguessr. It does not use any kind of user registration. All the streetviews are provided by Mapillary, at https://www.mapillary.com
 
