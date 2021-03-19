@@ -15,7 +15,6 @@ services:
         ports: 
             - 8000:8000
         env_file: 
-            - .prod.env
             - .creds.env
         depends_on: 
             - db
