@@ -6,11 +6,7 @@ let map = new mapboxgl.Map({
     zoom: 9 // starting zoom
 });
 
-/**
- * 
- * GLOBAL VARIABLES
- * 
- */
+
 let i = 0;
 let mapillarySource;
 let mapillaryImages = {
@@ -21,12 +17,22 @@ let markersCoords = {
 }
 let table = document.getElementById("show-coords");
 
-//Check if there's a close image on every marker placement
+/**
+ * Builds url to get a street view
+ * 
+ * @param  {Number} lng Click longitude
+ * @param  {Number} lat Click latitude
+ * @return {String}     Mapillary API url
+ */
 function isThereACloseImage(lng, lat) {
     return "https://a.mapillary.com/v3/images?client_id=MGNWR1hFdWVhb3FQTTJxcDZPUExHZzo2NTE4YmM3NmY0YWYyNGYy&closeto=" + lng + "," + lat; 
 }
 
-//Gets called if a delete button is clicked
+/**
+ * Deletes marker and key
+ * 
+ * @param {Number} indexToDelete index of the marker and key to remove
+ */
 function deleteSelection(indexToDelete) {
     //Instead of using delete, set it to an empty string and filter out on the backend (quickfix)
     mapillaryImages.keys[indexToDelete] = ""; 
@@ -34,15 +40,19 @@ function deleteSelection(indexToDelete) {
     markersCoords.markers[indexToDelete] = "";
 }
 
-
+/**
+ * Inserts new marker, location and button of a 
+ * chosen location
+ * 
+ * @param {Number} index key and marker index
+ * @param {String} colorOfMarker custom color of marker and button
+ */
 function populateTable(index, colorOfMarker) {
     //Get the table and insert a row after the last element
     let rowToInsert = table.insertRow(-1); //Add a new row to end of table
 
     let cellToInsertInput = rowToInsert.insertCell(0); //Select cell for button
-    let cellToInsertCoords = rowToInsert.insertCell(1); //Select cell for coords
-
-    //Add the content to the cells
+    let cellToInsertCoords = rowToInsert.insertCell(1); //Select cell for key
 
     //Delete button
     let deleteCoordinateButton = document.createElement("button");
@@ -64,18 +74,22 @@ function populateTable(index, colorOfMarker) {
 }
 
 
+/**
+ * Adds streetviews to the form
+ */
 function handleSubmit() {
 
     for(i = 0; i < mapillaryImages.keys.length; i++) {
         if(mapillaryImages.keys[i] != "") {
-            //Every line on the text area will be in the form lng,lat
-            //On the backend we must get every line and separate by comma and make an array for each pair
             document.getElementById("locations-to-submit").value += mapillaryImages.keys[i] + '\n';        
         }
     }    
 }
 
-//Generate random color for each selected location
+/**
+ * Generates random color for each location
+ * @returns custom color
+ */
 function getRandomColor() {
     let letters = '0123456789ABCDEF';
     let color = '#';
