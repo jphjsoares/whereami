@@ -1,5 +1,4 @@
 env/
-.prod.env
 .creds.env
 src/map/__pycache__/
 src/game/__pycache__/
