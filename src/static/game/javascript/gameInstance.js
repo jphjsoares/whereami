@@ -29,35 +29,26 @@ let howManyImages = keys.length;
 let alertOfReportHasBeenShown = false;
 let pointsToAdd = 0;
 
-/*
-*
-*
-*
-*   NETWORK REQUESTS FOR IMAGE KEYS
-*
-*
-*/
-
+/**
+ * Makes network requests to get coordinates for
+ * each image key. To compare every guess
+ */
 for(let i = 0; i < keys.length; i++) {
 
     let url = "https://a.mapillary.com/v3/images/"  + keys[i] + "?client_id=MGNWR1hFdWVhb3FQTTJxcDZPUExHZzo2NTE4YmM3NmY0YWYyNGYy";
     $.get(url, function(data) {
-        toGuess.push([i, data["geometry"]["coordinates"]]); //store it in a way so that we can access the index of an image and the respective coordinates
+        toGuess.push([i, data["geometry"]["coordinates"]]); 
     });
 }
 
 document.getElementById("img-index").innerText = nextImage + " / " + keys.length;
 document.getElementById("game-score").innerText = "Score " + score;
 
-/*
-*
-*
-*
-*   CLEAN INTERFACE AND HANDLE THE NEXT VIEW
-*
-*
-*/
-
+/**
+ * 
+ * Updates current street view,
+ * Showing next image
+ */
 function nextImageSetup() {
     mapIsOpen = false;
     mly.remove();
@@ -75,15 +66,10 @@ function nextImageSetup() {
 
 
 
-/*
-*
-*
-*
-*   HANDLE MARKER PLACEMENT
-*
-*
-*/
 
+/**
+ * Handles all the marker placements
+ */
 map.on('click', function(e){
     if (hasGuessed) { //Don't allow map clicking after guess has been taken!
         return;
@@ -101,15 +87,9 @@ map.on('click', function(e){
 
 
 
-/*
-*
-*
-*
-*   HANDLE "I THINK I KNOW"
-*
-*
-*/
-
+/**
+ * Opens map when user clicks "I THINK I KNOW"
+ */
 function openMap() {
     mapIsOpen = true;
     document.getElementById("open-map").style.display = "none";
@@ -120,15 +100,10 @@ function openMap() {
 
 
 
-/*
-*
-*
-*
-*   HANDLE GUESS
-*
-*
-*/
-
+/**
+ * Handles a user guess, showing real location and
+ * updating score
+ */
 function handleGuess() {
     hasGuessed = true; //Notify the code that the user has submitted a guess
     document.getElementById("trigger-guess").style.display = "none"; //Hide guess button to prevent bugs
@@ -228,16 +203,11 @@ function handleGuess() {
     }
 }
 
-/*
-*
-*
-*
-*   CLEAN INTERFACE AND SHOW NEXT IMAGE
-*
-*
-*/
 
-
+/**
+ * Cleans interface and sets up window for
+ * the next street view.
+ */
 function cleanUp() {
     document.getElementById("guess-results").style.display = "none";  //remove the div with results
     document.getElementById("open-map").style.display = "block"; //show button to open map
@@ -263,19 +233,15 @@ function cleanUp() {
     nextImageSetup();
 }
 
-/*
-*
-*
-*
-*   REPORT IMAGE
-*
-*
-*/
 
+/**
+ * Handles a player reporting an image
+ */
 function reportImage() {
     let reason_low_quality = 0;
     let reason_wrong_coordinates = 0;
 
+    //Reason for report
     if(document.getElementById("low-quality-check").checked){
         reason_low_quality = 1;
     }
@@ -300,9 +266,7 @@ function reportImage() {
             window.location.href = urlOfEndgame;
             console.log(data);    
         });
-        /*
-        let urlOfEndgame =  window.location.origin + '/game/eg/' + (window.location.href).split('/')[4] + '/' + score;
-        window.location.href = urlOfEndgame; //Deleted game */
+        
     } else {
         if(hasGuessed) {
             score = score - pointsToAdd;
@@ -327,9 +291,9 @@ function reportImage() {
     document.getElementById("report-div").style.display = "none";
 }
 
-/////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
+/**
+ * ALL THE BUTTON CLICK HANDLERS
+ */
 
 $("#report-view").click(function(){
     let element = document.getElementById("report-div");

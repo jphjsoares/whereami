@@ -24,7 +24,10 @@ map.on('draw.delete', checkForPolygons);
 map.on('draw.update', checkForPolygons);
 
 
-
+/**
+ * Allows submit button to be clicked if there's
+ * more than 1 polygon drawn
+ */
 function checkForPolygons() {
     let polygon = draw.getAll().features;
     if(polygon.length > 0) {
@@ -35,11 +38,27 @@ function checkForPolygons() {
 }
 
 
-//Be careful with radius, might generate a point out of polygon, requires more testing
+
+/**
+ * Builds url to get a street view
+ * 
+ * @param  {Float} box0 Min longitude of bbox
+ * @param  {Float} box1 Min latitude of bbox
+ * @param  {Float} box2 Max longitude of bbox
+ * @param  {Float} box3 Max latitude of bbox
+ * @param  {Number} lng Randomly generated longitude
+ * @param  {Number} lat Randomly generated latitude
+ * @return {String}     Mapillary API url
+ */
 function buildUrl( box0, box1, box2, box3, lng, lat) {
     return "https://a.mapillary.com/v3/images?bbox=" + box0 + ',' + box1 + ',' + box2 + ',' + box3 + "&closeto=" + lng + ',' + lat + "&radius=50000&per_page=1&client_id=MGNWR1hFdWVhb3FQTTJxcDZPUExHZzo2NTE4YmM3NmY0YWYyNGYy";
 }
 
+/**
+ * Generates a random point inside a polygon
+ * 
+ * @param {Polygon} polygon Drawn polygon by the user
+ */
 function generateRandomPointsOnRegion(polygon) {
 
     let polyBbox = turf.bboxPolygon(turf.bbox(polygon)); //Generate a polybbox with the given polygon
@@ -68,7 +87,9 @@ function generateRandomPointsOnRegion(polygon) {
 }
 
 
-// Populate inputs and submit the form
+/**
+ * Adds streetviews to the form
+ */
 function getReadyForSubmit() {
     for(locationIndex = 0; locationIndex < coordinatesToSubmit.length; locationIndex++) {
         //Every line on the text area will be in the form lng,lat
@@ -78,8 +99,9 @@ function getReadyForSubmit() {
     $('form').unbind('submit').submit();
 }
 
-//Every 50ms check if we got all our points.
-//If yes, submit
+/**
+ * Every 50ms check if the form is ready to be submitted
+ */
 function checkIfPopulated() {
     let timer = window.setInterval(function(){
         if (coordinatesToSubmit.length == 10) {
@@ -90,6 +112,9 @@ function checkIfPopulated() {
 }
 
 
+/**
+ * Starts random street view generator
+ */
 $("#form").on('submit', function(e) {
     e.preventDefault();
     let polygon = draw.getAll().features; //Get all drawn polygons
