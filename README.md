@@ -12,4 +12,4 @@ Whereami is a free alternative to geoguessr. It does not use any kind of user re
 
 ## Possible features:
 * Multiplayer
-* Native desktop app (possibly with electron)
+* Desktop app (possibly with electron)
