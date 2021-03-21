@@ -23,6 +23,31 @@ map.on('draw.create', checkForPolygons);
 map.on('draw.delete', checkForPolygons);
 map.on('draw.update', checkForPolygons);
 
+//Show tiles on map by region
+map.on('style.load', function() {
+    var mapillarySource = {
+        type: 'vector',
+        tiles: ["https://tiles3.mapillary.com/v0.1/{z}/{x}/{y}.mvt"],
+        minzoom: 0,
+        maxzoom: 14
+    };
+
+    map.addSource('mapillary', mapillarySource);
+    
+    //For long range
+    map.addLayer({
+        'id': 'mapillary',
+        'type': 'circle',
+        'source': 'mapillary',
+        'source-layer':'mapillary-sequence-overview',
+        'paint': {
+            'circle-opacity': 0.2,
+            'circle-color': 'rgb(53, 175, 109)',
+        } 
+    });
+
+});
+
 
 /**
  * Allows submit button to be clicked if there's

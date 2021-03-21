@@ -91,11 +91,25 @@ map.on('click', function(e){
  * Opens map when user clicks "I THINK I KNOW"
  */
 function openMap() {
+    /*
     mapIsOpen = true;
-    document.getElementById("open-map").style.display = "none";
+    //document.getElementById("open-map").style.display = "none";
     $("#mly").css("width", "65%");
     $("#map").css("flex-grow", "1");
-    map.resize();   
+    map.resize();  
+    */
+    //open
+    if (!mapIsOpen) {
+        mapIsOpen = true;
+        $("#mly").css("width", "65%");
+        $("#map").css("flex-grow", "1");
+        map.resize();
+    } else { //close
+        mapIsOpen = false;
+        $("#mly").css("width", "100%");
+        $("#map").css("flex-grow", "1");
+        map.resize();
+    }
 }
 
 
@@ -107,6 +121,7 @@ function openMap() {
 function handleGuess() {
     hasGuessed = true; //Notify the code that the user has submitted a guess
     document.getElementById("trigger-guess").style.display = "none"; //Hide guess button to prevent bugs
+    document.getElementById("open-map").style.display = "none";
     document.getElementById("map").style.width = "65%"; //Make map bigger
     document.getElementById("mly").style.width = "35%"; //Make viewer smaller
     map.resize();

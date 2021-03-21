@@ -34,13 +34,11 @@
 {% endblock %}
 
 {% block otherjs %}
-<script type="text/javascript">
-
-</script>
 {% load static %}
 <script src="{% static 'map/javascript/mapbox-gl-draw.js' %}"></script>
 <script src="{% static 'map/javascript/turf.min.js' %}"></script>
 <script src="{% static 'map/javascript/jquery.min.js' %}"></script>
+<script src="{% static 'map/javascript/featuredRegions.js' %}"></script>
 <script src="{% static 'map/javascript/mapByRegion.js' %}"></script>
         
         
