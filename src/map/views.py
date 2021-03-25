@@ -217,7 +217,6 @@ def create_world(request):
         form = GenerateRandomWorld()
     return render(request, 'map/create-world.html')
 
-# ------- Image reported ------- 
 def report_image(request, image_key, reason_low_quality, reason_wrong_coordinates):
     """Report an image
     
@@ -269,6 +268,7 @@ def report_image(request, image_key, reason_low_quality, reason_wrong_coordinate
 
 def check_reported(request, image_key):
     """Checks if an image is reported"""
+    
     try: 
         reported = ReportedImages.objects.get(mapillary_image=image_key)
         return HttpResponse("REPORTED")     
