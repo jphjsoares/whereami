@@ -9,18 +9,14 @@ BASE_DIR = os.path.dirname(os.path.realpath(os.path.dirname(__file__) + "/.."))
 #Disable admin on production
 ADMIN_ENABLED = False
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 DEBUG_PROPAGATE_EXCEPTIONS = True
 CSRF_COOKIE_SECURE = True
 SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True #This is causing the messages to not appear
+SESSION_COOKIE_SECURE = True 
 
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS")
 
@@ -74,12 +70,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'whereami.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-"""
-
-"""
 
 DATABASES = {
     'default': {
