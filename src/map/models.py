@@ -3,6 +3,7 @@ from django.contrib.postgres.fields import ArrayField
 
 def make_hash_id():
     """Creates the random map hash with letters and digits"""
+    
     import random, string
     allowed_chars = ''.join((string.ascii_letters, string.digits))
     return ''.join(random.choices(allowed_chars, k=12))
