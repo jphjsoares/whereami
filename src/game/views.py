@@ -191,7 +191,3 @@ def update_singleplayer_score(request, hash, final_score):
     current_player.save()
     
     return HttpResponse('UPDATED')
-
-
-def multiplayer(request):
-   return HttpResponse("Multiplayer is still being developed!")
