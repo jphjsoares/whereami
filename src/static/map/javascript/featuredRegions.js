@@ -1,4 +1,5 @@
 let regions = {
+  
     "portugal":{
         "id": "d133634d92b7b3f6f7fe8ad6b3604b07",
         "type": "Feature",
@@ -487,4 +488,7 @@ let regions = {
           "type": "Polygon"
         }
       },
+    //Make canada
+    //Make australia
+    
 }
