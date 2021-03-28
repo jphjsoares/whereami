@@ -15,22 +15,22 @@
             </div>
             <br />
         {% endif %}
-        <div id="singleplayer-home-card" class="card" style="width: 33rem;">
+        <div id="singleplayer-home-card" class="card" style="width: 37rem;">
                 <div class="card-body">
                         <h5 class="card-title">Single player game</h5>
                         <p class="card-text">Do you have a map id or do you wish to create a map now?</p>
-                        <div class="row">
-                                <div class="col-md-auto">
+                        <div class="row justify-content-sm-center">
+                                <div class="col-sm-auto">
                                     <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#form-modal">
                                         <a href="#" class="card-link btn btn-secondary">I have a map</a>
                                     </button>
                                 </div>
-                                <div class="col-md-auto">
+                                <div class="col-sm-auto">
                                     <button type="button" class="btn btn-secondary">
                                         <a href="{% url 'singplayer-random' %}" class="card-link btn btn-secondary">Random map</a>
                                     </button>
                                 </div>
-                                <div class="col-md-auto">
+                                <div class="col-sm-auto">
                                     <button type="button" class="btn btn-secondary">
                                         <a href="{% url 'map-home' %}" class="card-link btn btn-secondary">Create a map</a>
                                     </button>
