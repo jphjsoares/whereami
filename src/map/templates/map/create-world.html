@@ -7,9 +7,6 @@
 {% endblock %}
 
 {% block mapcreate %}
-        <div class="alert alert-info">
-            This page may show you the same, or very close images after creating map. I am trying to make the algorithm better.
-        </div>
         {% if messages %}
                 <div class="alert alert-warning messages" role="alert">
                         {% for message in messages %}
@@ -18,12 +15,11 @@
                 </div>
                 <br />
         {% endif %}
-        <div style="text-align: center;">
+        <div style="margin-top:16rem; text-align: center;">
             <h3>Generate a map with random locations of the world!</h3>
             <p>Select how many locations you want the map to have below (between 5 or 100).<br />The bigger the number of locations you request, the more time it will take to generate</p>
             <h6 style="opacity: 0.5;">We never recommend to create 5 location maps only though!</h6>
             <br />
-            
             <br />
             <form action="" method="post">
                 {% csrf_token %}
@@ -32,7 +28,7 @@
                 <br />
                 <br />
                 <br />
-                <input type="submit" onclick="showLoading()" value="Generate map!">
+                <input class="btn btn-secondary" type="submit" onclick="showLoading()" value="Generate map!">
             </form>
         </div>
 {% endblock %}
