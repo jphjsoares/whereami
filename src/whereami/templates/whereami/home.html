@@ -18,29 +18,18 @@
     {% endif %}
     {% load static %}
     
-    <div id="main-content" style="flex: 1 0 auto; margin: 0 auto; width: 90%;"> 
+    <div id="main-content" style="flex: 1 0 auto; margin: 0 auto; width: 90%; margin-top: -50px;"> 
         <div class="row justify-content-md-center" style="margin-top: 100px;">
             <div class="col-md-auto">
                 <div class="card" style="width: 25rem;">
                     <img style="height: 450px;" src="{% static 'lost-alone.jpg' %}" class="card-img-top" alt="...">
                     <div class="card-body">
                         <h5 class="card-title">Single Player</h5>
-                        <p class="card-text">Select this if you want to play a single player game.</p>
+                        <p class="card-text">Discover the world by guessing the location of street views</p>
                         <a href="{% url 'singleplayer' %}" class="btn btn-primary">Let's play!</a>
                     </div>
                 </div>
             </div>
-            <div class="col-md-auto">
-                <div class="alert alert-warning" role="alert">Still under development</div>
-                <div class="card" style="opacity: 0.5; width: 25rem;">
-                    <img style="height: 450px;" src="{% static 'lost-group.jpg' %}" class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title">Multiplayer</h5>
-                        <p class="card-text">Do you want to guess random locations with a group of friends? Click here! A link will be created so you can share it with your friends! You can also create a game with handpicked locations and see if they guess them all right!</p>
-                        <a href="#" class="btn btn-primary disabled">Let's play!</a>
-                    </div>
-                </div>
-            </div>    
         </div>
     </div>
     {% include "whereami/footer.html" %}
