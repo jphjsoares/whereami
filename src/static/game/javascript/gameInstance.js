@@ -1,4 +1,4 @@
-const mapillaryApiKey = "MGNWR1hFdWVhb3FQTTJxcDZPUExHZzo2NTE4YmM3NmY0YWYyNGYy";
+const mapillaryApiKey = "MLY|7677134818979003|9333a16aef0cf8d9a8e79fa6ecd7bac3";
 let mly = new Mapillary.Viewer({
     apiClient:mapillaryApiKey,
     component: {
@@ -8,7 +8,7 @@ let mly = new Mapillary.Viewer({
     imageKey: keys[0],
 });
 
-mapboxgl.accessToken = 'pk.eyJ1IjoiY2FzZWlubWVsbCIsImEiOiJja2tpZWU3bG8wNXN4MnBzNzVibnN5dG90In0.D6Y43QmUBiirztruQeEFHA';
+mapboxgl.accessToken = 'pk.eyJ1IjoiY2FzZWlubWVsbCIsImEiOiJja3o4anZjOHMwdWQxMndxbTFoZGM3YzI1In0.B6eDbdCeO01bXCrDkDZIdw';
 let map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/streets-v11', // stylesheet location

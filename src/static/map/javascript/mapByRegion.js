@@ -1,10 +1,9 @@
-//mapboxgl.accessToken = 'pk.eyJ1IjoiY2FzZWlubWVsbCIsImEiOiJja2tpZWU3bG8wNXN4MnBzNzVibnN5dG90In0.D6Y43QmUBiirztruQeEFHA';
-mapboxgl.accessToken = 'pk.eyJ1IjoiY2FzZWlubWVsbCIsImEiOiJja2x4d3ZobnAweWYyMndvNmw5d3Z6M2Q2In0.Oot19uqvGNmeGXD066LMJQ';
+mapboxgl.accessToken = 'pk.eyJ1IjoiY2FzZWlubWVsbCIsImEiOiJja3o4anZjOHMwdWQxMndxbTFoZGM3YzI1In0.B6eDbdCeO01bXCrDkDZIdw';
 
 let map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/streets-v11', // stylesheet location
-    center: [-68.13734351262877, 45.137451890638886], // starting position [lng, lat]
+    center: [-9.136068933525848, 38.74608203665869], // starting position [lng, lat]
     zoom: 5 // starting zoom
 });
 
@@ -26,27 +25,26 @@ map.on('draw.update', checkForPolygons);
 
 //Show tiles on map by region
 map.on('style.load', function() {
-    var mapillarySource = {
+    map.addSource('mapillary', {
         type: 'vector',
-        tiles: ["https://tiles3.mapillary.com/v0.1/{z}/{x}/{y}.mvt"],
-        minzoom: 0,
-        maxzoom: 14
-    };
-
-    map.addSource('mapillary', mapillarySource);
-    
-    //For long range
-    map.addLayer({
-        'id': 'mapillary',
-        'type': 'circle',
-        'source': 'mapillary',
-        'source-layer':'mapillary-sequence-overview',
-        'paint': {
-            'circle-opacity': 0.2,
-            'circle-color': 'rgb(53, 175, 109)',
-        } 
+        tiles: ['https://tiles.mapillary.com/maps/vtp/mly1_public/2/{z}/{x}/{y}?access_token=MLY|7677134818979003|9333a16aef0cf8d9a8e79fa6ecd7bac3'],
+        minzoom: 6,
+        maxzoom: 20
     });
-
+    map.addLayer({
+        'id': 'mapillary-sequences',
+        'type': 'line',
+        'source': 'mapillary',
+        'source-layer': 'sequence',
+        'layout': {
+            'line-join': 'round',
+            'line-cap': 'round'
+        },
+        'paint': {
+            'line-color': '#05CB63',
+            'line-width': 1
+        }
+    });
 });
 
 
