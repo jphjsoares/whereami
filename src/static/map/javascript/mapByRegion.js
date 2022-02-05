@@ -126,7 +126,6 @@ function getReadyForSubmit() {
  */
 function checkIfPopulated() {
     let timer = window.setInterval(function(){
-        console.log(imageIdsToSubmit);
         if (imageIdsToSubmit.length == 10) {
             window.clearInterval(timer);
             getReadyForSubmit();

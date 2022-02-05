@@ -1,11 +1,10 @@
 const mapillaryApiKey = "MLY|7677134818979003|9333a16aef0cf8d9a8e79fa6ecd7bac3";
-let mly = new Mapillary.Viewer({
-    apiClient:mapillaryApiKey,
-    component: {
-        cover: false,
-    },
-    container:'mly',
-    imageKey: keys[0],
+let { Viewer } = mapillary;
+
+let viewer = new Viewer({
+    accessToken: mapillaryApiKey,
+    container: 'mly',
+    imageId: keys[0],
 });
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiY2FzZWlubWVsbCIsImEiOiJja3o4anZjOHMwdWQxMndxbTFoZGM3YzI1In0.B6eDbdCeO01bXCrDkDZIdw';
@@ -15,9 +14,6 @@ let map = new mapboxgl.Map({
     center: [-9.136068933525848, 38.74608203665869], // starting position [lng, lat]
     zoom: 3 // starting zoom
 });
-
-window.addEventListener("resize", function() { mly.resize(); });
-
 
 let toGuess = []; //[imageIndex, [lnt,lat]]
 let markers = [];
@@ -35,9 +31,16 @@ let pointsToAdd = 0;
  */
 for(let i = 0; i < keys.length; i++) {
 
-    let url = "https://a.mapillary.com/v3/images/"  + keys[i] + "?client_id=MGNWR1hFdWVhb3FQTTJxcDZPUExHZzo2NTE4YmM3NmY0YWYyNGYy";
-    $.get(url, function(data) {
-        toGuess.push([i, data["geometry"]["coordinates"]]); 
+    let url = "https://graph.mapillary.com/" + keys[i] + "?fields=id,computed_geometry";
+    $.ajax({
+        url: url,
+        type: "GET",
+        headers: {"Authorization": "OAuth MLY|7677134818979003|9333a16aef0cf8d9a8e79fa6ecd7bac3"},
+        contentType: "application/json",
+        success: function(result) {
+            toGuess.push([i, result.computed_geometry.coordinates]);
+
+        }
     });
 }
 
@@ -51,20 +54,15 @@ document.getElementById("game-score").innerText = "Score " + score;
  */
 function nextImageSetup() {
     mapIsOpen = false;
-    mly.remove();
-    mly = new Mapillary.Viewer({
-        apiClient:mapillaryApiKey,
-        component: {
-            cover: false,
-        },
+    viewer.remove();
+    viewer = new Viewer({
+        accessToken:mapillaryApiKey,
         container:'mly',
-        imageKey: keys[nextImage],
+        imageId: keys[nextImage],
     });
     nextImage++;
     document.getElementById("img-index").innerHTML = nextImage + " / " + keys.length;
 }
-
-
 
 
 /**
@@ -86,18 +84,10 @@ map.on('click', function(e){
 });
 
 
-
 /**
  * Opens map when user clicks "I THINK I KNOW"
  */
 function openMap() {
-    /*
-    mapIsOpen = true;
-    //document.getElementById("open-map").style.display = "none";
-    $("#mly").css("width", "65%");
-    $("#map").css("flex-grow", "1");
-    map.resize();  
-    */
     //open
     if (!mapIsOpen) {
         mapIsOpen = true;
@@ -125,7 +115,6 @@ function handleGuess() {
     document.getElementById("map").style.width = "65%"; //Make map bigger
     document.getElementById("mly").style.width = "35%"; //Make viewer smaller
     map.resize();
-    mly.resize();
     
     let realLng;
     let realLat;
