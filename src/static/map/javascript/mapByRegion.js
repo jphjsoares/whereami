@@ -1,10 +1,14 @@
+<<<<<<< HEAD
+mapboxgl.accessToken = 'pk.eyJ1IjoiY2FzZWlubWVsbCIsImEiOiJja3o4anZjOHMwdWQxMndxbTFoZGM3YzI1In0.B6eDbdCeO01bXCrDkDZIdw';
+=======
 mapboxgl.accessToken = 'pk.eyJ1IjoiY2FzZWlubWVsbCIsImEiOiJja2tpZWU3bG8wNXN4MnBzNzVibnN5dG90In0.D6Y43QmUBiirztruQeEFHA';
+>>>>>>> main
 
 let map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/streets-v11', // stylesheet location
-    center: [-68.13734351262877, 45.137451890638886], // starting position [lng, lat]
-    zoom: 5 // starting zoom
+    center: [-9.136068933525848, 38.74608203665869], // starting position [lng, lat]
+    zoom: 9 // starting zoom
 });
 
 let draw = new MapboxDraw({
@@ -15,7 +19,7 @@ let draw = new MapboxDraw({
     }
 });
 
-let coordinatesToSubmit = []
+let imageIdsToSubmit = []
 document.getElementById("submit-button").disabled = true;
 
 map.addControl(draw);
@@ -25,27 +29,26 @@ map.on('draw.update', checkForPolygons);
 
 //Show tiles on map by region
 map.on('style.load', function() {
-    var mapillarySource = {
+    map.addSource('mapillary', {
         type: 'vector',
-        tiles: ["https://tiles3.mapillary.com/v0.1/{z}/{x}/{y}.mvt"],
-        minzoom: 0,
-        maxzoom: 14
-    };
-
-    map.addSource('mapillary', mapillarySource);
-    
-    //For long range
-    map.addLayer({
-        'id': 'mapillary',
-        'type': 'circle',
-        'source': 'mapillary',
-        'source-layer':'mapillary-sequence-overview',
-        'paint': {
-            'circle-opacity': 0.2,
-            'circle-color': 'rgb(53, 175, 109)',
-        } 
+        tiles: ['https://tiles.mapillary.com/maps/vtp/mly1_public/2/{z}/{x}/{y}?access_token=MLY|7677134818979003|9333a16aef0cf8d9a8e79fa6ecd7bac3'],
+        minzoom: 6,
+        maxzoom: 20
     });
-
+    map.addLayer({
+        'id': 'mapillary-sequences',
+        'type': 'line',
+        'source': 'mapillary',
+        'source-layer': 'sequence',
+        'layout': {
+            'line-join': 'round',
+            'line-cap': 'round'
+        },
+        'paint': {
+            'line-color': '#05CB63',
+            'line-width': 1
+        }
+    });
 });
 
 
@@ -71,12 +74,10 @@ function checkForPolygons() {
  * @param  {Float} box1 Min latitude of bbox
  * @param  {Float} box2 Max longitude of bbox
  * @param  {Float} box3 Max latitude of bbox
- * @param  {Number} lng Randomly generated longitude
- * @param  {Number} lat Randomly generated latitude
  * @return {String}     Mapillary API url
  */
-function buildUrl( box0, box1, box2, box3, lng, lat) {
-    return "https://a.mapillary.com/v3/images?bbox=" + box0 + ',' + box1 + ',' + box2 + ',' + box3 + "&closeto=" + lng + ',' + lat + "&radius=50000&per_page=1&client_id=MGNWR1hFdWVhb3FQTTJxcDZPUExHZzo2NTE4YmM3NmY0YWYyNGYy";
+function buildUrl( box0, box1, box2, box3) {
+    return "https://graph.mapillary.com/images?fields=id,computed_geometry&limit=1&bbox=" + box0 + ',' + box1 + ',' + box2 + ',' + box3;
 }
 
 /**
@@ -84,29 +85,29 @@ function buildUrl( box0, box1, box2, box3, lng, lat) {
  * 
  * @param {Polygon} polygon Drawn polygon by the user
  */
-function generateRandomPointsOnRegion(polygon) {
+async function generateRandomPointsOnRegion(polygon) {
 
     let polyBbox = turf.bboxPolygon(turf.bbox(polygon)); //Generate a polybbox with the given polygon
-    let points = turf.randomPoint(1, polyBbox); //Generate one random point inside that polybox
+    let newUrl = buildUrl(polyBbox["bbox"][0], polyBbox["bbox"][1], polyBbox["bbox"][2], polyBbox["bbox"][3]);
 
-    let newUrl = buildUrl(polyBbox["bbox"][0], polyBbox["bbox"][1], polyBbox["bbox"][2], polyBbox["bbox"][3], 
-        points["features"][0]["geometry"]["coordinates"][0], 
-        points["features"][0]["geometry"]["coordinates"][1]); //Build url to get point inside the bbox
-
-    $.get(newUrl, function(data) {
-        //If we get a valid image and if that image is INSIDE THE DRAWN POLYGON (not bbox) and if quality is more than 3
-        if(data.features.length !== 0 && turf.booleanPointInPolygon(points["features"][0]["geometry"], polygon) && data["features"][0]["properties"].quality_score > 3) {      
+    $.ajax({
+        url: newUrl,
+        type: "GET",
+        headers: {"Authorization": "OAuth MLY|7677134818979003|9333a16aef0cf8d9a8e79fa6ecd7bac3"},
+        contentType: "application/json",
+        success: function(result) {
             
-            //Check if the image is reported
-            let checkIfReported = window.location.origin + "/map/check_reported/" + data["features"][0]["properties"].key;
-            $.get(checkIfReported, function(response) {
-                if(response == 'OKAY') {
-                    console.log(response);
-                    coordinatesToSubmit.push(data["features"][0]["properties"].key); //Submit the point
-                }
-            });
-        } else {
-            generateRandomPointsOnRegion(polygon);
+            // CAREFUL: this version does not take into account low quality images
+            if (turf.booleanPointInPolygon(result["data"][0].computed_geometry.coordinates, polygon) && !imageIdsToSubmit.includes(result["data"][0].id)) {
+                let checkIfReported = window.location.origin + "/map/check_reported/" + result["data"][0].id;
+                $.get(checkIfReported, function(response) {
+                    if(response == 'OKAY') {
+                        imageIdsToSubmit.push(result["data"][0].id); //Submit the point
+                    }
+                });
+            } else {
+                generateRandomPointsOnRegion(polygon);
+            }
         }
     });
 }
@@ -116,10 +117,10 @@ function generateRandomPointsOnRegion(polygon) {
  * Adds streetviews to the form
  */
 function getReadyForSubmit() {
-    for(locationIndex = 0; locationIndex < coordinatesToSubmit.length; locationIndex++) {
+    for(locationIndex = 0; locationIndex < imageIdsToSubmit.length; locationIndex++) {
         //Every line on the text area will be in the form lng,lat
         //On the backend we must get every line and separate by comma and make an array for each pair
-        document.getElementById("locations-to-submit").value += coordinatesToSubmit[locationIndex] + '\n';
+        document.getElementById("locations-to-submit").value += imageIdsToSubmit[locationIndex] + '\n';
     }
     $('form').unbind('submit').submit();
 }
@@ -129,7 +130,7 @@ function getReadyForSubmit() {
  */
 function checkIfPopulated() {
     let timer = window.setInterval(function(){
-        if (coordinatesToSubmit.length == 10) {
+        if (imageIdsToSubmit.length == 10) {
             window.clearInterval(timer);
             getReadyForSubmit();
         }

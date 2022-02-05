@@ -14,8 +14,6 @@ DEBUG_PROPAGATE_EXCEPTIONS = True
 
 ALLOWED_HOSTS = ['*']
 
-
-
 # Application definition
 INSTALLED_APPS = [
     'game',

@@ -1,4 +1,4 @@
-mapboxgl.accessToken = 'pk.eyJ1IjoiY2FzZWlubWVsbCIsImEiOiJja2tpZWU3bG8wNXN4MnBzNzVibnN5dG90In0.D6Y43QmUBiirztruQeEFHA';
+mapboxgl.accessToken = 'pk.eyJ1IjoiY2FzZWlubWVsbCIsImEiOiJja3o4anZjOHMwdWQxMndxbTFoZGM3YzI1In0.B6eDbdCeO01bXCrDkDZIdw';
 let map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/streets-v11', // stylesheet location
@@ -25,7 +25,12 @@ let table = document.getElementById("show-coords");
  * @return {String}     Mapillary API url
  */
 function isThereACloseImage(lng, lat) {
-    return "https://a.mapillary.com/v3/images?client_id=MGNWR1hFdWVhb3FQTTJxcDZPUExHZzo2NTE4YmM3NmY0YWYyNGYy&closeto=" + lng + "," + lat; 
+    //These 2 variables make a bbox
+    let maxLng = lng+0.001;
+    let maxLat = lat+0.001;
+    let reqUrl =  "https://graph.mapillary.com/images?fields=id&bbox=" + lat.toFixed(3) + "," + lng.toFixed(3) + "," + maxLat.toFixed(3) + "," + maxLng.toFixed(3);
+    console.log(reqUrl);
+    return reqUrl;
 }
 
 /**
@@ -101,43 +106,26 @@ function getRandomColor() {
 }
 
 map.on('style.load', function() {
-    var mapillarySource = {
-        type: 'vector',
-        tiles: ["https://tiles3.mapillary.com/v0.1/{z}/{x}/{y}.mvt"],
-        minzoom: 0,
-        maxzoom: 14
-    };
-
-    map.addSource('mapillary', mapillarySource);
-    
-    //For long range
-    map.addLayer({
-        'id': 'mapillary',
-        'type': 'circle',
-        'source': 'mapillary',
-        'source-layer':'mapillary-sequence-overview',
-        'paint': {
-            'circle-opacity': 0.2,
-            'circle-color': 'rgb(53, 175, 109)',
-        } 
-    });
-
-    //For close range
-    map.addLayer({
-        'id': 'mapillary2',
-        'type': 'line',
-        'source': 'mapillary',
-        'source-layer': 'mapillary-sequences',
-        'layout': {
-            'line-cap': 'round',
-            'line-join': 'round'
-        },
-        'paint': {
-            'line-opacity': 0.6,
-            'line-color': 'rgb(53, 175, 109)',
-            'line-width': 3
-        } 
-    });
+        map.addSource('mapillary', {
+            type: 'vector',
+            tiles: ['https://tiles.mapillary.com/maps/vtp/mly1_public/2/{z}/{x}/{y}?access_token=MLY|7677134818979003|9333a16aef0cf8d9a8e79fa6ecd7bac3'],
+            minzoom: 6,
+            maxzoom: 20
+        });
+        map.addLayer({
+            'id': 'mapillary-sequences',
+            'type': 'line',
+            'source': 'mapillary',
+            'source-layer': 'sequence',
+            'layout': {
+                'line-join': 'round',
+                'line-cap': 'round'
+            },
+            'paint': {
+                'line-color': '#05CB63',
+                'line-width': 1
+            }
+        });
     
     //Show loading icon after choosing location
     $(document).on({
@@ -154,17 +142,27 @@ map.on('style.load', function() {
 
     map.on('click', function(e){
         message.remove();
-        
+        $.ajax({
+            url: isThereACloseImage(e.lngLat.wrap().lng, e.lngLat.wrap().lat),
+            type: "GET",
+            headers: {"Authorization": "OAuth MLY|7677134818979003|9333a16aef0cf8d9a8e79fa6ecd7bac3"},
+            contentType: "application/json",
+            success: function(data) {
+                console.log(data);
+            }
+        });
+        /*
         $.get(isThereACloseImage(e.lngLat.wrap().lng, e.lngLat.wrap().lat), function(data) {
+            console.log(data);
             
             //Show error if no close image  
-            if(data.features.length === 0) { 		
+            if(data.data.length === 0) { 		
                 message.setAttribute("open","open");
                 message.appendChild(errorText);
                 document.getElementById("dialog-container").appendChild(message);
             
             } else {
-                let checkIfReported = window.location.origin + "/map/check_reported/" + data["features"][0]["properties"].key;
+                let checkIfReported = window.location.origin + "/map/check_reported/" + data["data"][0];
                 $.get(checkIfReported, function(response) {
                     if(response == 'REPORTED') {
                         alert("Sorry, this image was reported, please use another one");
@@ -183,5 +181,6 @@ map.on('style.load', function() {
                 });
             }
         });
+        */
     });
 });
