@@ -7,7 +7,10 @@ from random import uniform, choice
 import random
 import os
 import json
-import urllib
+try:
+    from urllib.request import Request, urlopen  # Python 3
+except ImportError:
+    from urllib2 import Request, urlopen  # Python 2
 import concurrent.futures
 
 #List of bboxes with points to choose from
@@ -129,25 +132,27 @@ def get_location(picked_box, request):
         If the images are not from the user "wbs" and "adminmapillary"
         If image is not reported
     """
+    auth_header = "OAuth " + os.environ.get("CLIENT_ID")
     
-    url = "https://a.mapillary.com/v3/images?client_id=" + os.environ.get("CLIENT_ID") + "&per_page=50&min_quality_score=3&bbox=" + picked_box
-    req = urllib.request.urlopen(url) 
-    data = json.load(req)
-    
+    url = "https://graph.mapillary.com/images?fields=id,computed_geometry&limit=5&bbox=" + picked_box
+    request = Request(url)
+    request.add_header("Authorization", auth_header)
+    res = urlopen(request)
+    data = json.load(res)
+
     #Make sure request contains data
-    if len(data["features"]) != 0:
-        randomly_selected_image = random.choice(data["features"])
+    if len(data["data"]) != 0:
+        randomly_selected_image = random.choice(data["data"])
         
-        #filter user 'wbs' and 'adminmapillary' (low quality and wrong coordinates)
-        if randomly_selected_image["properties"]["username"] != "wbs" and randomly_selected_image["properties"]["username"] != "adminmapillary": 
-            
-            #Check if the randomly chosen image is reported
-            check_image_reported = check_reported(request, randomly_selected_image["properties"]["key"]).content
-            if check_image_reported.decode('utf-8') == 'OKAY':
-                locations_to_submit_final.append(randomly_selected_image["properties"]["key"])
-                print("CREATED " + randomly_selected_image["properties"]["key"])
-            else: 
-                get_location(picked_box)
+        #INFO : in API v4.0 we are not able to check the username of who uploaded the images :(
+        #Check if the randomly chosen image is reported
+        check_image_reported = check_reported(request, randomly_selected_image["id"]).content
+        if check_image_reported.decode('utf-8') == 'OKAY' and randomly_selected_image["id"] not in locations_to_submit_final:
+            locations_to_submit_final.append(randomly_selected_image["id"])
+            print("CREATED " + randomly_selected_image["id"])
+        else: 
+            get_location(picked_box)
+
     else:
          get_location(picked_box)
  
@@ -168,7 +173,6 @@ def create_world(request):
             
             chosen_bboxes = [] #bboxes that were randomly chosen
             submitted_number_of_locations = request.POST["numoflocations"]
-        
              
             for i in range(0, int(submitted_number_of_locations)):
                 """Select a random bbox for each location, with random sizes"""
@@ -193,7 +197,8 @@ def create_world(request):
             with concurrent.futures.ThreadPoolExecutor(max_workers=int(submitted_number_of_locations)) as e:
                 for i in range(0, int(submitted_number_of_locations)):
                     e.submit(get_location, chosen_bboxes[i], request)
-            
+        
+
             map_to_submit = Map(
                 map_type=3,
                 num_of_locations=len(locations_to_submit_final),
