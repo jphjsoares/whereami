@@ -1,49 +1,15 @@
 # whereami
+## What is whereami?
+Whereami is a free alternative to geoguessr. It does not use any kind of user registration. All the streetviews are provided by Mapillary, at https://www.mapillary.com
 
-## Possible architecture changes!
-At the moment we have 2 different architectures in mind. 
-First, using users to track everything is way more difficult but may seem interesting for employers.
-Second, use links to join private games without having users to sign in.
+## How does it work?
+* To start a game you need a map id. 
+* A map id is created when you generate a map. 
+* You can generate random maps by drawing a region or a random map in the whole world.
+* You can also create custom maps (selecting each location you want the map to have) for your friends to test their skills. 
+* All the created map id's can be shared.
+* At the end of each game, a game summary will be shown. If you want to share it with your friends you can just copy it and send it!
 
-
-### To create a virtual environment
-``` sh
-cd whereami
-python3 -m venv env
-```
-
-To activate the virtual environment in linux
-``` sh
-source env/bin/activate
-```
-To quit the virtual environment
-``` sh
-deactivate
-```
-### To run the app using docker-compose
-
-``` sh
-docker-compose up --build -d
-```
-
-### To test
-
-First access docker-compose web service
-
-``` sh
-docker-compose run web bash
-```
-
-And then:
-
-``` sh
-python manage.py test --keepdb
-```
-
-#### WARNING: make sure you have hstore extension created in the test db. If you don't have it do it like how it's said below. And use --keepdb to prevent the extension from being removed (because django creates a new DB everytime)
-
-``` sh
-docker-compose run db bash
-psql --host=[your host name] --dbname=[your test db name] --username=[your username]
-create extension hstore;
-```
+## Possible features:
+* Multiplayer
+* Desktop app (possibly with electron)
