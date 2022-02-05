@@ -48,8 +48,13 @@ locations_to_submit_final = []
 def index(request):
     return render(request, 'map/index.html')
 
+"""
+For now, this will be commented because new Mapillary API does not make it 
+easy for this feature to work. Will probably work on it later again.
+"""
+
 def create_custom(request):
-    """Creates a map with locations chosen by the user"""
+    #Creates a map with locations chosen by the user
 
     if request.method == 'POST':
         form = GenerateCustomMap(request.POST)
@@ -78,6 +83,7 @@ def create_custom(request):
             return redirect("/map/createcustom")        
     else:
         return render(request, 'map/create-custom.html') 
+
 
 def create_by_region(request):
     """Creates a map with locations randomly selected inside a polygon"""
