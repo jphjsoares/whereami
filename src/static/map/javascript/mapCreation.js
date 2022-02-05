@@ -25,9 +25,11 @@ let table = document.getElementById("show-coords");
  * @return {String}     Mapillary API url
  */
 function isThereACloseImage(lng, lat) {
-    let maxLng = lng+0.2;
-    let maxLat = lat+0.2;
-    let reqUrl =  "https://graph.mapillary.com/images?access_token=MLY|7677134818979003|9333a16aef0cf8d9a8e79fa6ecd7bac3&fields=id&bbox=" + lat + "," + lng + "," + maxLat + "," + maxLng;
+    let maxLng = lng+3;
+    let maxLat = lat+3;
+    //let reqUrl =  "https://graph.mapillary.com/images?fields=id&bbox=" + lat + "," + lng + "," + maxLat + "," + maxLng;
+    //TODO: fix bbox coordinates
+    let reqUrl =  "https://graph.mapillary.com/images?fields=id&limit=1&bbox=" + lat.toFixed(3) + "," + lng.toFixed(3) + "," + maxLat.toFixed(3) + "," + maxLng.toFixed(3);
     console.log(reqUrl);
     return reqUrl;
 }
@@ -141,7 +143,16 @@ map.on('style.load', function() {
 
     map.on('click', function(e){
         message.remove();
-        
+        $.ajax({
+            url: isThereACloseImage(e.lngLat.wrap().lng, e.lngLat.wrap().lat),
+            type: "GET",
+            headers: {"Authorization": "OAuth MLY|7677134818979003|9333a16aef0cf8d9a8e79fa6ecd7bac3"},
+            contentType: "application/json",
+            success: function(data) {
+                console.log(data);
+            }
+        });
+        /*
         $.get(isThereACloseImage(e.lngLat.wrap().lng, e.lngLat.wrap().lat), function(data) {
             console.log(data);
             
@@ -171,5 +182,6 @@ map.on('style.load', function() {
                 });
             }
         });
+        */
     });
 });
