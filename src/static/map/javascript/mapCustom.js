@@ -25,11 +25,10 @@ let table = document.getElementById("show-coords");
  * @return {String}     Mapillary API url
  */
 function isThereACloseImage(lng, lat) {
-    let maxLng = lng+3;
-    let maxLat = lat+3;
-    //let reqUrl =  "https://graph.mapillary.com/images?fields=id&bbox=" + lat + "," + lng + "," + maxLat + "," + maxLng;
-    //TODO: fix bbox coordinates
-    let reqUrl =  "https://graph.mapillary.com/images?fields=id&limit=1&bbox=" + lat.toFixed(3) + "," + lng.toFixed(3) + "," + maxLat.toFixed(3) + "," + maxLng.toFixed(3);
+    //These 2 variables make a bbox
+    let maxLng = lng+0.001;
+    let maxLat = lat+0.001;
+    let reqUrl =  "https://graph.mapillary.com/images?fields=id&bbox=" + lat.toFixed(3) + "," + lng.toFixed(3) + "," + maxLat.toFixed(3) + "," + maxLng.toFixed(3);
     console.log(reqUrl);
     return reqUrl;
 }

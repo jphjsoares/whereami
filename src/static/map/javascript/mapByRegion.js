@@ -4,7 +4,7 @@ let map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/streets-v11', // stylesheet location
     center: [-9.136068933525848, 38.74608203665869], // starting position [lng, lat]
-    zoom: 5 // starting zoom
+    zoom: 9 // starting zoom
 });
 
 let draw = new MapboxDraw({
