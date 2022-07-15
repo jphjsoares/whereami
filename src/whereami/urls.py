@@ -18,7 +18,6 @@ from django.urls import path, include
 from . import views
 
 urlpatterns = [
-    #path('admin/', admin.site.urls), disabled on production
     path('map/', include('map.urls')),
     path('game/', include('game.urls')),
     path('', views.home, name="home")
