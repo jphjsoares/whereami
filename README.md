@@ -1,4 +1,8 @@
 # whereami
+
+## Warning:
+Since Heroku transitioned to a paid model, the availability of the app has been affected, and it is no longer accessible. I am currently exploring alternative options to find a viable solution in light of Heroku's transition to a paid service. I am seeking ways to make the app accessible again.
+
 ## What is whereami?
 Whereami is a free alternative to geoguessr. It does not use any kind of user registration. All the streetviews are provided by Mapillary, at https://www.mapillary.com
 
